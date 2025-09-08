@@ -1,0 +1,55 @@
+
+
+#nav_bar {
+  display:flex; justify-content:space-between; align-items:center;
+  padding:0 12px; background-color:#993300;
+}
+
+
+.menu_btn ul {
+  display:flex; gap:8px; list-style:none; margin:0; padding:0;
+}
+.menu_btn ul > li.depth1 {
+  position:relative; 
+  padding:12px 20px; border-radius:20px;
+}
+.menu_btn ul > li.depth1 > a {
+  color:#fff; text-decoration:none; display:block;
+}
+
+
+.menu_btn ul > li.depth1:hover {
+  background-color:#ff9900;
+}
+
+
+.menu_btn ul > li.depth1 .submenu {
+  position:absolute; left:0; top:100%;
+  min-width:160px;
+  background:#fff; color:#333;
+  border-radius:10px;
+  box-shadow:0 8px 20px rgba(0,0,0,.15);
+  list-style:none; padding:8px 0;
+  display:none; z-index:10;
+}
+.menu_btn ul > li.depth1:hover .submenu {
+  display:block;
+}
+.menu_btn ul > li.depth1 .submenu > li > a {
+  display:block; padding:10px 14px; color:#333; text-decoration:none;
+  white-space:nowrap;
+}
+.menu_btn ul > li.depth1 .submenu > li > a:hover {
+  background:#ffe0bf;
+}
+
+
+.user ul { display:flex; list-style:none; margin:0; padding:0; gap:8px; }
+.user ul li a {
+  display:block; color:#fff; text-decoration:none; padding:12px 20px; border-radius:20px;
+}
+.user ul li:first-child a:hover,
+.user ul li:last-child  a:hover {
+  background-color:#ff9900;
+}
+
