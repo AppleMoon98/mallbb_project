@@ -26,7 +26,7 @@ const Login = () => {
   return (
     <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh", flexDirection: "column" ,minHeight:"210px"}}>
       
-      <h1 style={{ marginBottom: "20px" }}>로그인</h1>
+      <h1 className="text-4xl font-extrabold">로그인</h1>
 
       
       <div style={{ display: "flex", gap: "40px", marginBottom: "20px" }}>
