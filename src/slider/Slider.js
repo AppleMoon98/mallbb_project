@@ -1,4 +1,3 @@
-import React from "react";
 import Slider from "react-slick";
 import Slide1 from "../img/project_Img/slide_Image/Silde.webp"
 import Slide2 from "../img/project_Img/slide_Image/Silde2.webp"

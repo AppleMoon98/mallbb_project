@@ -1,11 +1,10 @@
 import { Link } from "react-router-dom";
 import "../css/main.css";
 import "../css/mainnav.css";
-import Register from "../pages/user/register";
-import Login from "../pages/user/login";
-import Main from "../pages/main";
+import { useSelector } from "react-redux";
 
 const MainNav = () => {
+  const loginState = useSelector(state => state.loginSlice)
   return (
     <nav>
       <div id="nav_bar">
@@ -40,13 +39,22 @@ const MainNav = () => {
         </div>
         <div className="user">
           <ul className="submenu">
-            <li><Link to="/register">회원가입</Link></li>
-            <li><Link to="/login">로그인</Link></li>
+            {!loginState.email ?
+              <div className="flex text-white">
+                <Link to="/register" className="px-4">회원가입</Link>
+                <Link to="/member/login">로그인</Link>
+              </div>
+              :
+              <div className="flex">
+                <Link to="#">마이페이지</Link>
+                <Link to="/member/logout">로그아웃</Link>
+              </div>
+            }
           </ul>
         </div>
       </div>
     </nav>
-  );
+  )
 };
 
 export default MainNav
