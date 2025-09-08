@@ -8,7 +8,7 @@ const initState = {
     pageRequestDTO:null,
     prev:false,
     next:false,
-    totalcount:0,
+    totalCount:0,
     prevPage:0,
     nextPage:0,
     totalPage:0,

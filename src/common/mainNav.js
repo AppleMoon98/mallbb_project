@@ -11,13 +11,13 @@ const MainNav = () => {
       <div id="nav_bar">
         <div className="menu_btn">
           <ul>
-            <li class="depth1">
+            <li className="depth1">
               <Link to={"/"}>로고(이미지)</Link>
             </li>
-            <li class="depth1">
+            <li className="depth1">
               <a href="#">소개</a>
             </li>
-            <li class="depth1">
+            <li className="depth1">
               <a href="#">게시판</a>
               <ul className="submenu">
                 <li><Link to={"/notice"}>공지사항</Link></li>
@@ -26,10 +26,10 @@ const MainNav = () => {
                 <li><a href="#">Q&A</a></li>
               </ul>
             </li>
-            <li class="depth1">
+            <li className="depth1">
               <a href="#">지도</a>
             </li>
-            <li class="depth1">
+            <li className="depth1">
               <a href="#">예약</a>
               <ul className="submenu">
                 <li><a href="#">예약하기</a></li>

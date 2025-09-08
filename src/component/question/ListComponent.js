@@ -6,10 +6,10 @@ import useCustomMove from "../hooks/useCustomMove";
 const initState = {
     dtoList:[],
     pageNumList:[],
-    pageRequstDTO:null,
+    pageRequestDTO:null,
     prev:false,
     next:false,
-    totalcount:0,
+    totalCount:0,
     prevPage:0,
     nextPage:0,
     totalPage:0,
@@ -61,7 +61,7 @@ const ListComponent = () =>{
       <PageComponent serverData={serverData} movePage={moveToList} />
     </div>
 
-    <Link to={Addpage}>글 등록</Link>
+    <Link to="/question/add">글 등록</Link>
   </div>
 );
 }

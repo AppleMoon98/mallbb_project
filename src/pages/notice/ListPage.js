@@ -14,7 +14,6 @@ const ListPage = () =>{
             <MainNav/>
             <Sidebar/>
             <ListComponent/>
-        
         </div>
     )
 }
