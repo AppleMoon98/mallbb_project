@@ -45,8 +45,8 @@ const MainNav = () => {
                 <Link to="/member/login">로그인</Link>
               </div>
               :
-              <div className="flex">
-                <Link to="#">마이페이지</Link>
+              <div className="flex text-white">
+                <Link to="#" className="px-4">마이페이지</Link>
                 <Link to="/member/logout">로그아웃</Link>
               </div>
             }

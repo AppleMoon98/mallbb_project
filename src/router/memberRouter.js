@@ -1,7 +1,7 @@
 import { lazy, Suspense } from "react"
 
 const Loading = <div>Logding......</div>
-const Login = lazy( () => import("../pages/member/login"))
+const Login = lazy( () => import("../pages/member/LoginPage"))
 const Logout = lazy( () => import("../pages/member/LogoutPage"))
 
 const memberRouter = () => {

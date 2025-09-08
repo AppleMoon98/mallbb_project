@@ -1,6 +1,6 @@
 import LoginComponent from "../../component/member/LoginComponent";
 
-const Login = () => {
+const LoginPage = () => {
   return (
     <div>
       <LoginComponent />
@@ -8,7 +8,7 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default LoginPage;
 
 
 

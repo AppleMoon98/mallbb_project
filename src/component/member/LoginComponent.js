@@ -1,38 +1,38 @@
-import { Link, useNavigate } from "react-router-dom"
+import { Link } from "react-router-dom"
 import { useState } from "react"
 import useCustomLogin from "../hooks/useCustomLogin"
 
 
 const initState = {
-    email: '',
-    password: ''
+  email: '',
+  password: ''
 }
 
 const LoginComponent = () => {
-    const [loginParam, setLoginParam] = useState({...initState})
-    const { doLogin, moveToPath } = useCustomLogin()
+  const [loginParam, setLoginParam] = useState({ ...initState })
+  const { doLogin, moveToPath } = useCustomLogin()
 
-    const handleChage = (e) => {
-        loginParam[e.target.name] = e.target.value
-        setLoginParam({...loginParam})
-    }
+  const handleChage = (e) => {
+    loginParam[e.target.name] = e.target.value
+    setLoginParam({ ...loginParam })
+  }
 
-    const handleClickLogin = (e) => {
-        doLogin(loginParam)
-        .then(data => {
-          console.log("after unwarp.........")
-          console.log(data)
+  const handleClickLogin = (e) => {
+    doLogin(loginParam)
+      .then(data => {
+        console.log("after unwarp.........")
+        console.log(data)
 
-          if(data.error)
-            alert("이메일 혹은 패스워드가 일치하지 않습니다.")
-          else{
-            alert("Login")
-            moveToPath('/')
-          }
-        })
-    }
+        if (data.error)
+          alert("이메일 혹은 패스워드가 일치하지 않습니다.")
+        else {
+          alert("Login")
+          moveToPath('/')
+        }
+      })
+  }
 
-    const tabBase = {
+  const tabBase = {
     padding: "12px 24px",
     border: "2px solid #333",
     borderRadius: "20px",
@@ -54,36 +54,38 @@ const LoginComponent = () => {
   };
 
   return (
-    <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh", flexDirection: "column" ,minHeight:"210px"}}>
+    <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh", flexDirection: "column", minHeight: "210px" }}>
       <h1 className="text-4xl font-extrabold">로그인</h1>
-      
+
       <div style={{ display: "flex", gap: "40px", marginBottom: "20px" }}>
         <div style={tabActive}>개인</div>
         <Link to={"/login/seller"} style={tabInactive}>사업자</Link>
       </div>
 
-      <form>
-        <div style={{ display: "flex", flexDirection: "column", gap: "12px", border: "2px solid #000", padding: "20px", borderRadius: "14px", width: "300px"}}>
-          <div>
-            <label style={{ fontWeight: "600", fontSize: "14px" }}>ID</label>
-            <input type="text" style={{ width: "95%", padding: "8px", borderRadius: "8px", border: "1px solid #ccc" }} name="email" onChange={handleChage} />
-          </div>
-          <div>
-            <label style={{ fontWeight: "600", fontSize: "14px" }}>PASSWORD</label>
-            <input type="password" style={{ width: "95%", padding: "8px", borderRadius: "8px", border: "1px solid #ccc" }} name="password" onChange={handleChage} />
-          </div>
-          <button type="submit" style={{ marginTop: "10px", padding: "10px", background: "#4a90e2", color: "white", border: "none", borderRadius: "8px", fontWeight: "700", cursor: "pointer" }} onClick={handleClickLogin}>
-            로그인
-          </button>
-        </div>
-      </form>
 
-      <div style={{ marginTop: "20px", display: "flex", flexDirection: "column", gap: "10px", width: "300px",height:"150px" }}>
+      <div style={{ display: "flex", flexDirection: "column", gap: "12px", border: "2px solid #000", padding: "20px", borderRadius: "14px", width: "300px" }}>
+        <div>
+          <label style={{ fontWeight: "600", fontSize: "14px" }}>ID</label>
+          <input type="text" style={{ width: "95%", padding: "8px", borderRadius: "8px", border: "1px solid #ccc" }} name="email" value={loginParam.email} onChange={handleChage} />
+        </div>
+
+        <div>
+          <label style={{ fontWeight: "600", fontSize: "14px" }}>PASSWORD</label>
+          <input type="password" style={{ width: "95%", padding: "8px", borderRadius: "8px", border: "1px solid #ccc" }} name="password" value={loginParam.password} onChange={handleChage} />
+        </div>
+
+        <button style={{ marginTop: "10px", padding: "10px", background: "#4a90e2", color: "white", border: "none", borderRadius: "8px", fontWeight: "700", cursor: "pointer" }} onClick={handleClickLogin}>
+          로그인
+        </button>
+      </div>
+
+
+      <div style={{ marginTop: "20px", display: "flex", flexDirection: "column", gap: "10px", width: "300px", height: "150px" }}>
         <div style={{ padding: "10px", textAlign: "center", background: "#db4437", color: "white", borderRadius: "8px", cursor: "pointer" }}>구글로 로그인 하기</div>
         <div style={{ padding: "10px", textAlign: "center", background: "#2db400", color: "white", borderRadius: "8px", cursor: "pointer" }}>네이버로 로그인 하기</div>
         <div style={{ padding: "10px", textAlign: "center", background: "#f7e600", color: "#3c1e1e", borderRadius: "8px", cursor: "pointer" }}>카카오로 로그인 하기</div>
       </div>
-      
+
       <div style={{ marginTop: "12px" }}>
         <Link to="/" style={{ color: "#555", textDecoration: "none" }}>돌아가기</Link>
       </div>

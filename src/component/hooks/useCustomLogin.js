@@ -10,8 +10,8 @@ const useCustomLogin = () => {
     const isLogin = loginState.email ? true : false
     
     const doLogin = async (loginParam) => {
-        const action = await dispatch(loginPostAsync(loginParam))
-        return action.payload
+        const action = dispatch(loginPostAsync(loginParam)).unwrap()
+        return action
     }
 
     const doLogout = () => {
