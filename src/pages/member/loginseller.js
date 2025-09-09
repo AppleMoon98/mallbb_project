@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 
-const Loginseller = () => {
+const loginSeller = () => {
   const tabBase = {
     padding: "12px 24px",
     border: "2px solid #333",
@@ -60,4 +60,4 @@ const Loginseller = () => {
   );
 };
 
-export default Loginseller;
+export default loginSeller;

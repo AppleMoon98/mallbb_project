@@ -1,6 +1,7 @@
 import { createSearchParams, Navigate, useNavigate } from "react-router-dom"
-import { loginPostAsync, logout } from "../../slice/loginslice"
+import { loginPostAsync, logout } from "../../slice/LoginSlice"
 import { useDispatch, useSelector } from "react-redux"
+import { removeCookie } from "../../util/CookieUtil"
 
 // 로그인 판별
 const useCustomLogin = () => {
@@ -16,6 +17,7 @@ const useCustomLogin = () => {
 
     const doLogout = () => {
         dispatch(logout())
+        removeCookie('member')
     }
 
     const moveToPath = (path) => {

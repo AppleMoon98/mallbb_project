@@ -5,7 +5,7 @@ const jwtAxios = axios.create()
 
 const refreshJWT = async (accessToken, refreshToken) => {
     const host = API_SERVER_HOST
-    const header = {headers: {"Authorization": `Bearer ${accessToken}`}}
+    const header = { headers: { "Authorization": `Bearer ${accessToken}` } }
     const result = await axios.get(`${host}/member/refresh?refreshToken=${refreshToken}`, header)
 
     console.log("--------------------")
@@ -43,7 +43,7 @@ const requestFail = (err) => {
 const befroeRes = async (res) => {
     console.log("before return response..........")
     const data = res.data
-    if(data && data.error === 'ERROR_ACCESS_TOKEN'){
+    if (data && data.error === 'ERROR_ACCESS_TOKEN') {
         const memberCookieValue = getCookie("member")
         const result = await refreshJWT(memberCookieValue.accessToken, memberCookieValue.refreshToken)
         console.log("refreshJWT RESULT", result)

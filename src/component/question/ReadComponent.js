@@ -3,7 +3,7 @@ import { getOne } from "../../api/questionApi";
 import useCustomMove from "../hooks/useCustomMove";
 import { API_SERVER_HOST } from "../../api/questionApi";
 import FetchingModal from "../../common/FetchingModal";
-import { data } from "react-react-dom";
+
 
 const initState = {
     id:0,

@@ -1,5 +1,3 @@
-import { useDispatch } from "react-redux"
-import { logout } from "../../slice/loginslice"
 import useCustomLogin from "../hooks/useCustomLogin"
 
 const LogoutComponent = () => {

@@ -1,4 +1,3 @@
-import MainNav from "../../common/mainNav";
 import AddComponent from "../../component/review/AddComponent";
 
 const AddPage = () => {

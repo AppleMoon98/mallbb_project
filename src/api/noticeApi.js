@@ -1,12 +1,12 @@
-import jwtAxios from "../util/JWTutil"
+import jwtAxios from "../util/JWTUtil"
 
 export const API_SERVER_HOST = 'http://localhost:8080'
 
-const prefix = `${API_SERVER_HOST}/notice`
+const prefix = `${API_SERVER_HOST}/n`
 
 export const getList = async (pageParam) => {
     const { page, size } = pageParam
-    const res = await jwtAxios.get(`${prefix}/list`, { params: { page: page, size: size } })
+    const res = await jwtAxios.get(`${prefix}/l`, { params: { page: page, size: size } })
     return res.data;
 }
 

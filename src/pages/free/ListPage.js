@@ -1,5 +1,4 @@
 import { useSearchParams } from "react-router-dom";
-import MainNav from "../../common/mainNav";
 import ListComponent from "../../component/free/ListComponent";
 import Sidebar from "../../common/Sidebar";
 

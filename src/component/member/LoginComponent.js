@@ -1,96 +1,107 @@
-import { Link } from "react-router-dom"
-import { useState } from "react"
-import useCustomLogin from "../hooks/useCustomLogin"
-
+import { Link } from "react-router-dom";
+import { useState } from "react";
+import useCustomLogin from "../hooks/useCustomLogin";
 
 const initState = {
-  email: '',
-  password: ''
-}
+  email: "",
+  password: "",
+};
 
 const LoginComponent = () => {
-  const [loginParam, setLoginParam] = useState({ ...initState })
-  const { doLogin, moveToPath } = useCustomLogin()
+  const [loginParam, setLoginParam] = useState({ ...initState });
+  const [loading, setLoading] = useState(false);
+  const { doLogin, moveToPath } = useCustomLogin();
 
   const handleChage = (e) => {
-    loginParam[e.target.name] = e.target.value
-    setLoginParam({ ...loginParam })
-  }
-
-  const handleClickLogin = (e) => {
-    doLogin(loginParam)
-      .then(data => {
-        console.log("after unwarp.........")
-        console.log(data)
-
-        if (data.error)
-          alert("이메일 혹은 패스워드가 일치하지 않습니다.")
-        else {
-          alert("Login")
-          moveToPath('/')
-        }
-      })
-  }
-
-  const tabBase = {
-    padding: "12px 24px",
-    border: "2px solid #333",
-    borderRadius: "20px",
-    cursor: "pointer",
-    fontWeight: 600,
-    transition: "all 0.2s ease",
+    const { name, value } = e.target;
+    setLoginParam((prev) => ({ ...prev, [name]: value }));
   };
 
-  const tabActive = {
-    ...tabBase,
-    background: "#333",
-    color: "#fff",
+  const handleClickLogin = async () => {
+    if (loading) return;
+    setLoading(true);
+    try {
+      const data = await doLogin(loginParam);
+      console.log("after unwrap.........", data);
+
+      if (data?.error) {
+        alert("이메일 혹은 패스워드가 일치하지 않습니다.");
+      } else {
+        alert("Login");
+        moveToPath("/");
+      }
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const tabInactive = {
-    ...tabBase,
-    background: "#fff",
-    color: "#333",
-  };
+  const tabActive =
+    "px-6 py-3 rounded-2xl border-2 border-neutral-800 bg-neutral-800 text-white font-semibold cursor-pointer transition";
+  const tabInactive =
+    "px-6 py-3 rounded-2xl border-2 border-neutral-800 bg-white text-neutral-800 font-semibold cursor-pointer transition hover:bg-neutral-100";
 
   return (
-    <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh", flexDirection: "column", minHeight: "210px" }}>
+    <div className="flex h-screen min-h-[210px] flex-col items-center justify-center">
       <h1 className="text-4xl font-extrabold">로그인</h1>
 
-      <div style={{ display: "flex", gap: "40px", marginBottom: "20px" }}>
-        <div style={tabActive}>개인</div>
-        <Link to={"/login/seller"} style={tabInactive}>사업자</Link>
+      <div className="mb-5 flex gap-10">
+        <div className={tabActive}>개인</div>
+        <Link to="/login/seller" className={tabInactive}>
+          사업자
+        </Link>
       </div>
 
-
-      <div style={{ display: "flex", flexDirection: "column", gap: "12px", border: "2px solid #000", padding: "20px", borderRadius: "14px", width: "300px" }}>
+      <div className="flex w-72 flex-col gap-3 rounded-xl border-2 border-black p-5">
         <div>
-          <label style={{ fontWeight: "600", fontSize: "14px" }}>ID</label>
-          <input type="text" style={{ width: "95%", padding: "8px", borderRadius: "8px", border: "1px solid #ccc" }} name="email" value={loginParam.email} onChange={handleChage} />
+          <label className="text-sm font-semibold">ID</label>
+          <input
+            type="text"
+            name="email"
+            value={loginParam.email}
+            onChange={handleChage}
+            className="mt-1 w-[95%] rounded-lg border border-gray-300 p-2"
+          />
         </div>
 
         <div>
-          <label style={{ fontWeight: "600", fontSize: "14px" }}>PASSWORD</label>
-          <input type="password" style={{ width: "95%", padding: "8px", borderRadius: "8px", border: "1px solid #ccc" }} name="password" value={loginParam.password} onChange={handleChage} />
+          <label className="text-sm font-semibold">PASSWORD</label>
+          <input
+            type="password"
+            name="password"
+            value={loginParam.password}
+            onChange={handleChage}
+            className="mt-1 w-[95%] rounded-lg border border-gray-300 p-2"
+          />
         </div>
 
-        <button style={{ marginTop: "10px", padding: "10px", background: "#4a90e2", color: "white", border: "none", borderRadius: "8px", fontWeight: "700", cursor: "pointer" }} onClick={handleClickLogin}>
-          로그인
+        <button
+          onClick={handleClickLogin}
+          disabled={loading}
+          className="mt-2 rounded-lg bg-[#4a90e2] px-4 py-2 font-bold text-white hover:opacity-90 disabled:opacity-60"
+        >
+          {loading ? "로그인 중..." : "로그인"}
         </button>
       </div>
 
-
-      <div style={{ marginTop: "20px", display: "flex", flexDirection: "column", gap: "10px", width: "300px", height: "150px" }}>
-        <div style={{ padding: "10px", textAlign: "center", background: "#db4437", color: "white", borderRadius: "8px", cursor: "pointer" }}>구글로 로그인 하기</div>
-        <div style={{ padding: "10px", textAlign: "center", background: "#2db400", color: "white", borderRadius: "8px", cursor: "pointer" }}>네이버로 로그인 하기</div>
-        <div style={{ padding: "10px", textAlign: "center", background: "#f7e600", color: "#3c1e1e", borderRadius: "8px", cursor: "pointer" }}>카카오로 로그인 하기</div>
+      <div className="mt-5 flex h-36 w-72 flex-col gap-2">
+        <button className="rounded-lg bg-[#db4437] p-2 text-center text-white">
+          구글로 로그인 하기
+        </button>
+        <button className="rounded-lg bg-[#2db400] p-2 text-center text-white">
+          네이버로 로그인 하기
+        </button>
+        <button className="rounded-lg bg-[#f7e600] p-2 text-center text-[#3c1e1e]">
+          카카오로 로그인 하기
+        </button>
       </div>
 
-      <div style={{ marginTop: "12px" }}>
-        <Link to="/" style={{ color: "#555", textDecoration: "none" }}>돌아가기</Link>
+      <div className="mt-3">
+        <Link to="/" className="text-gray-600 no-underline hover:underline">
+          돌아가기
+        </Link>
       </div>
     </div>
   );
-}
+};
 
-export default LoginComponent
+export default LoginComponent;

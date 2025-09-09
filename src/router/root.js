@@ -1,8 +1,8 @@
 // routes/root.js
-import { createBrowserRouter, Navigate } from "react-router-dom"
+import { createBrowserRouter } from "react-router-dom"
 import Register from "../pages/member/Register"
-import Loginseller from "../pages/member/Loginseller"
-import Registerseller from "../pages/member/Registerseller"
+import Loginseller from "../pages/member/LoginSeller"
+import Registerseller from "../pages/member/RegisterSeller"
 import noticeRouter from "./noticeRouter"
 import memberRouter from "./memberRouter"
 import { lazy, Suspense } from "react"
@@ -15,6 +15,7 @@ const Main = lazy(() => import("../pages/main"))
 const NoticeIndex = lazy(() => import("../pages/notice/IndexPage"))
 const ReviewIndex = lazy( () => import("../pages/review/IndexPage"))
 const FreeIndex = lazy( () => import("../pages/free/IndexPage"))
+const QuestionIndex = lazy( () => import("../pages/question/IndexPage"))
 
 const root = createBrowserRouter([
   {
@@ -49,7 +50,7 @@ const root = createBrowserRouter([
   },
   {
     path: "question",
-    element: <Suspense fallback={Loading}></Suspense>,
+    element: <Suspense fallback={Loading}><QuestionIndex/></Suspense>,
     children: questionRouter()
   },
   {

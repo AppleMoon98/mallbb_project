@@ -1,4 +1,4 @@
-import { useEffect,useState} from "react";
+import { useEffect,useState, useRef} from "react";
 import { getOne,register,remove } from "../../api/questionApi";
 import ResultModal from "../../common/ResultModal";
 import useCustomMove from "../hooks/useCustomMove";
@@ -155,7 +155,7 @@ const ModifyComponent = ({id}) =>{
                                 {question.uploadFileNames.map((imgFile, i)=>
                                 <div className="flex justify-center flex-col w-1/3" key={i}>
                                     <button className="bg-blue-500 text-3xl text-white" onClick={()=>deleteOldImages(imgFile)}>DELETE</button>
-                                    <img alt="img" src={`${host}/api/products/view/s_${imgFile}`}></img>
+                                    <img alt="img" src={`${prefix}/api/question/view/s_${imgFile}`}></img>
                                 </div>
                             )}
                         </div>

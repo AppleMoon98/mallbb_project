@@ -1,5 +1,5 @@
 import AddComponent from "../../component/free/AddComponent";
-import MainNav from "../../common/mainNav";
+import MainNav from "../../common/MainNav";
 
 const AddPage = () => {
     return (

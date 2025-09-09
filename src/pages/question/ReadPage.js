@@ -5,8 +5,6 @@ import ReadComponent from "../../component/question/ReadComponent";
 const ReadPage = () => {
     
     const {id} = useParams()
-    
-    const navigate = useNavigate()
 
     const [queryParams] = useSearchParams()
 
