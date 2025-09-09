@@ -14,7 +14,7 @@ export function OutputList({ serverData, onClickTitle }) {
   if (!hasData) {
     return (
       <li className="p-6 text-center text-gray-500">
-        등록된 공지사항이 없습니다.
+        등록된 게시글이 없습니다.
       </li>
     )
   }
@@ -25,7 +25,7 @@ export function OutputList({ serverData, onClickTitle }) {
         <li
           key={board.id}
           className="flex cursor-pointer border-b border-gray-200 px-2 py-2 hover:bg-gray-50"
-          onClick={onClickTitle}
+          onClick={() => onClickTitle(board.id)}
         >
           <span className="basis-20 shrink-0 text-center text-gray-600">
             {board.id}

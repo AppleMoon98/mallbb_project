@@ -3,6 +3,7 @@ import { getOne } from "../../api/reviewApi";
 import useCustomMove from "../hooks/useCustomMove";
 import { API_SERVER_HOST } from "../../api/reviewApi";
 import FetchingModal from "../../common/FetchingModal";
+import { remove } from "../../api/reviewApi";
 
 const initState = {
     id:0,
@@ -20,7 +21,7 @@ const ReadComponent = ({id}) => {
 
     const [ review, setReview ] = useState(initState);
     const [ fetching, setFetching ] = useState(false);
-    const { moveToList, moveToModify } = useCustomMove()
+    const { moveToModify } = useCustomMove()
 
     useEffect( () => {
         setFetching(true);
@@ -48,9 +49,9 @@ const ReadComponent = ({id}) => {
               review.uploadFileNames.map((imgFile, i) => (
                 <img
                   key={i}
-                  alt={`notice-${i}`}
+                  alt={`review-${i}`}
                   className="p-2 w-1/3 cursor-pointer border rounded"
-                  src={`${prefix}/api/review/view/${imgFile}`}
+                  src={`${prefix}/r/view/${imgFile}`}
                 />
               ))
             ) : (
@@ -59,20 +60,17 @@ const ReadComponent = ({id}) => {
           </div>
         </div>
       </div>
-
       <div className="flex justify-end p-4">
         <button
           type="button"
-          className="rounded p-4 m-2 text-xl w-32 text-white bg-blue-500"
-          onClick={() => moveToList()}
-        >
-          List
-        </button>
+          className="rounded p-4 m-2 text-xl w-32 text-white bg-red-500"
+          onClick={() => (id)}>
+          삭제
+          </button>
         <button
           type="button"
-          className="rounded p-4 m-2 text-xl w-32 text-white bg-red-500"
-          onClick={() => moveToModify(id)}
-        >
+          className="rounded p-4 m-2 text-xl w-32 text-white bg-green-500"
+          onClick={() => moveToModify(id)}>
           수정
         </button>
       </div>

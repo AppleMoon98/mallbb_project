@@ -7,7 +7,7 @@ import FetchingModal from "../../common/FetchingModal";
 import ResultModal from "../../common/ResultModal";
 
  
-const prefix = API_SERVER_HOST
+const prefix = API_SERVER_HOST;
 
 const initState = {
     id:0,
@@ -51,7 +51,7 @@ const ModifyComponent = ({id}) =>{
             formData.append("files",files[i]);
         }
 
-            formData.append("price",notice.id)
+            formData.append("id",notice.id)
             formData.append("title",notice.title)
             formData.append("desc",notice.desc)
             formData.append("delFlag",notice.delFlag)

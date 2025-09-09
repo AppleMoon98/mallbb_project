@@ -19,7 +19,7 @@ const initState = {
 };
 
 const ListComponent = () => {
-  const { page, size, moveToList } = useCustomMove();
+  const { page, size, moveToList , moveToRead } = useCustomMove();
   const [serverData, setServerData] = useState(initState);
 
   useEffect(() => {
@@ -34,7 +34,7 @@ const ListComponent = () => {
         <Header />
 
         {/* 목록 /base/Listcomponent.js */}
-        <OutputList serverData={serverData} onClickTitle={moveToList} />
+        <OutputList serverData={serverData} onClickTitle={moveToRead} />
       </ul>
 
       <div className="mt-5 text-center">

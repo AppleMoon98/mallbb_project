@@ -32,19 +32,19 @@ const useCustomMove = () => {
         navigate({ pathname, search: queryStr })
     }
 
-    const moveToModify = (num) => {
+    const moveToModify = (id) => {
         console.log(queryDefault)
 
         navigate({
-            pathname: `../modify/${num}`,
+            pathname: `../modify/${id}`,
             search: queryDefault
         })
     }
 
-    const moveToRead = (num) => {
+    const moveToRead = (id) => {
         console.log(queryDefault)
         navigate({
-            pathname: `../read/${num}`,
+            pathname: `read/${id}`,
             search: queryDefault
         })
     }
@@ -52,6 +52,7 @@ const useCustomMove = () => {
     const moveToPath = (path, replace) => {
         navigate({pathname:path}, {replace:replace})
     }
+    
     return { moveToList, page, size, moveToModify, moveToRead, moveToPath, refresh }
 }
 

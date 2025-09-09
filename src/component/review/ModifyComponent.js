@@ -161,7 +161,7 @@ const ModifyComponent = ({id}) => {
                         {review.uploadFileNames.map((imgFile, i)=>
                         <div className="flex justify-center flex-col w-1/3" key={i}>
                             <button className="bg-blue-500 text-3xl text-white" onClick={()=>deleteOIdImages(imgFile)}>DELETE</button>
-                            <img alt="img" src={`${prefix}/api/review/view/s_${imgFile}`}></img>
+                            <img alt="img" src={`${prefix}/r/view/s_${imgFile}`}></img>
                         </div>
                     )}
                 </div>

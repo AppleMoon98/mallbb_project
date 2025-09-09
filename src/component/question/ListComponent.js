@@ -2,6 +2,8 @@ import { useEffect, useState} from "react";
 import { getList } from "../../api/questionApi";
 import PageComponent from "../../common/PageComponent";
 import useCustomMove from "../hooks/useCustomMove";
+import { Link } from "react-router-dom";
+import { Header, OutputList } from "../base/ListComponent";
 
 const initState = {
     dtoList:[],
@@ -14,10 +16,10 @@ const initState = {
     nextPage:0,
     totalPage:0,
     current:0
-}
+};
 
 const ListComponent = () =>{
-    const {page,size,moveToList} = useCustomMove()
+    const {page,size,moveToList, moveToRead} = useCustomMove()
     
     const [serverData, setServerData] = useState(initState);
     
@@ -25,41 +27,29 @@ const ListComponent = () =>{
         getList({page,size}).then(data=>{
             setServerData(data)
         })
-    },[page,size])
+    },[page,size]);
 
     return (
-  <div style={{width: "60%", margin: "20px auto" }}>
-    <h2 style={{ fontSize: "24px", fontWeight: "bold", marginBottom: "16px" }}>질문 게시판</h2>
+  <div className="w-[60%] mx-auto my-5">
+      <h2 className="mb-4 text-2xl font-bold">질문게시판</h2>
+      <ul className="m-0 list-none p-0">
+        {/* 헤더 /base/Listcomponent.js */}
+        <Header />
 
-    <ul style={{ listStyle: "none", margin: 0, padding: 0 }}>
-      <li style={{display: "flex",backgroundColor: "#f2f2f2",fontWeight: "bold",borderBottom: "2px solid #ddd",padding: "12px 8px",
-        }}
-      >
-        <span style={{ flex: "0 0 80px", textAlign: "center" }}>번호</span>
-        <span style={{ flex: "1" }}>제목</span>
-        <span>작성자</span>
-        <span style={{ flex: "0 0 160px", textAlign: "center" }}>날짜</span>
-      </li>
+        {/* 목록 /base/Listcomponent.js */}
+        <OutputList serverData={serverData} onClickTitle={moveToRead} />
+      </ul>
 
-      {(serverData?.dtoList ?? []).map((question) => (
-        <li key={question.id} style={{display: "flex",borderBottom: "1px solid #ddd",padding: "10px 8px",cursor: "pointer"}}
-          onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#fafafa")}
-          onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "white")}
-        >
-          <span style={{ flex: "0 0 80px", textAlign: "center", color: "#555"}}>{question.id}</span>
-          <span style={{ flex: "1", color: "#000000"}} onClick={moveToList}>{question.title}</span>
-          <span style={{ flex: "0 0 160px", textAlign: "center", color: "#666"}}>{question.createDate}</span>
-        </li>
-      ))}
-    </ul>
-
-    <div style={{ marginTop: "20px", textAlign: "center" }}>
-      <PageComponent serverData={serverData} movePage={moveToList} />
+      <div className="mt-5 text-center">
+        <PageComponent serverData={serverData} movePage={moveToList} />
+      </div>
+      <div className="flex justify-end">
+        <Link to="/question/add" className="mt-4 inline-block rounded-md bg-blue-600 px-4 py-2 text-white hover:bg-blue-700">
+          글 등록
+        </Link>
+      </div>
     </div>
-
-    <link to={"/question/add"}>글 등록</link>
-  </div>
-);
-}
+  );
+};
 
 export default ListComponent;

@@ -12,23 +12,19 @@ const reviewRouter = () => {
 
     return [
         {
-            path:"list",
-            element:<Suspense fallback={Loading}><ReviewList/></Suspense>
-        },
-        {
             path:"",
-            element: <Navigate replace to="/review/list"></Navigate>
+            element:<Suspense fallback={Loading}><ReviewList/></Suspense>
         },
         {
             path:"add",
             element:<Suspense fallback={Loading}><ReviewRegister/></Suspense>
         },
         {
-            path:"modify",
+            path:"modify/:id",
             element:<Suspense fallback={Loading}><ReviewModify/></Suspense>
         },
         {
-            path:"read",
+            path:"read/:id",
             element:<Suspense fallback={Loading}><ReviewRead/></Suspense>
         }
     ]

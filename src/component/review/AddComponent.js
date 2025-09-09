@@ -1,6 +1,6 @@
 import { useState, useRef } from "react";
 import { register } from "../../api/reviewApi";
-
+import useCustomMove from "../hooks/useCustomMove";
 
 const initState = {
     title:"",
@@ -10,6 +10,7 @@ const initState = {
 export default function AddComponent() {
     const [review, setReview] = useState(initState);
     const uploadRef = useRef(null);
+    const { moveToPath } = useCustomMove()
 
     const handleChangeReview = (e) => {
         const { name, value } = e.target;
@@ -26,7 +27,7 @@ export default function AddComponent() {
         formdata.append("title", review.title);
         formdata.append("content", review.content);
 
-        const files = uploadRef.currnet?.files;
+        const files = uploadRef.currnet?.files
         if(files && files.length > 0){
             for(let i=0; i<files.length; i++){
                 formdata.append("files", files[i]);

@@ -17,11 +17,11 @@ return[
         element:<Suspense fallback={Loading}><NoticeRegister/></Suspense>
     },
     {
-        path: "modify",
+        path: "modify/:id",
         element: <Suspense fallback={Loading}><NoticeModify/></Suspense>
     },
     {
-        path: "read",
+        path: "read/:id",
         element: <Suspense fallback={Loading}><NoticeRead/></Suspense>
     }
 

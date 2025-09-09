@@ -15,20 +15,22 @@ const initState = {
     uploadFilenames:[],
 }
 
-const host = API_SERVER_HOST;
+const prefix = API_SERVER_HOST;
 
 const ReadComponent = ({id}) => {
-    const [question, setQuestion] = useState(initState);
-    const {moveToList, moveToModify}= useCustomMove();
-    const {fetching, setFetching}= useState(false);
 
-    useEffect(()=>{
+    const [ question, setQuestion ] = useState(initState);
+    const [fetching, setFetching] = useState(false);
+    const { moveToModify }= useCustomMove();
+
+    useEffect( () => {
         setFetching(true);
-        getOne(id).then((data)=>{
+        getOne(id).then((data) => {
             setQuestion(data);
             setFetching(false);
-        });
-    },[id]);
+        })
+    },[id])
+
     return (
         <div className="border-2 border-sky-200 mt-10 m-2 p-4">
       {fetching ? <FetchingModal /> : null}
@@ -49,7 +51,7 @@ const ReadComponent = ({id}) => {
                   key={i}
                   alt={`question-${i}`}
                   className="p-2 w-1/3 cursor-pointer border rounded"
-                  src={`${host}/api/question/view/${imgFile}`}
+                  src={`${prefix}/api/question/view/${imgFile}`}
                 />
               ))
             ) : (
@@ -62,15 +64,13 @@ const ReadComponent = ({id}) => {
         <button
           type="button"
           className="rounded p-4 m-2 text-xl w-32 text-white bg-blue-500"
-          onClick={() => moveToList()}
-        >
-          List
+          onClick={() => moveToDelete(id)}>
+          삭제
         </button>
         <button
           type="button"
           className="rounded p-4 m-2 text-xl w-32 text-white bg-red-500"
-          onClick={() => moveToModify(id)}
-        >
+          onClick={() => (id)}>
           수정
         </button>
       </div>

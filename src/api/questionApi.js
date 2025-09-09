@@ -1,4 +1,4 @@
-   import axios from "axios";
+import jwtAxios from "../util/JWTUtil"
 
     export const API_SERVER_HOST = 'http://localhost:8080'
 
@@ -7,19 +7,19 @@
     export const getList = async(pageParam) => {
         const {page,size} = pageParam
 
-        const res = await axios.get(`${prefix}/l`,{params:{page:page,size:size}})
+        const res = await jwtAxios.get(`${prefix}/q`,{params:{page:page,size:size}})
 
         return res.data;
     }
 
     export const getOne = async (id) => {
-        const res = await axios.get(`${prefix}/${id}`);
+        const res = await jwtAxios.get(`${prefix}/${id}`);
         return res.data;
     }
 
 
     export const register = async (formdata) =>{
-        const res = await axios.post(`${prefix}/`,formdata,{
+        const res = await jwtAxios.post(`${prefix}/`,formdata,{
             headers:{"Content-Type": "multipart/form-data"}
         });
 
@@ -27,7 +27,7 @@
     }
 
     export const modify = async(id,formdata) =>{
-        const res = await axios.put(`${prefix}/${id}`,formdata,{
+        const res = await jwtAxios.put(`${prefix}/${id}`,formdata,{
             headers:{"Content-Type": "multipart/form-data"}
         });
 
@@ -35,7 +35,7 @@
     }
 
     export const remove = async (id)=>{
-        const res = await axios.delete(`${prefix}/${id}`);
+        const res = await jwtAxios.delete(`${prefix}/${id}`);
         return res.data;
     }
 

@@ -1,10 +1,10 @@
 import { useEffect,useState, useRef} from "react";
 import { getOne,register,remove } from "../../api/questionApi";
-import ResultModal from "../../common/ResultModal";
-import useCustomMove from "../hooks/useCustomMove";
 import { API_SERVER_HOST } from "../../api/questionApi";
-import FetchingModal from "../../common/FetchingModal";
 import { modify } from "../../api/questionApi";
+import useCustomMove from "../hooks/useCustomMove";
+import FetchingModal from "../../common/FetchingModal";
+import ResultModal from "../../common/ResultModal";
 
 
 const prefix = API_SERVER_HOST

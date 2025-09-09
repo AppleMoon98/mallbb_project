@@ -20,9 +20,9 @@ const MainNav = () => {
               <a href="#">게시판</a>
               <ul className="submenu">
                 <li><Link to={"/notice"}>공지사항</Link></li>
-                <li><a href="#">자유게시판</a></li>
-                <li><a href="#">리뷰게시판</a></li>
-                <li><a href="#">Q&A</a></li>
+                <li><a href="/free">자유게시판</a></li>
+                <li><a href="/review">리뷰게시판</a></li>
+                <li><a href="/question">질문게시판</a></li>
               </ul>
             </li>
             <li className="depth1">

@@ -1,4 +1,4 @@
-import { useEffect,useState } from "react";
+import { useEffect, useState } from "react";
 import { getOne } from "../../api/noticeApi";
 import useCustomMove from "../hooks/useCustomMove";
 import { API_SERVER_HOST } from "../../api/noticeApi";
@@ -6,30 +6,31 @@ import FetchingModal from "../../common/FetchingModal";
 import { data } from "react-router-dom";
 
 const initState = {
-    id:0,
-    title:"",
-    content:"",
-    startDate:"",
-    desc:"",
-    delflag:false,
-    uploadFilenames:[],
+  id: 0,
+  title: "",
+  content: "",
+  createDate: "",
+  desc: "",
+  delflag: false,
+  uploadFilenames: [],
 }
 
 const prefix = API_SERVER_HOST;
 
-const ReadComponent = ({id}) => {
-    const [notice, setNotice] = useState(initState);
-    const {moveToList, moveToModify}=useCustomMove();
-    const [fetching,setFetching]= useState(false);
+const ReadComponent = ({ id }) => {
+  const [notice, setNotice] = useState(initState);
+  const { moveToList, moveToModify } = useCustomMove();
+  const [fetching, setFetching] = useState(false);
 
-    useEffect(()=>{
-        setFetching(true);
-        getOne(id).then((data)=>{
-            setNotice(data);
-            setFetching(false);
-        });
-    },[id]);
-    return (
+  useEffect(() => {
+    setFetching(true);
+    getOne(id).then(data => {
+      console.log(data)
+      setNotice(data);
+      setFetching(false);
+    });
+  }, [id]);
+  return (
     <div className="border-2 border-sky-200 mt-10 m-2 p-4">
       {fetching ? <FetchingModal /> : null}
 
@@ -38,7 +39,7 @@ const ReadComponent = ({id}) => {
       {makeDiv("내용", notice.content)}
       {makeDiv("작성일자", notice.startDate)}
 
-      
+
       <div className="flex justify-center">
         <div className="relative mb-4 flex w-full flex-wrap items-stretch">
           <div className="w-1/5 p-6 text-right font-bold">이미지</div>
