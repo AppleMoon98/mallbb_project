@@ -1,1 +1,14 @@
-//ADD는 직접 만들어야 하는 영역
+import AddComponent from "../../component/free/AddComponent";
+import MainNav from "../../common/mainNav";
+
+const AddPage = () => {
+    return (
+        <div>
+            <MainNav/>
+            <AddComponent/>
+            글 등록
+        </div>
+    )
+}
+
+export default AddPage;

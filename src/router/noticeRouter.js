@@ -1,25 +1,31 @@
-import { Suspense, lazy } from "react";
+import { Suspense,lazy } from "react";
 import { Navigate } from "react-router-dom";
 
 const Loading = <div>Loading........</div>
-const NoticeList = lazy(() => import("../pages/notice/ListPage"))
-const NoticeRegister = lazy(() => import("../pages/notice/AddPage"))
+const NoticeList = lazy(()=>import("../pages/notice/ListPage"))
+const NoticeRegister = lazy(()=>import("../pages/notice/AddPage"))
+const NoticeModify = lazy(()=>import("../pages/notice/ModifyPage"))
+const NoticeRead = lazy(()=>import("../pages/notice/ReadPage"))
+const noticeRouter = () =>{
+return[
+    {
+        path:"",
+        element:<Suspense fallback={Loading}><NoticeList/></Suspense>
+    },
+    {
+        path:"add",
+        element:<Suspense fallback={Loading}><NoticeRegister/></Suspense>
+    },
+    {
+        path: "modify",
+        element: <Suspense fallback={Loading}><NoticeModify/></Suspense>
+    },
+    {
+        path: "read",
+        element: <Suspense fallback={Loading}><NoticeRead/></Suspense>
+    }
 
-const noticeRouter = () => {
-    return [
-        {
-            path: "",
-            element: <Navigate replace to="list" />
-        },
-        {
-            path: "list",
-            element: <Suspense fallback={Loading}><NoticeList /></Suspense>
-        },
-        {
-            path: "add",
-            element: <Suspense fallback={Loading}><NoticeRegister /></Suspense>
-        }
-    ]
+]
 }
 
 export default noticeRouter;

@@ -1,7 +1,6 @@
 import axios from "axios";
-import { getCookie, setCookie } from "./cookieUtil";
-import { API_SERVER_HOST } from "../api/todoApi"
-
+import { getCookie, setCookie } from "./CookieUtil";
+import { API_SERVER_HOST } from "../api/noticeApi";
 const jwtAxios = axios.create()
 
 const refreshJWT = async (accessToken, refreshToken) => {
@@ -61,7 +60,7 @@ const befroeRes = async (res) => {
 }
 
 const responseFail = (err) => {
-    console("response fail error..........")
+    console.log("response fail error..........")
     return Promise.reject(err)
 }
 

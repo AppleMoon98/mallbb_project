@@ -4,47 +4,71 @@ import { register } from "../../api/questionApi";
 const initState = {
     title:'',
 	content:'',
-	createDate:'',
-	delFlag:'',
 }
 
-const Addcomponent = () =>{
-    const[notice,setNotice] = useState({...initState})
-
-    const uploadRef = useRef()
+export default function AddComponent() {
+    const[question,setQuestion] = useState({initState})
+    const uploadRef = useRef(null)
 
     const handleChangeQuestion = (e) =>{
-        question[e.target.name] = e.target.value
-        setQuestion({...question})
+        const { name, value } = e.target;
+    setQuestion((prev) => ({ ...prev, [name]: value }));
+    };
+
+    const handleClickAdd = async () => {
+    if (!question.title.trim() || !question.content.trim()) {
+      alert("제목과 내용을 입력해 주세요.");
+      return;
     }
 
-    const handleClickAdd = (e) =>{
-        const files = uploadRef.current.files
+        const formdata = new FormData();
+        formdata.append("title", question.title);
+        formdata.append("content", question.content);
 
-        const formdata = new FormData()
-
-        for(let i = 0; i <files.length; i++){
+        const files = uploadRef.current?.files;
+        if(files && files.length > 0) {
+          for(let i = 0; i <files.length; i++){
             formdata.append("files",files[i]);
         }
+     }
 
-        formdata.append("qcontent",question.content)
-        formdata.append("qtitle",question.title)
-        formdata.append("qcreateDate",question.createDate)
-        formdata.append("qdelFlag",question.delFlag)
-
-        console.log(formdata)
-
-        register(formdata)
+        try {
+      const res = await register(formdata);
+      console.log("등록 성공:", res);
+      alert("등록되었습니다.");
+      setQuestion(initState);
+      if (uploadRef.current) uploadRef.current.value = "";
+     
+    } catch (err) {
+      console.error("등록 실패:", err);
+      alert("등록 중 오류가 발생했습니다.");
     }
+  };
     
-    return(
-        <div>
-            <div>
-                <button type="button" onClick={handleClickAdd}>
-                            글 등록
-                </button>
-            </div>
-        </div>
-    )
+return(
+    <div style={{ maxWidth: 720, margin: "0 auto", padding: 16}}>
+      <div style={{ display: "flex", flexDirection: "column", gap: 12}}>
+        <input
+           type="text"
+           name="title"
+           placeholder="제목"
+           value={question.title}
+           onChange={handleChangeQuestion}
+           style={{ padding: 10, border: "1px solid #ddd", borderRadius: 6 }} 
+        />
+        <textarea
+           name="content"
+           placeholder="내용"
+           value={question.content}
+           onChange={handleChangeQuestion}
+           rows={8}
+           style={{ padding: 10, border: "1px solid #ddd", borderRadius: 6, resize: "vertical" }}
+        />
+        <input type="file" multiple ref={uploadRef} />
+        <button type="button" onClick={handleClickAdd} style={{ padding: "8px 16px" }}>
+          글 등록
+        </button>
+      </div>
+    </div>
+  );
 }
-export default Addcomponent;

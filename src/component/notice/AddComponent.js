@@ -48,7 +48,9 @@ export default function AddComponent() {
   };
 
   return (
+    
     <div style={{ maxWidth: 720, margin: "0 auto", padding: 16 }}>
+      <h1>글 등록</h1>
       <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
         <input
           type="text"
@@ -67,7 +69,7 @@ export default function AddComponent() {
           style={{ padding: 10, border: "1px solid #ddd", borderRadius: 6, resize: "vertical" }}
         />
         <input type="file" multiple ref={uploadRef} />
-        <button type="button" onClick={handleClickAdd} style={{ padding: "8px 16px" }}>
+        <button type="button" onClick={handleClickAdd} style={{ padding: "8px 16px"}}>
           글 등록
         </button>
       </div>

@@ -1,5 +1,5 @@
 import { createSearchParams, Navigate, useNavigate } from "react-router-dom"
-import { loginPostAsync, logout } from "../../slider/LoginSlider"
+import { loginPostAsync, logout } from "../../slice/loginslice"
 import { useDispatch, useSelector } from "react-redux"
 
 // 로그인 판별

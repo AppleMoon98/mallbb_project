@@ -1,15 +1,15 @@
 import { useEffect, useState} from "react";
 import { getList } from "../../api/questionApi";
-import PageComponent from "../../common/pagecomponent";
+import PageComponent from "../../common/PageComponent";
 import useCustomMove from "../hooks/useCustomMove";
 
 const initState = {
     dtoList:[],
     pageNumList:[],
-    pageRequestDTO:null,
+    pageRequstDTO:null,
     prev:false,
     next:false,
-    totalCount:0,
+    totalcount:0,
     prevPage:0,
     nextPage:0,
     totalPage:0,
@@ -18,18 +18,14 @@ const initState = {
 
 const ListComponent = () =>{
     const {page,size,moveToList} = useCustomMove()
-
+    
     const [serverData, setServerData] = useState(initState);
-
+    
     useEffect(()=>{
-            getList({ page, size }).then(data => {
-            setServerData({
-            ...initState,
-            ...data,
-            dtoList: Array.isArray(data?.dtoList) ? data.dtoList : [],
-      });
-    });
-        },[page,size])
+        getList({page,size}).then(data=>{
+            setServerData(data)
+        })
+    },[page,size])
 
     return (
   <div style={{width: "60%", margin: "20px auto" }}>
@@ -46,13 +42,13 @@ const ListComponent = () =>{
       </li>
 
       {(serverData?.dtoList ?? []).map((question) => (
-        <li key={notice.id} style={{display: "flex",borderBottom: "1px solid #ddd",padding: "10px 8px",cursor: "pointer"}}
+        <li key={question.id} style={{display: "flex",borderBottom: "1px solid #ddd",padding: "10px 8px",cursor: "pointer"}}
           onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#fafafa")}
           onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "white")}
         >
           <span style={{ flex: "0 0 80px", textAlign: "center", color: "#555"}}>{question.id}</span>
           <span style={{ flex: "1", color: "#000000"}} onClick={moveToList}>{question.title}</span>
-          <span style={{ flex: "0 0 160px", textAlign: "center", color: "#666"}}>{notice.createDate}</span>
+          <span style={{ flex: "0 0 160px", textAlign: "center", color: "#666"}}>{question.createDate}</span>
         </li>
       ))}
     </ul>
@@ -61,7 +57,7 @@ const ListComponent = () =>{
       <PageComponent serverData={serverData} movePage={moveToList} />
     </div>
 
-    <Link to="/question/add">글 등록</Link>
+    <link to={"/question/add"}>글 등록</link>
   </div>
 );
 }

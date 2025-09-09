@@ -1,13 +1,13 @@
-import { Outlet } from "react-router-dom";
-import MainNav from "../../common/mainNav"; // 필요시
+import {Outlet} from "react-router-dom";
+import MainNav from "../../common/mainNav";
+import Sidebar from "../../common/Sidebar";
 
-const IndexPage = () => {
+export default function IndexPage() {
   return (
     <div>
-      <MainNav />
+      <MainNav/>
+      <Sidebar />
       <Outlet />
     </div>
   );
 }
-
-export default IndexPage;

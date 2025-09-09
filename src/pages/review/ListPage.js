@@ -1,10 +1,18 @@
-import { useSearchParems } from "react-router-dom"
+import { useSearchParams } from "react-router-dom";
+import MainNav from "../../common/mainNav";
+import Sidebar from "../../common/Sidebar";
+import ListComponent from "../../component/review/ListComponent"
 
 const ListPage = () => {
+
+    const[queryParams] = useSearchParams()
+    const page = queryParams.get("page") ? parseInt(queryParams.get("page")) : 1
+    const size = queryParams.get("size") ? parseInt(queryParams.get("size")) : 10
+
     return (
         <div style={{width:"100%",height:"100%",display:"flex", flexDirection:"column"}}>
-            <MainNav/>
             <Sidebar/>
+            <ListComponent/>
         </div>
     )
 }
