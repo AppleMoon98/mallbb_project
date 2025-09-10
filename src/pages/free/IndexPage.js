@@ -6,7 +6,7 @@ export default function IndexPage() {
   return (
     <div>
       <MainNav/>
-      <Sidebar/>
+      {/*<Sidebar/>*/}
       <Outlet/>
     </div>
   );

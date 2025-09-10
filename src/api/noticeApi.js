@@ -37,6 +37,6 @@ export const remove = async (id) => {
     return res.data;
 }
 
-// export const getFileUrl = (filename) =>{
-//     `${prefix}/view/${encodeURIComponent(filename)}`;
-// }
+export const getFileUrl = (filename) =>{
+   return `${prefix}/view/${encodeURIComponent(filename)}`;
+}

@@ -6,8 +6,6 @@ export default function IndexPage() {
         <div>
             <MainNav/>
             <Outlet/>
-           
-            
         </div>
     );
 }

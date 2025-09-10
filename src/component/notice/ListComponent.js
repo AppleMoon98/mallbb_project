@@ -3,7 +3,7 @@ import { getList } from "../../api/noticeApi";
 import PageComponent from "../../common/PageComponent";
 import useCustomMove from "../hooks/useCustomMove";
 import { Link } from "react-router-dom";
-import { Header, OutputList } from "../base/ListComponent";
+import { OutputList } from "../base/ListComponent";
 
 const initState = {
   dtoList: [],
@@ -30,8 +30,6 @@ const ListComponent = () => {
     <div className="w-[60%] mx-auto my-5">
       <h2 className="mb-4 text-2xl font-bold">공지사항</h2>
       <ul className="m-0 list-none p-0">
-        {/* 헤더 /base/Listcomponent.js */}
-        <Header />
 
         {/* 목록 /base/Listcomponent.js */}
         <OutputList serverData={serverData} onClickTitle={moveToRead} />
@@ -41,7 +39,8 @@ const ListComponent = () => {
         <PageComponent serverData={serverData} movePage={moveToList} />
       </div>
       <div className="flex justify-end">
-        <Link to="/notice/add" className="mt-4 inline-block rounded-md bg-blue-600 px-4 py-2 text-white hover:bg-blue-700">
+        <Link to="/notice/add" className="inline-flex items-center rounded-xl bg-indigo-600 px-5 py-2.5 text-sm font-medium text-white shadow
+                       hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-400 active:translate-y-px">
           글 등록
         </Link>
       </div>

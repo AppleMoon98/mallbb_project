@@ -7,7 +7,7 @@ import jwtAxios from "../util/JWTUtil"
     export const getList = async(pageParam) => {
         const {page,size} = pageParam
 
-        const res = await jwtAxios.get(`${prefix}/q`,{params:{page:page,size:size}})
+        const res = await jwtAxios.get(`${prefix}/l`,{params:{page:page,size:size}})
 
         return res.data;
     }
@@ -39,6 +39,6 @@ import jwtAxios from "../util/JWTUtil"
         return res.data;
     }
 
-    // export const getFileUrl = (filename) =>{
-    //     `${prefix}/view/${encodeURIComponent(filename)}`;
-    // }
+    export const getFileUrl = (filename) =>{
+       return `${prefix}/view/${encodeURIComponent(filename)}`;
+    }

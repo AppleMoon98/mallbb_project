@@ -22,21 +22,21 @@ const ReadComponent = ({ id }) => {
   const [fetching, setFetching] = useState(false);
 
   useEffect(() => {
-    setFetching(true);
+    setFetching(true)
     getOne(id).then((data) => {
-      setFree(data);
-      setFetching(false);
-    });
-  }, [id]);
+      setFree(data)
+      setFetching(false)
+    })
+  }, [id])
+
   return (
     <div className="border-2 border-sky-200 mt-10 m-2 p-4">
-      {fetching ? <FetchingModal /> : null}
+      {fetching ? <FetchingModal /> : <></>}
 
       {makeDiv("번호", free.id)}
       {makeDiv("제목", free.title)}
       {makeDiv("내용", free.content)}
       {makeDiv("작성일자", free.createDate)}
-
 
       <div className="flex justify-center">
         <div className="relative mb-4 flex w-full flex-wrap items-stretch">

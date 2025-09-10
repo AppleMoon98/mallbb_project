@@ -3,7 +3,7 @@ import { getList } from "../../api/questionApi";
 import PageComponent from "../../common/PageComponent";
 import useCustomMove from "../hooks/useCustomMove";
 import { Link } from "react-router-dom";
-import { Header, OutputList } from "../base/ListComponent";
+import { OutputList } from "../base/ListComponent";
 
 const initState = {
     dtoList:[],
@@ -33,8 +33,6 @@ const ListComponent = () =>{
   <div className="w-[60%] mx-auto my-5">
       <h2 className="mb-4 text-2xl font-bold">질문게시판</h2>
       <ul className="m-0 list-none p-0">
-        {/* 헤더 /base/Listcomponent.js */}
-        <Header />
 
         {/* 목록 /base/Listcomponent.js */}
         <OutputList serverData={serverData} onClickTitle={moveToRead} />

@@ -1,71 +1,53 @@
 import { useEffect, useState } from "react";
-import{ getList } from "../../api/freeApi";
+import { getList } from "../../api/freeApi";
 import PageComponent from "../../common/PageComponent";
 import useCustomMove from "../hooks/useCustomMove";
 import { Link } from "react-router-dom";
-//import Addpage from "../../pages/free/AddPage";
+import { OutputList } from "../base/ListComponent";
+
 const initState = {
-    dtoList:[],
-    pageNumList:[],
-    pageRequestDTO:null,
-    prev:false,
-    next:false,
-    totalcount:0,
-    prevPage:0,
-    nextPage:0,
-    totalPage:0,
-    current:0
+  dtoList: [],
+  pageNumList: [],
+  pageRequestDTO: null,
+  prev: false,
+  next: false,
+  totalcount: 0,
+  prevPage: 0,
+  nextPage: 0,
+  totalPage: 0,
+  current: 0
 }
 
 
-const ListComponent = () =>{
-    const {page,size,moveToList} = useCustomMove()
-    
-    const [serverData, setServerData] = useState(initState);
-    
-    useEffect(()=>{
-            getList({ page, size }).then(data => {
-            setServerData({
-            ...initState,
-            ...data,
-            dtoList: Array.isArray(data?.dtoList) ? data.dtoList : [],
-      });
-    });
-        },[page,size])
+const ListComponent = () => {
+  const { page, size, moveToList , moveToRead } = useCustomMove()
+  const [serverData, setServerData] = useState(initState)
 
-    return (
-  <div style={{width: "60%", margin: "20px auto" }}>
-    <h2 style={{ fontSize: "24px", fontWeight: "bold", marginBottom: "16px" }}>자유게시판</h2>
+  useEffect(() => {
+    getList({ page, size }).then(data => setServerData({...initState, ...data,
+        dtoList: Array.isArray(data?.dtoList) ? data.dtoList : [],}));
+  }, [page, size])
 
-    <ul style={{ listStyle: "none", margin: 0, padding: 0 }}>
-      <li style={{display: "flex",backgroundColor: "#f2f2f2",fontWeight: "bold",borderBottom: "2px solid #ddd",padding: "12px 8px",
-        }}
-      >
-        <span style={{ flex: "0 0 80px", textAlign: "center" }}>번호</span>
-        <span style={{ flex: "1" }}>제목</span>
-        <span>작성자</span>
-        <span style={{ flex: "0 0 160px", textAlign: "center" }}>날짜</span>
-      </li>
+  return (
+    <div className="w-[60%] mx-auto my-5">
+      <h2 className="mb-4 text-2xl font-bold">자유게시판</h2>
+      <ul className="m-0 list-none p-0">
 
-      {(serverData?.dtoList ?? []).map((free) => (
-        <li key={free.id} style={{display: "flex",borderBottom: "1px solid #ddd",padding: "10px 8px",cursor: "pointer"}}
-          onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#fafafa")}
-          onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "white")}
-        >
-          <span style={{ flex: "0 0 80px", textAlign: "center", color: "#555"}}>{free.id}</span>
-          <span style={{ flex: "1", color: "#000000"}} onClick={moveToList}>{free.title}</span>
-          <span style={{ flex: "0 0 160px", textAlign: "center", color: "#666"}}>{free.createDate}</span>
-        </li>
-      ))}
-    </ul>
+        {/* 목록 /base/Listcomponent.js */}
+        <OutputList serverData={serverData} onClickTitle={moveToRead} />
+      </ul>
 
-    <div style={{ marginTop: "20px", textAlign: "center" }}>
-      <PageComponent serverData={serverData} movePage={moveToList} />
+      <div className="mt-5 text-center">
+        <PageComponent serverData={serverData} movePage={moveToList} />
+      </div>
+      <div className="flex justify-end">
+        <Link to="/free/add" className="inline-flex items-center rounded-xl bg-indigo-600 px-5 py-2.5 text-sm font-medium text-white shadow
+                       hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-400 active:translate-y-px">
+          글 등록
+        </Link>
+      </div>
     </div>
-
-    {/* <Link>글 등록</Link> */}
-  </div>
-);
+  )
 }
 
 export default ListComponent;

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getOne } from "../../api/noticeApi";
+import { getOne ,remove} from "../../api/noticeApi";
 import useCustomMove from "../hooks/useCustomMove";
 import { API_SERVER_HOST } from "../../api/noticeApi";
 import FetchingModal from "../../common/FetchingModal";
@@ -19,9 +19,22 @@ const prefix = API_SERVER_HOST;
 
 const ReadComponent = ({ id }) => {
   const [notice, setNotice] = useState(initState);
-  const { moveToList, moveToModify } = useCustomMove();
   const [fetching, setFetching] = useState(false);
+  const { moveToList, moveToModify , moveToPath } = useCustomMove();
 
+  const handleClickDelete = async() => {
+        if(!window.confirm("정말 삭제하시겠습니까?")) return;
+        try{
+          setFetching(true);
+          await remove(id);
+          moveToPath('../', true);
+        } catch (e) {
+          alert("삭제 중 오류가 발생했습니다.");
+        } finally {
+          setFetching(false);
+        }
+    }
+  
   useEffect(() => {
     setFetching(true);
     getOne(id).then(data => {
@@ -30,6 +43,7 @@ const ReadComponent = ({ id }) => {
       setFetching(false);
     });
   }, [id]);
+  
   return (
     <div className="border-2 border-sky-200 mt-10 m-2 p-4">
       {fetching ? <FetchingModal /> : null}
@@ -37,7 +51,7 @@ const ReadComponent = ({ id }) => {
       {makeDiv("번호", notice.id)}
       {makeDiv("제목", notice.title)}
       {makeDiv("내용", notice.content)}
-      {makeDiv("작성일자", notice.startDate)}
+      {makeDiv("작성일자", notice.createDate)}
 
 
       <div className="flex justify-center">
@@ -48,9 +62,9 @@ const ReadComponent = ({ id }) => {
               notice.uploadFileNames.map((imgFile, i) => (
                 <img
                   key={i}
-                  alt={`notice-${i}`}
+                  alt={`notice${i}`}
                   className="p-2 w-1/3 cursor-pointer border rounded"
-                  src={`${prefix}/api/notice/view/${imgFile}`}
+                  src={`${prefix}/n/view/${imgFile}`}
                 />
               ))
             ) : (
@@ -61,19 +75,26 @@ const ReadComponent = ({ id }) => {
       </div>
 
       <div className="flex justify-end p-4">
+      <button
+        type="button"
+        className="rounded p-4 m-2 text-xl w-32 text-white bg-red-500"
+        onClick={handleClickDelete}
+      >
+        삭제
+      </button>
         <button
           type="button"
-          className="rounded p-4 m-2 text-xl w-32 text-white bg-blue-500"
+          className="rounded p-4 m-2 text-xl w-32 text-white bg-yellow-500"
           onClick={() => moveToList()}
         >
-          List
+          리스트
         </button>
         <button
-          type="button"
-          className="rounded p-4 m-2 text-xl w-32 text-white bg-red-500"
-          onClick={() => moveToModify(id)}
+        type="button"
+        className="rounded p-4 m-2 text-xl w-32 text-white bg-green-500"
+        onClick={() => moveToModify(id)}
         >
-          수정
+        수정
         </button>
       </div>
     </div>

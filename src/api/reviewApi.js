@@ -28,3 +28,7 @@ export const remove = async (id) => {
     const res = await jwtAxios.delete(`${prefix}/${id}`)
     return res.data
 }
+
+export const getFileUrl = (filename) =>{
+   return `${prefix}/view/${encodeURIComponent(filename)}`;
+}

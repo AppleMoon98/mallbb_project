@@ -1,11 +1,8 @@
-import MainNav from "../../common/MainNav";
-import ListComponent from "../../component/question/ListComponent";
-import Sidebar from "../../common/Sidebar";
+
+import ListComponent from "../../component/question/ListComponent";;
 const ListPage = () =>{
     return(
-        <div style={{width:"100%",height:"100%",display:"flex", flexDirection:"column"}}>
-            <MainNav/>
-            <Sidebar/>
+        <div>
             <ListComponent/>
         </div>
     )

@@ -1,9 +1,8 @@
 import { useEffect,useState } from "react";
-import { getOne } from "../../api/reviewApi";
+import { getOne, remove } from "../../api/reviewApi";
 import useCustomMove from "../hooks/useCustomMove";
 import { API_SERVER_HOST } from "../../api/reviewApi";
 import FetchingModal from "../../common/FetchingModal";
-import { remove } from "../../api/reviewApi";
 
 const initState = {
     id:0,
@@ -12,7 +11,7 @@ const initState = {
     createDate:"",
     desc:"",
     delFlag:"",
-    uploadFilenames:[]
+    uploadFileNames:[]
 }
 
 const prefix = API_SERVER_HOST
@@ -21,7 +20,20 @@ const ReadComponent = ({id}) => {
 
     const [ review, setReview ] = useState(initState);
     const [ fetching, setFetching ] = useState(false);
-    const { moveToModify } = useCustomMove()
+    const { moveToModify, moveToList ,moveToPath } = useCustomMove();
+
+    const handleClickDelete = async() => {
+        if(!window.confirm("정말 삭제하시겠습니까?")) return;
+        try{
+          setFetching(true);
+          await remove(id);
+          moveToPath('../', true);
+        } catch (e) {
+          alert("삭제 중 오류가 발생했습니다.");
+        } finally {
+          setFetching(false);
+        }
+    }
 
     useEffect( () => {
         setFetching(true);
@@ -64,9 +76,9 @@ const ReadComponent = ({id}) => {
         <button
           type="button"
           className="rounded p-4 m-2 text-xl w-32 text-white bg-red-500"
-          onClick={() => (id)}>
+          onClick={handleClickDelete}>
           삭제
-          </button>
+        </button>
         <button
           type="button"
           className="rounded p-4 m-2 text-xl w-32 text-white bg-green-500"

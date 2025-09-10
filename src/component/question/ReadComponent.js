@@ -51,7 +51,7 @@ const ReadComponent = ({id}) => {
                   key={i}
                   alt={`question-${i}`}
                   className="p-2 w-1/3 cursor-pointer border rounded"
-                  src={`${prefix}/api/question/view/${imgFile}`}
+                  src={`${prefix}/q/view/${imgFile}`}
                 />
               ))
             ) : (
@@ -64,7 +64,7 @@ const ReadComponent = ({id}) => {
         <button
           type="button"
           className="rounded p-4 m-2 text-xl w-32 text-white bg-blue-500"
-          onClick={() => moveToDelete(id)}>
+          onClick={() => (id)}>
           삭제
         </button>
         <button
