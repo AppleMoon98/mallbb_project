@@ -1,7 +1,7 @@
 import { useRef, useState } from "react"
 import { register } from "../../api/freeApi"
 import useCustomMove from "../hooks/useCustomMove"
-import { OutputDetail } from "../base/ListComponent";
+import { OutputDetail } from "../base/BoardComponent";
 
 
 const initState = {

@@ -17,7 +17,7 @@ const MainNav = () => {
               <a href="#">소개</a>
             </li>
             <li className="depth1">
-              <a href="#">게시판</a>
+              <a href="/free">게시판</a>
               <ul className="submenu">
                 <li><Link to={"/notice"}>공지사항</Link></li>
                 <li><a href="/free">자유게시판</a></li>

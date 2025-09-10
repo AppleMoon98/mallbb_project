@@ -29,7 +29,7 @@ const useCustomMove = () => {
             queryStr = queryDefault
 
         setRefresh(!refresh)
-        navigate({ pathname, search: queryStr })
+        navigate({ pathname:'../', search: queryStr })
     }
 
     const moveToModify = (id) => {

@@ -15,7 +15,7 @@ const ReadPage = () => {
     toString()
 
     return(
-        <div className="font-extrabold w-full bg-white mt-6">
+        <div className="font-extrabold w-full bg-divide-yellow-600 mt-6">
             <div className="text-4xl text-center">
             {/* 상세보기 {} <= 바로 제목으로 가져올것 */}
             </div>

@@ -11,7 +11,7 @@ export default function App() {
       <MainNav/>
       <main className="main-container">
         <MainSlider/>
-        <h2>오늘의 추천메뉴</h2>
+        <div className="text-4xl font-extrabold">오늘의 추천메뉴</div>
         <CardSlider/>
       </main>
     </div>

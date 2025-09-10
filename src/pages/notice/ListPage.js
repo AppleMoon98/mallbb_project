@@ -1,7 +1,7 @@
 import ListComponent from "../../component/notice/ListComponent";
 const ListPage = () =>{    
     return(
-        <div>
+        <div className="bg-divide-yellow-600 border-solid">
             <ListComponent/>
         </div>
     )

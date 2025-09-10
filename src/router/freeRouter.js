@@ -1,4 +1,5 @@
 import { Suspense, lazy } from "react";
+import { Navigate } from "react-router-dom";
 
 const Loading = <div>Loading........</div>
 const FreeList = lazy(() => import("../pages/free/ListPage"))

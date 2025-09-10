@@ -59,18 +59,12 @@ const ReadComponent = ({ id }) => {
       </div>
 
       <div className="flex justify-end p-4">
-        <button
-          type="button"
-          className="rounded p-4 m-2 text-xl w-32 text-white bg-blue-500"
-          onClick={() => moveToList()}
-        >
+        <button type="button" className="rounded p-4 m-2 text-xl w-32 text-white bg-blue-500"
+          onClick={moveToList}>
           List
         </button>
-        <button
-          type="button"
-          className="rounded p-4 m-2 text-xl w-32 text-white bg-red-500"
-          onClick={() => moveToModify(id)}
-        >
+        <button type="button" className="rounded p-4 m-2 text-xl w-32 text-white bg-red-500"
+          onClick={() => moveToModify(id)}>
           수정
         </button>
       </div>

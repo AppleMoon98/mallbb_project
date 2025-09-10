@@ -3,7 +3,7 @@ import { getList } from "../../api/noticeApi";
 import PageComponent from "../../common/PageComponent";
 import useCustomMove from "../hooks/useCustomMove";
 import { Link } from "react-router-dom";
-import { OutputList } from "../base/ListComponent";
+import { OutputList } from "../base/BoardComponent";
 
 const initState = {
   dtoList: [],
@@ -27,7 +27,7 @@ const ListComponent = () => {
   }, [page, size]);
 
   return (
-    <div className="w-[60%] mx-auto my-5">
+    <div className="w-[60%] mx-auto my-5 bg-divide-yellow-600">
       <h2 className="mb-4 text-2xl font-bold">공지사항</h2>
       <ul className="m-0 list-none p-0">
 

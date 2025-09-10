@@ -1,7 +1,7 @@
 import { useState, useRef } from "react";
 import { register } from "../../api/reviewApi";
 import useCustomMove from "../hooks/useCustomMove";
-import { OutputDetail } from "../base/ListComponent";
+import { OutputDetail } from "../base/BoardComponent";
 
 const initState = {
     title: "",

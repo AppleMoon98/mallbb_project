@@ -3,7 +3,7 @@ import { getList } from "../../api/questionApi";
 import PageComponent from "../../common/PageComponent";
 import useCustomMove from "../hooks/useCustomMove";
 import { Link } from "react-router-dom";
-import { OutputList } from "../base/ListComponent";
+import { OutputList } from "../base/BoardComponent";
 
 const initState = {
     dtoList:[],
