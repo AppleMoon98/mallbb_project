@@ -5,7 +5,7 @@ import useCustomMove from "../hooks/useCustomMove";
 import { Link } from "react-router-dom";
 import "../../css/review.css";
 import CardItem from "./CardItem";
-import { API_SERVER_HOST } from "../../api/freeApi";
+import { API_SERVER_HOST } from "../../api/config";
 
 
 const initState = {
@@ -47,26 +47,25 @@ const ListComponent = () => {
               글 등록
             </Link>
           </div>
-          {/* 목록 /base/Listcomponent.js */}
           <div className='cards'>
             <div className="cards__container">
               <div className="cards__wrapper">
-
+              
                 <ul className='cards__items'>
                   <CardItem
-                    src={`${prefix}/f/view/69fbfc92-a79b-4829-8b47-95ac09c6169a-25-09-02_00007_.png`}
-                    text='Set Sail in the Atlantic Ocean visiting Uncharted Waters'
+                    src={`${prefix}/r/view/69fbfc92-a79b-4829-8b47-95ac09c6169a-25-09-02_00007_.png`}
+                    text='몰빵'
                     label='Mystery'
-                    path='/services'
+                    path={`./read/${1}`}
                   />
                   <CardItem
-                    src={`${prefix}/f/view/69fbfc92-a79b-4829-8b47-95ac09c6169a-25-09-02_00007_.png`}
+                    src={`${prefix}/r/view/69fbfc92-a79b-4829-8b47-95ac09c6169a-25-09-02_00007_.png`}
                     text='Experience Football on Top of the Himilayan Mountains'
                     label='Adventure'
                     path='/products'
                   />
                   <CardItem
-                    src={`${prefix}/f/view/69fbfc92-a79b-4829-8b47-95ac09c6169a-25-09-02_00007_.png`}
+                    src={`${prefix}/r/view/69fbfc92-a79b-4829-8b47-95ac09c6169a-25-09-02_00007_.png`}
                     text='Ride through the Sahara Desert on a guided camel tour'
                     label='Adrenaline'
                     path='/sign-up'
@@ -74,19 +73,19 @@ const ListComponent = () => {
                 </ul>
                 <ul className='cards__items'>
                   <CardItem
-                    src={`${prefix}/f/view/69fbfc92-a79b-4829-8b47-95ac09c6169a-25-09-02_00007_.png`}
+                    src={`${prefix}/r/view/69fbfc92-a79b-4829-8b47-95ac09c6169a-25-09-02_00007_.png`}
                     text='Set Sail in the Atlantic Ocean visiting Uncharted Waters'
                     label='Mystery'
                     path='/services'
                   />
                   <CardItem
-                    src={`${prefix}/f/view/69fbfc92-a79b-4829-8b47-95ac09c6169a-25-09-02_00007_.png`}
+                    src={`${prefix}/r/view/69fbfc92-a79b-4829-8b47-95ac09c6169a-25-09-02_00007_.png`}
                     text='Experience Football on Top of the Himilayan Mountains'
                     label='Adventure'
                     path='/products'
                   />
                   <CardItem
-                    src={`${prefix}/f/view/69fbfc92-a79b-4829-8b47-95ac09c6169a-25-09-02_00007_.png`}
+                    src={`${prefix}/r/view/69fbfc92-a79b-4829-8b47-95ac09c6169a-25-09-02_00007_.png`}
                     text='Ride through the Sahara Desert on a guided camel tour'
                     label='Adrenaline'
                     path='/sign-up'

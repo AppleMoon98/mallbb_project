@@ -16,6 +16,9 @@ const NoticeIndex = lazy(() => import("../pages/notice/IndexPage"))
 const ReviewIndex = lazy( () => import("../pages/review/IndexPage"))
 const FreeIndex = lazy( () => import("../pages/free/IndexPage"))
 const QuestionIndex = lazy( () => import("../pages/question/IndexPage"))
+const Reservation = lazy(()=>import("../pages/reservation"))
+const Map = lazy(()=>import("../pages/map"))
+const WebInfo = lazy(()=>import("../pages/webinfo"))
 
 const root = createBrowserRouter([
   {
@@ -57,6 +60,18 @@ const root = createBrowserRouter([
     path: "free",
     element: <Suspense fallback={Loading}><FreeIndex/></Suspense>,
     children: freeRouter()
+  },
+  {
+    path: "reservation",
+    element:<Suspense fallback={Loading}><Reservation/></Suspense>    
+  },
+  {
+    path: "map",
+    element:<Suspense fallback={Loading}><Map/></Suspense>
+  },
+  {
+    path: "webinfo",
+    element:<Suspense fallback={Loading}><WebInfo/></Suspense>
   }
 ])
 

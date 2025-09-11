@@ -1,8 +1,8 @@
 import axios from "axios";
 import { getCookie, setCookie } from "./CookieUtil";
-import { API_SERVER_HOST } from "../api/noticeApi";
-const jwtAxios = axios.create()
+import { API_SERVER_HOST } from "../api/config";
 
+const jwtAxios = axios.create()
 const refreshJWT = async (accessToken, refreshToken) => {
     const host = API_SERVER_HOST
     const header = { headers: { "Authorization": `Bearer ${accessToken}` } }

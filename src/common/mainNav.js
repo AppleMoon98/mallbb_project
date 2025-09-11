@@ -14,7 +14,7 @@ const MainNav = () => {
               <Link to={"/"}>로고(이미지)</Link>
             </li>
             <li className="depth1">
-              <a href="#">소개</a>
+              <Link to={"/webinfo"}>소개</Link>
             </li>
             <li className="depth1">
               <a href="/free">게시판</a>
@@ -26,10 +26,10 @@ const MainNav = () => {
               </ul>
             </li>
             <li className="depth1">
-              <a href="#">지도</a>
+              <Link to={"/map"}>지도</Link>
             </li>
             <li className="depth1">
-              <a href="#">예약</a>
+              <Link to={"/reservation"}>예약</Link>
               <ul className="submenu">
                 <li><a href="#">예약하기</a></li>
                 <li><a href="#">예약확인</a></li>

@@ -16,7 +16,7 @@ const LoginComponent = () => {
     const { name, value } = e.target;
     setLoginParam((prev) => ({ ...prev, [name]: value }));
   };
-
+  
   const handleClickLogin = async () => {
     if (loading) return;
     setLoading(true);

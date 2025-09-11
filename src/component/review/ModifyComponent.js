@@ -1,8 +1,7 @@
 import { useEffect, useState, useRef} from "react";
-import { getOne, remove } from "../../api/reviewApi";
+import { getOne, remove, modify } from "../../api/reviewApi";
 import useCustomMove from "../hooks/useCustomMove";
-import { API_SERVER_HOST } from "../../api/reviewApi";
-import { modify } from "../../api/reviewApi";
+import { API_SERVER_HOST } from "../../api/config";
 import FetchingModal from "../../common/FetchingModal";
 import ResultModal from "../../common/ResultModal";
 

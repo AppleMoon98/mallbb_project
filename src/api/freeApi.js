@@ -1,20 +1,19 @@
+import { publicAxios } from "../util/http"
 import jwtAxios from "../util/JWTUtil"
-
-export const API_SERVER_HOST = 'http://localhost:8080'
+import {API_SERVER_HOST} from "./config"
 
 const prefix = `${API_SERVER_HOST}/f`
 
 export const getList = async (pageParam) => {
     const { page, size } = pageParam
-    const res = await jwtAxios.get(`${prefix}/l`, { params: { page: page, size: size } })
+    const res = await publicAxios.get(`${prefix}/l`, { params: { page: page, size: size } })
     return res.data;
 }
 
 export const getOne = async (id) => {
-    const res = await jwtAxios.get(`${prefix}/${id}`);
+    const res = await publicAxios.get(`${prefix}/${id}`);
     return res.data;
 }
-
 
 export const register = async (formdata) => {
     const res = await jwtAxios.post(`${prefix}/`, formdata, {

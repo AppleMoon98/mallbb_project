@@ -1,5 +1,5 @@
 import axios from "axios";
-import { API_SERVER_HOST } from "./noticeApi";
+import { API_SERVER_HOST } from "./config";
 
 const host = `${API_SERVER_HOST}/member`
 

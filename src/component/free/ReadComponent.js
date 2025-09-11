@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import useCustomMove from "../hooks/useCustomMove";
-import { API_SERVER_HOST, getOne } from "../../api/freeApi";
+import { API_SERVER_HOST } from "../../api/config"
+import { getOne } from "../../api/freeApi";
 import FetchingModal from "../../common/FetchingModal";
 
 
@@ -18,7 +19,7 @@ const prefix = API_SERVER_HOST;
 
 const ReadComponent = ({ id }) => {
   const [free, setFree] = useState(initState);
-  const { moveToList, moveToModify } = useCustomMove();
+  const { moveToPath, moveToModify } = useCustomMove();
   const [fetching, setFetching] = useState(false);
 
   useEffect(() => {
@@ -60,8 +61,8 @@ const ReadComponent = ({ id }) => {
 
       <div className="flex justify-end p-4">
         <button type="button" className="rounded p-4 m-2 text-xl w-32 text-white bg-blue-500"
-          onClick={moveToList}>
-          List
+          onClick={() => moveToPath('../')}>
+          List(임시)
         </button>
         <button type="button" className="rounded p-4 m-2 text-xl w-32 text-white bg-red-500"
           onClick={() => moveToModify(id)}>

@@ -1,7 +1,7 @@
 import { useEffect,useState } from "react";
 import { getOne, remove } from "../../api/reviewApi";
 import useCustomMove from "../hooks/useCustomMove";
-import { API_SERVER_HOST } from "../../api/reviewApi";
+import { API_SERVER_HOST } from "../../api/config";
 import FetchingModal from "../../common/FetchingModal";
 
 const initState = {
