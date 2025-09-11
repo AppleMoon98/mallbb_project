@@ -3,13 +3,19 @@ import dayjs from "dayjs";
 export function OutputList({ serverData, onClickTitle }) {
   const hasData = serverData?.totalCount > 0 && serverData?.dtoList?.length > 0;
 
+  // Board List Class Name
+  const idClassName = "basis-20 shrink-0 text-center"
+  const wirterClassName = "basis-30 shrink-0 text-center"
+  const dateClassName = "basis-40 shrink-0 text-center"
+
   if (!hasData) {
     return (
       <>
         <li className="flex border-b-2 border-gray-300 bg-gray-100 px-2 py-3 font-semibold">
-          <span className="basis-20 shrink-0 text-center">번호</span>
+          <span className={idClassName}>번호</span>
           <span className="flex-1">제목</span>
-          <span className="basis-40 shrink-0 text-center">날짜</span>
+          <span className={wirterClassName}>작성자</span>
+          <span className={dateClassName}>날짜</span>
         </li>
 
         <li className="p-6 text-center text-gray-500">
@@ -22,9 +28,10 @@ export function OutputList({ serverData, onClickTitle }) {
   return (
     <>
       <li className="flex border-b-2 border-gray-300 bg-gray-100 px-2 py-3 font-semibold">
-        <span className="basis-20 shrink-0 text-center">번호</span>
+        <span className={idClassName}>번호</span>
         <span className="flex-1">제목</span>
-        <span className="basis-40 shrink-0 text-center">날짜</span>
+        <span className={wirterClassName}>작성자</span>
+        <span className={dateClassName}>날짜</span>
       </li>
 
       {serverData.dtoList.map((board) => (
@@ -32,7 +39,7 @@ export function OutputList({ serverData, onClickTitle }) {
           className="flex cursor-pointer border-b border-gray-200 px-2 py-2 hover:bg-gray-50"
           onClick={() => onClickTitle(board.id)}>
 
-          <span className="basis-20 shrink-0 text-center text-gray-600">
+          <span className={`${idClassName} text-gray-600`}>
             {board.id}
           </span>
 
@@ -40,7 +47,11 @@ export function OutputList({ serverData, onClickTitle }) {
             {board.title}
           </span>
 
-          <span className="basis-40 shrink-0 text-center text-gray-600">
+          <span className={`${wirterClassName} text-gray-600`}>
+            {board.id}
+          </span>
+
+          <span className={`${dateClassName} text-gray-600`}>
             {dayjs(board.createDate).format('YYYY-MM-DD')}
           </span>
         </li>

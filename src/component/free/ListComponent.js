@@ -15,7 +15,8 @@ const initState = {
   prevPage: 0,
   nextPage: 0,
   totalPage: 0,
-  current: 0
+  current: 0,
+  writer: null
 }
 
 

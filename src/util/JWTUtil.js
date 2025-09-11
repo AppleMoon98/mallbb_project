@@ -2,11 +2,15 @@ import axios from "axios";
 import { getCookie, setCookie } from "./CookieUtil";
 import { API_SERVER_HOST } from "../api/config";
 
-const jwtAxios = axios.create()
+const LOGIN_URL = "/member/login";      // 로그인
+const REFRESH_URL = "/member/refresh";  // 리프레시
+
+export const jwtAxios = axios.create();
+
 const refreshJWT = async (accessToken, refreshToken) => {
     const host = API_SERVER_HOST
     const header = { headers: { "Authorization": `Bearer ${accessToken}` } }
-    const result = await axios.get(`${host}/member/refresh?refreshToken=${refreshToken}`, header)
+    const result = await axios.get(`${host}${REFRESH_URL}?refreshToken=${refreshToken}`, header)
 
     console.log("--------------------")
     console.log(result.data)
@@ -19,7 +23,7 @@ const beforeReq = (config) => {
 
     const memberInfo = getCookie("member")
     if (!memberInfo) {
-        console.log("Memeber NOT FOUND")
+        console.log("Member NOT FOUND")
         return Promise.reject(
             {
                 response: {
@@ -40,7 +44,7 @@ const requestFail = (err) => {
     return Promise.reject(err)
 }
 
-const befroeRes = async (res) => {
+const beforeRes = async (res) => {
     console.log("before return response..........")
     const data = res.data
     if (data && data.error === 'ERROR_ACCESS_TOKEN') {
@@ -54,7 +58,7 @@ const befroeRes = async (res) => {
 
         const originalRequest = res.config
         originalRequest.headers.Authorization = `Bearer ${result.accessToken}`
-        return await axios(originalRequest)
+        return await jwtAxios(originalRequest)
     }
     return res
 }
@@ -65,6 +69,6 @@ const responseFail = (err) => {
 }
 
 jwtAxios.interceptors.request.use(beforeReq, requestFail)
-jwtAxios.interceptors.response.use(befroeRes, responseFail)
+jwtAxios.interceptors.response.use(beforeRes, responseFail)
 
 export default jwtAxios
