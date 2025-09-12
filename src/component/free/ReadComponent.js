@@ -3,29 +3,44 @@ import useCustomMove from "../hooks/useCustomMove";
 import { API_SERVER_HOST } from "../../api/config"
 import { getOne } from "../../api/freeApi";
 import FetchingModal from "../../common/FetchingModal";
+import dayjs from "dayjs";
+import { commentGetList } from "../../api/freeCommentApi";
 
 
 const initState = {
   id: 0,
   title: "",
   content: "",
-  startDate: "",
-  desc: "",
+  createDate: "",
   delflag: false,
-  uploadFilenames: [],
+  uploadFileNames: [],
+}
+
+const commentState = {
+  id: 0,
+  content: "",
+  createDate: "",
+  delflag: false
 }
 
 const prefix = API_SERVER_HOST;
 
 const ReadComponent = ({ id }) => {
-  const [free, setFree] = useState(initState);
-  const { moveToPath, moveToModify } = useCustomMove();
-  const [fetching, setFetching] = useState(false);
+  const [free, setFree] = useState(initState)
+  const [comment, setComment] = useState(commentState)
+  const { moveToPath, moveToModify } = useCustomMove()
+  const [fetching, setFetching] = useState(false)
 
   useEffect(() => {
     setFetching(true)
     getOne(id).then((data) => {
       setFree(data)
+      setFetching(false)
+    })
+
+    commentGetList(id).then((data) => {
+      console.log(data)
+      setComment(data)
       setFetching(false)
     })
   }, [id])
@@ -37,7 +52,7 @@ const ReadComponent = ({ id }) => {
       {makeDiv("번호", free.id)}
       {makeDiv("제목", free.title)}
       {makeDiv("내용", free.content)}
-      {makeDiv("작성일자", free.createDate)}
+      {makeDiv("작성일자", dayjs(free.createDate).format('YYYY-MM-DD HH:MM'))}
 
       <div className="flex justify-center">
         <div className="relative mb-4 flex w-full flex-wrap items-stretch">
@@ -69,6 +84,17 @@ const ReadComponent = ({ id }) => {
           수정
         </button>
       </div>
+      <>
+        {/*댓글 테스트*/}
+        {comment?.length > 0 ?
+          comment.map((comment, index) => {
+            return(
+              <li key={index}>{comment.content}</li>
+            )
+          })
+        :
+        <></>}
+      </>
     </div>
   );
 };

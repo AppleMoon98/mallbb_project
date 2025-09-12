@@ -47,18 +47,18 @@ const ModifyComponent = ({id}) =>{
 
             const formData = new FormData()
 
-            for(let i = 0; i < files.length ; i++){
+            for(let i = 0; i < files.length ; i++)
                 formData.append("files", files[i]);
-            }
+            
 
                 formData.append("price",question.id)
                 formData.append("title",question.title)
                 formData.append("desc",question.desc)
                 formData.append("delFlag",question.delFlag)
             
-                for(let i = 0; i < question.uploadFileNames.length ; i++){
+                for(let i = 0; i < question.uploadFileNames.length ; i++)
                     formData.append("uploadFileName", question.uploadFileNames[i])
-                }
+                
                 setFetching(true)
 
                 modify(id, formData).then(data=>{

@@ -4,7 +4,6 @@ const AddPage = () => {
     return (
         <div>
             <AddComponent />
-            글 등록
         </div>
     )
 }
