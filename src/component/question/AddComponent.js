@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
 import { register } from "../../api/questionApi";
 import useCustomMove from "../hooks/useCustomMove"
-import { OutputDetail } from "../base/BoardComponent";
+import { InputDetail } from "../base/BoardComponent";
 
 const initState = {
   title: "",
@@ -51,7 +51,7 @@ export default function AddComponent() {
   }
 
   return (
-    <OutputDetail board={questionBoard} handleChangeBoard={handleChangeQuestionBoard}
+    <InputDetail board={questionBoard} handleChangeBoard={handleChangeQuestionBoard}
       uploadRef={uploadRef} handleClickAdd={handleClickAdd} />
   )
 }

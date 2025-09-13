@@ -1,4 +1,3 @@
-import { publicAxios } from "../util/http"
 import jwtAxios from "../util/JWTUtil"
 import { API_SERVER_HOST } from "./config"
 

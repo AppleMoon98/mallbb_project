@@ -4,42 +4,74 @@ import { API_SERVER_HOST } from "../../api/config"
 import { getOne } from "../../api/freeApi";
 import FetchingModal from "../../common/FetchingModal";
 import dayjs from "dayjs";
-import { commentGetList } from "../../api/freeCommentApi";
+import { commentGetList, commentRegister } from "../../api/freeCommentApi";
 
-
-const initState = {
+const boardState = {
   id: 0,
   title: "",
   content: "",
   createDate: "",
   delflag: false,
   uploadFileNames: [],
+  writer: "",
+}
+
+const addCommentState = {
+  content: ""
 }
 
 const commentState = {
   id: 0,
   content: "",
   createDate: "",
-  delflag: false
+  delflag: false,
+  writer: "",
 }
 
 const prefix = API_SERVER_HOST;
 
 const ReadComponent = ({ id }) => {
-  const [free, setFree] = useState(initState)
+  const [board, setBoard] = useState(boardState)
   const [comment, setComment] = useState(commentState)
+  const [addComment, setAddComment] = useState(addCommentState)
   const { moveToPath, moveToModify } = useCustomMove()
   const [fetching, setFetching] = useState(false)
+
+  // 댓글 등록시 내용이 바뀔때 초기화 용도지만,
+  // 사실 다른곳에 달아도 적용됨 ㅎㅎ;
+  const handleChangeComment = (e) => {
+    const { name, value } = e.target
+    setAddComment((prev) => ({ ...prev, [name]: value }))
+  }
+
+  // 댓글 등록관련 시스템 전부
+  const handleClickAdd = async () => {
+    if (!addComment.content.trim()) {
+      alert("댓글 내용을 입력해주세요.")
+      return
+    }
+
+    const commentData = { content: addComment.content }
+
+    try {
+      const res = await commentRegister(commentData, id)
+      alert("등록되었습니다.", res)
+      setAddComment(addCommentState)
+      window.location.reload()
+    } catch (err) {
+      console.error("댓글 오류 : ", err)
+      alert("등록 중 오류가 발생하였습니다.")
+    }
+  }
 
   useEffect(() => {
     setFetching(true)
     getOne(id).then((data) => {
-      setFree(data)
+      setBoard(data)
       setFetching(false)
     })
 
     commentGetList(id).then((data) => {
-      console.log(data)
       setComment(data)
       setFetching(false)
     })
@@ -49,20 +81,21 @@ const ReadComponent = ({ id }) => {
     <div className="border-2 border-sky-200 mt-10 m-2 p-4">
       {fetching ? <FetchingModal /> : <></>}
 
-      {makeDiv("번호", free.id)}
-      {makeDiv("제목", free.title)}
-      {makeDiv("내용", free.content)}
-      {makeDiv("작성일자", dayjs(free.createDate).format('YYYY-MM-DD HH:MM'))}
+      {makeDiv("번호", board.id)}
+      {makeDiv("작성자", board.writer)}
+      {makeDiv("제목", board.title)}
+      {makeDiv("내용", board.content)}
+      {makeDiv("작성일자", dayjs(board.createDate).format('YYYY-MM-DD HH:MM'))}
 
       <div className="flex justify-center">
         <div className="relative mb-4 flex w-full flex-wrap items-stretch">
           <div className="w-1/5 p-6 text-right font-bold">이미지</div>
           <div className="w-4/5 flex flex-wrap gap-2 p-4">
-            {free.uploadFileNames?.length > 0 ? (
-              free.uploadFileNames.map((imgFile, i) => (
+            {board.uploadFileNames?.length > 0 ? (
+              board.uploadFileNames.map((imgFile, i) => (
                 <img
                   key={i}
-                  alt={`free-${i}`}
+                  alt={`board-${i}`}
                   className="p-2 w-1/3 cursor-pointer border rounded"
                   src={`${prefix}/f/view/${imgFile}`}
                 />
@@ -85,15 +118,30 @@ const ReadComponent = ({ id }) => {
         </button>
       </div>
       <>
-        {/*댓글 테스트*/}
+        {/*댓글 입력 테스트*/}
+        <div className="space-y-2">
+          <label htmlFor="content" className="text-sm font-medium text-gray-700">댓글 입력</label>
+          <textarea id="content" name="content" placeholder="소중한 한마디 적어주세요" rows={8} value={addComment.content} onChange={handleChangeComment}
+            className="w-full resize-y rounded-xl border border-gray-200 bg-gray-50 px-4 py-2 outline-none transition
+                       focus:border-indigo-400 focus:bg-white focus:ring-2 focus:ring-indigo-200"/>
+          <div className="flex justify-end">
+            <button type="button" onClick={handleClickAdd}
+              className="inline-flex items-center rounded-xl bg-indigo-600 px-5 py-2.5 text-sm font-medium text-white shadow
+                       hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-400 active:translate-y-px">
+              글 등록
+            </button>
+          </div>
+        </div>
+
+        {/*댓글 출력 테스트*/}
         {comment?.length > 0 ?
           comment.map((comment, index) => {
-            return(
-              <li key={index}>{comment.content}</li>
+            return (
+              <div key={index}>{makeDiv(comment.writer, comment.content)}</div>
             )
           })
-        :
-        <></>}
+          :
+          <></>}
       </>
     </div>
   );

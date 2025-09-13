@@ -48,7 +48,7 @@ export function OutputList({ serverData, onClickTitle }) {
           </span>
 
           <span className={`${wirterClassName} text-gray-600`}>
-            {board.id}
+            {board.writer}
           </span>
 
           <span className={`${dateClassName} text-gray-600`}>
@@ -60,7 +60,7 @@ export function OutputList({ serverData, onClickTitle }) {
   )
 }
 
-export function OutputDetail({ board, handleChangeBoard, uploadRef, handleClickAdd }) {
+export function InputDetail({ board, handleChangeBoard, uploadRef, handleClickAdd }) {
   return (
     <div className="mx-auto max-w-2xl px-4 py-8">
       <h1 className="mb-6 text-2xl font-semibold">글 등록</h1>

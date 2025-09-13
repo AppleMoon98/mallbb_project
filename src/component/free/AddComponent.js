@@ -1,7 +1,7 @@
 import { useRef, useState } from "react"
 import { register } from "../../api/freeApi"
 import useCustomMove from "../hooks/useCustomMove"
-import { OutputDetail } from "../base/BoardComponent";
+import { InputDetail } from "../base/BoardComponent";
 
 
 const initState = {
@@ -10,25 +10,25 @@ const initState = {
 }
 
 export default function AddComponent() {
-  const [freeBoard, setFreeBoard] = useState(initState)
+  const [board, setBoard] = useState(initState)
   const uploadRef = useRef(null)
   const { moveToPath } = useCustomMove()
 
 
-  const handleChangeFreeBoard = (e) => {
+  const handleChangeBoard = (e) => {
     const { name, value } = e.target
-    setFreeBoard((prev) => ({ ...prev, [name]: value }))
+    setBoard((prev) => ({ ...prev, [name]: value }))
   }
 
   const handleClickAdd = async () => {
-    if (!freeBoard.title.trim() || !freeBoard.content.trim()) {
+    if (!board.title.trim() || !board.content.trim()) {
       alert("제목과 내용을 입력해 주세요.")
       return
     }
 
     const formdata = new FormData()
-    formdata.append("title", freeBoard.title)
-    formdata.append("content", freeBoard.content)
+    formdata.append("title", board.title)
+    formdata.append("content", board.content)
 
     const files = uploadRef.current?.files
     if (files && files.length > 0) 
@@ -39,7 +39,7 @@ export default function AddComponent() {
       const res = await register(formdata)
       console.log("등록 성공:", res)
       alert("등록되었습니다.")
-      setFreeBoard(initState)
+      setBoard(initState)
 
       if (uploadRef.current)
         uploadRef.current.value = ""
@@ -51,7 +51,7 @@ export default function AddComponent() {
   }
 
   return (
-     <OutputDetail board={freeBoard} handleChangeBoard={handleChangeFreeBoard}
+     <InputDetail board={board} handleChangeBoard={handleChangeBoard}
         uploadRef={uploadRef} handleClickAdd={handleClickAdd} />
   )
 }
