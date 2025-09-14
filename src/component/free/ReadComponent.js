@@ -4,7 +4,11 @@ import { API_SERVER_HOST } from "../../api/config"
 import { getOne } from "../../api/freeApi";
 import FetchingModal from "../../common/FetchingModal";
 import dayjs from "dayjs";
-import { commentGetList, commentRegister } from "../../api/freeCommentApi";
+import { commentGetList, commentRegister, commentRemove } from "../../api/freeCommentApi";
+import { useLocation, useNavigate } from "react-router-dom";
+import { getCookie } from "../../util/CookieUtil";
+
+const prefix = API_SERVER_HOST;
 
 const boardState = {
   id: 0,
@@ -28,17 +32,26 @@ const commentState = {
   writer: "",
 }
 
-const prefix = API_SERVER_HOST;
 
 const ReadComponent = ({ id }) => {
   const [board, setBoard] = useState(boardState)
   const [comment, setComment] = useState(commentState)
+
+  //useState([]) length가 터지기 때문에 빈 배열로 담아야 하나?
   const [addComment, setAddComment] = useState(addCommentState)
   const { moveToPath, moveToModify } = useCustomMove()
   const [fetching, setFetching] = useState(false)
 
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const isLogin = !!getCookie("member");
+
+  //!!는 이중 부정 연산자 =>자바스크립트의 이중 부정 연산자로, 어떤 값이든 명시적인 불리언(Boolean) 타입으로 변환하는 데 사용
+
   // 댓글 등록시 내용이 바뀔때 초기화 용도지만,
   // 사실 다른곳에 달아도 적용됨 ㅎㅎ;
+
   const handleChangeComment = (e) => {
     const { name, value } = e.target
     setAddComment((prev) => ({ ...prev, [name]: value }))
@@ -46,6 +59,11 @@ const ReadComponent = ({ id }) => {
 
   // 댓글 등록관련 시스템 전부
   const handleClickAdd = async () => {
+    if (!isLogin) {
+      navigate(`/login?redirect=${encodeURIComponent(location.pathname + location.search)}`)
+      return
+    }
+
     if (!addComment.content.trim()) {
       alert("댓글 내용을 입력해주세요.")
       return
@@ -85,7 +103,7 @@ const ReadComponent = ({ id }) => {
       {makeDiv("작성자", board.writer)}
       {makeDiv("제목", board.title)}
       {makeDiv("내용", board.content)}
-      {makeDiv("작성일자", dayjs(board.createDate).format('YYYY-MM-DD HH:MM'))}
+      {makeDiv("작성일자", dayjs(board.createDate).format('YYYY-MM-DD HH:mm'))}
 
       <div className="flex justify-center">
         <div className="relative mb-4 flex w-full flex-wrap items-stretch">
@@ -133,11 +151,27 @@ const ReadComponent = ({ id }) => {
           </div>
         </div>
 
+
+
+        {/*댓글 수정 */}
+
+
         {/*댓글 출력 테스트*/}
         {comment?.length > 0 ?
           comment.map((comment, index) => {
             return (
-              <div key={index}>{makeDiv(comment.writer, comment.content)}</div>
+              <div key={index}>{makeDiv(comment.writer, comment.content)}
+                {/* 댓글 삭제 */} 
+                <button
+                  className="px-2 py-1 text-sm bg-red-500 text-white rounded"
+                  onClick={async () => {
+                    await commentRemove(comment.id);
+                    const list = await commentGetList(id);
+                    setComment(list);
+                  }}>
+                  삭제
+                </button>
+              </div>
             )
           })
           :

@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import useCustomLogin from "../hooks/useCustomLogin";
+import GoogleLoginApi from "../../api/googleLoginAPI"
 
 const initState = {
   email: "",
@@ -84,9 +85,7 @@ const LoginComponent = () => {
       </div>
 
       <div className="mt-5 flex h-36 w-72 flex-col gap-2">
-        <button className="rounded-lg bg-[#db4437] p-2 text-center text-white">
-          구글로 로그인 하기
-        </button>
+        <GoogleLoginApi/>
         <button className="rounded-lg bg-[#2db400] p-2 text-center text-white">
           네이버로 로그인 하기
         </button>

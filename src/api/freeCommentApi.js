@@ -17,3 +17,17 @@ export const commentRegister = async (comment, boardId) => {
     console.log(res)
     return res.data
 }
+
+export const commentModify = async (id, comment) => {
+    const res = await jwtAxios.put(`${prefix}/${id}`,comment,{
+        headers:{"Content-Type" : "application/json"}
+    })
+    return res.data
+}
+
+export const commentRemove = async (id) =>{
+    const res = await jwtAxios.delete(`${prefix}/${id}`)
+    return res.data
+}
+
+
