@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { useState } from "react";
 import useCustomLogin from "../hooks/useCustomLogin";
 import GoogleLoginApi from "../../api/googleLoginAPI"
+import KakaoLoginAPI from "../../api/kakaoLoginAPI";
 
 const initState = {
   email: "",
@@ -89,9 +90,7 @@ const LoginComponent = () => {
         <button className="rounded-lg bg-[#2db400] p-2 text-center text-white">
           네이버로 로그인 하기
         </button>
-        <button className="rounded-lg bg-[#f7e600] p-2 text-center text-[#3c1e1e]">
-          카카오로 로그인 하기
-        </button>
+        <KakaoLoginAPI/>
       </div>
 
       <div className="mt-3">

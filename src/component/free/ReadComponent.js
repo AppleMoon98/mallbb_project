@@ -18,6 +18,7 @@ const boardState = {
   delflag: false,
   uploadFileNames: [],
   writer: "",
+  canEdit: false,
 }
 
 const addCommentState = {
@@ -30,6 +31,7 @@ const commentState = {
   createDate: "",
   delflag: false,
   writer: "",
+  canEdit: false,
 }
 
 
@@ -161,7 +163,7 @@ const ReadComponent = ({ id }) => {
           comment.map((comment, index) => {
             return (
               <div key={index}>{makeDiv(comment.writer, comment.content)}
-                {/* 댓글 삭제 */} 
+                {/* 댓글 삭제 */}
                 <button
                   className="px-2 py-1 text-sm bg-red-500 text-white rounded"
                   onClick={async () => {

@@ -17,9 +17,8 @@ const ReadPage = () => {
 
     return(
         <div className="font-extrabold w-full bg-white mt-6">
-            <div className="text-4xl text-center">
+            <div className="text-4xl text-center"></div>
             <ReadComponent id={id}></ReadComponent>
-            </div>
         </div>
     )
 }
