@@ -20,15 +20,20 @@ export default function AddComponent() {
     setBoard((prev) => ({ ...prev, [name]: value }))
   }
 
+  
+
   const handleClickAdd = async () => {
     if (!board.title.trim() || !board.content.trim()) {
       alert("제목과 내용을 입력해 주세요.")
       return
     }
-
+    //일단 보류
+    const html = board.content
+    const plainText = html.replace(/<\/?[^>]+>/g, '').trim()
+    //
     const formdata = new FormData()
     formdata.append("title", board.title)
-    formdata.append("content", board.content)
+    formdata.append("content", plainText)
 
     const files = uploadRef.current?.files
     if (files && files.length > 0) 

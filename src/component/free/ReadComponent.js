@@ -100,11 +100,10 @@ const ReadComponent = ({ id }) => {
   }, [id])
 
 
-  const refreshComments = async (id) => {
-
-    //const list = await commentGetList(id)
-    //setComment(list)
-
+  const refreshComments = (targetId) => {
+    setComment(prev =>
+      prev.map(c => c.id === targetId ? { ...c, useEdit: !c.useEdit } : c)
+    )
   }
 
   return (
@@ -165,22 +164,22 @@ const ReadComponent = ({ id }) => {
 
         {/*댓글 출력 테스트*/}
         {comment?.length > 0 ?
-          comment.map((comment, index) => {
+          comment.map((c, index) => {
             return (
               <div key={index}>
-                {comment.useEdit ? <></> : makeDiv(comment.writer, comment.content)}
+                {c.useEdit ? <></> : makeDiv(c.writer, c.content)}
                 {/* 댓글 삭제 */}
                 <button
                   className="px-2 py-1 text-sm bg-red-500 text-white rounded"
                   onClick={async () => {
-                    await commentRemove(comment.id);
+                    await commentRemove(c.id);
                     const list = await commentGetList(id);
                     setComment(list);
                   }}>
                   삭제
                 </button>
                 {/*댓글 수정 */}
-                <button type="button" onClick={() => { comment.useEdit = true }}
+                <button type="button" onClick={() => refreshComments(c.id)}
                   className="inline-flex items-center rounded-xl bg-indigo-600 px-5 py-2.5 text-sm font-medium text-white shadow
                        hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-400 active:translate-y-px">
                   수정

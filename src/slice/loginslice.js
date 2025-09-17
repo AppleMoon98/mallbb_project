@@ -3,7 +3,11 @@ import { loginPost } from "../api/memberApi"
 import { getCookie, removeCookie, setCookie } from "../util/CookieUtil"
 
 const initState = {
-    email: ''
+    email: '',
+    nickname: null,
+    accessToken: null,
+    refreshToken: null,
+    roleNames: [],
 }
 
 export const loginPostAsync = createAsyncThunk('loginPostAsync', (param) => {
@@ -29,6 +33,7 @@ const loginSlice = createSlice({
         },
 
         logout: (state, action) => {
+            removeCookie("member")
             console.log("logout.......")
             console.log("member")
             return { ...initState }

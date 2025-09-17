@@ -66,20 +66,6 @@ export function InputDetail({ board, handleChangeBoard, uploadRef, handleClickAd
   return (
     <div className="mx-auto max-w-2xl px-4 py-8">
       <h1 className="mb-6 text-2xl font-semibold">글 등록</h1>
-      <div>
-      <h2>게시판 글쓰기</h2>
-      <CKEditor
-        editor={ClassicEditor}
-        data="여기에 글 작성..."
-        onReady={editor => {
-          console.log('Editor is ready!', editor)
-        }}
-        onChange={(event, editor) => {
-          const data = editor.getData()
-          console.log({ data })
-        }}
-      />
-    </div>
       <div className="space-y-5 rounded-2xl bg-white p-6 shadow">
         <div className="space-y-2">
           <label htmlFor="title" className="text-sm font-medium text-gray-700">
@@ -92,8 +78,8 @@ export function InputDetail({ board, handleChangeBoard, uploadRef, handleClickAd
 
         <div className="space-y-2">
           <label htmlFor="content" className="text-sm font-medium text-gray-700">내용</label>
-          <CKEditor editor={ClassicEditor} style={{ minHeight: "200px" }} placeholder="내용" rows={8} data={board.content} onChange={(_, editor) => {handleChangeBoard({ target: { name: "content", value: editor.getData() } })}}
-            />
+          <CKEditor editor={ClassicEditor} style={{ minHeight: "200px" }} placeholder="내용" rows={8} data={board.content} onChange={(_, editor) => { handleChangeBoard({ target: { name: "content", value: editor.getData() } }) }}
+          />
         </div>
 
         <div className="space-y-2">
@@ -131,8 +117,8 @@ export function OutputModify({ board, handleChangeBoard, uploadRef, handleClickM
 
         <div className="space-y-2">
           <label htmlFor="content" className="text-sm font-medium text-gray-700">내용</label>
-          <CKEditor editor={ClassicEditor} style={{ minHeight: "200px" }} placeholder="내용" rows={8} data={board.content} onChange={(_, editor) => {handleChangeBoard({ target: { name: "content", value: editor.getData() } })}}
-            />
+          <CKEditor editor={ClassicEditor} style={{ minHeight: "200px" }} placeholder="내용" rows={8} data={board.content} onChange={(_, editor) => { handleChangeBoard({ target: { name: "content", value: editor.getData() } }) }}
+          />
         </div>
 
         <div className="space-y-2">
