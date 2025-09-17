@@ -1,1 +1,7 @@
-XLWhpXjufWIVgmHSe/txoQ==|cD+5WKk2ToQUbAoj54C4M0yb
+{
+    "codetogether.debug": true,
+    "codetogether.allowUnauthorizedCerts": true,
+    "codetogether.debugHttp": true,
+    "codetogether.terminal.revealOnGuestActivity": false,
+    "codetogether.virtualCursorJoin": "sharedVirtualCursor"
+}

@@ -23,11 +23,10 @@ const ListComponent = () =>{
     
     const [serverData, setServerData] = useState(initState);
     
-    useEffect(()=>{
-        getList({page,size}).then(data=>{
-            setServerData(data)
-        })
-    },[page,size]);
+    useEffect(() => {
+    getList({ page, size }).then(data => setServerData({...initState, ...data,
+        dtoList: Array.isArray(data?.dtoList) ? data.dtoList : [],}));
+  }, [page, size])
 
     return (
   <div className="w-[60%] mx-auto my-5">
@@ -42,7 +41,8 @@ const ListComponent = () =>{
         <PageComponent serverData={serverData} movePage={moveToList} />
       </div>
       <div className="flex justify-end">
-        <Link to="/question/add" className="mt-4 inline-block rounded-md bg-blue-600 px-4 py-2 text-white hover:bg-blue-700">
+        <Link to="/question/add" className="inline-flex items-center rounded-xl bg-indigo-600 px-5 py-2.5 text-sm font-medium text-white shadow
+                       hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-400 active:translate-y-px">
           글 등록
         </Link>
       </div>

@@ -19,11 +19,12 @@ const ModifyComponent = ({ id }) => {
     const { moveToPath } = useCustomMove()
     const [fetching, setFetching] = useState(false)
     const uploadRef = useRef()
-
-    const handleChangeBoard = (e) => {
-        board[e.target.name] = e.target.value
-        setBoard({ ...board })
-    }
+//
+    const handleChangeBoard = (eOrObj) => {
+    const { name, value } = 'target' in eOrObj ? eOrObj.target : eOrObj
+    setBoard(prev => ({ ...prev, [name]: value }))
+//    
+}
 
     const handleClickModify = async () => {
         const files = uploadRef.current.files

@@ -47,7 +47,7 @@ const requestFail = (err) => {
 const beforeRes = async (res) => {
     console.log("before return response..........")
     const data = res.data
-    if (data && data.error === 'ERROR_ACCESS_TOKEN') {
+    if ((data && data.error === 'ERROR_ACCESS_TOKEN')) {
         const memberCookieValue = getCookie("member")
         const result = await refreshJWT(memberCookieValue.accessToken, memberCookieValue.refreshToken)
         console.log("refreshJWT RESULT", result)

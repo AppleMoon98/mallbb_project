@@ -1,11 +1,10 @@
-import { publicAxios } from "../util/http";
 import jwtAxios from "../util/JWTUtil";
-import { API_SERVER_HOST } from "./config";
+import { API_SERVER_HOST, moveAxios } from "./config";
 
 const prefix = `${API_SERVER_HOST}/rc`
 
 export const commentGetList = async (boardId) => {
-    const res = await publicAxios.get(`${prefix}/${boardId}`)
+    const res = await moveAxios.get(`${prefix}/${boardId}`)
     return res.data
 }
 

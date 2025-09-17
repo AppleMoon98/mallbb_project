@@ -1,81 +1,140 @@
 import { useEffect, useState } from "react";
-import { getOne, remove } from "../../api/questionApi";
-import { commentGetList } from "../../api/questionCommentApi"
 import useCustomMove from "../hooks/useCustomMove";
 import { API_SERVER_HOST } from "../../api/config";
+import { getOne , remove } from "../../api/questionApi";
 import FetchingModal from "../../common/FetchingModal";
-
-
-const initState = {
-  id: 0,
-  title: "",
-  content: "",
-  startDate: "",
-  desc: "",
-  delflag: false,
-  uploadFilenames: [],
-  commentList: [],
-}
+import dayjs from "dayjs";
+import { commentGetList, commentRegister, commentRemove ,commentModify } from "../../api/questionCommentApi";
+import { useLocation, useNavigate } from "react-router-dom";
+import { getCookie } from "../../util/CookieUtil";
+import jwtAxios from "../../util/JWTUtil";
 
 const prefix = API_SERVER_HOST;
 
+const boardState = {
+  id: 0,
+  title: "",
+  content: "",
+  createDate: "",
+  delflag: false,
+  uploadFileNames: [],
+  writer: "",
+  canEdit: false,
+}
+
+const addCommentState = {
+  content: ""
+} 
+
+const commentState = {
+  id: 0,
+  content: "",
+  createDate: "",
+  delflag: false,
+  writer: "",
+  canEdit: false,
+}
+
+
 const ReadComponent = ({ id }) => {
-  const [question, setQuestion] = useState(initState);
-  const [comment, setComment] = useState()
-  const { moveToModify, moveToPath } = useCustomMove();
-  const [fetching, setFetching] = useState(false);
-  const [result, setResult] = useState(null)
+  const [board, setBoard] = useState(boardState)
+  const [comment, setComment] = useState(commentState)
 
-  const handleChangeQuest = (e) => {
+  //useState([]) length가 터지기 때문에 빈 배열로 담아야 하나?
+  const [addComment, setAddComment] = useState(addCommentState)
+  const { moveToPath, moveToModify } = useCustomMove()
+  const [fetching, setFetching] = useState(false)
+
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const isLogin = !!getCookie("member")
+  //!!는 이중 부정 연산자 =>자바스크립트의 이중 부정 연산자로, 어떤 값이든 명시적인 불리언(Boolean) 타입으로 변환하는 데 사용
+
+  // 댓글 등록시 내용이 바뀔때 초기화 용도지만,
+  // 사실 다른곳에 달아도 적용됨 ㅎㅎ;
+
+  const handleChangeComment = (e) => {
     const { name, value } = e.target
-    setQuestion((prev) => ({ ...prev, [name]: value }))
+    setAddComment((prev) => ({ ...prev, [name]: value }))
   }
 
-  const handleClickCommentSave = (e) => {
+  // 댓글 등록관련 시스템 전부
+  const handleClickAdd = async () => {
+    if (!isLogin) {
+      navigate(`/login?redirect=${encodeURIComponent(location.pathname + location.search)}`)
+      return
+    }
 
+    if (!addComment.content.trim()) {
+      alert("댓글 내용을 입력해주세요.")
+      return
+    }
 
+    const commentData = { content: addComment.content }
+
+    try {
+      const res = await commentRegister(commentData, id)
+      alert("등록되었습니다.", res)
+      setAddComment(addCommentState)
+      window.location.reload()
+    } catch (err) {
+      console.error("댓글 오류 : ", err)
+      alert("등록 중 오류가 발생하였습니다.")
+    }
   }
 
-  const handleClickDelete = () => {
-    remove(id).then(data => {
-
-      setResult('삭제')
-      setFetching(false)
-    })
+  const handleClickDelete = async () => {
+  if (!window.confirm("정말 삭제하시겠습니까?")) return;
+  try {
+    setFetching(true);
+    await remove(id);
+    moveToPath('../', true);
+  } catch (e) {
+    alert("삭제 중 오류가 발생했습니다.");
+  } finally {
+    setFetching(false);
   }
+}
+
+const handleClickComment = i => e => {
+  this.commentState({
+    ...this.state
+  })
+}
 
   useEffect(() => {
-    setFetching(true);
+    setFetching(true)
     getOne(id).then((data) => {
-      console.log(data)
-      setQuestion(data);
-      setFetching(false);
+      setBoard(data)
+      setFetching(false)
     })
 
     commentGetList(id).then((data) => {
-      console.log(data)
+      setComment(data)
+      setFetching(false)
     })
   }, [id])
 
   return (
     <div className="border-2 border-sky-200 mt-10 m-2 p-4">
-      {fetching ? <FetchingModal /> : null}
+      {fetching ? <FetchingModal /> : <></>}
 
-      {makeDiv("번호", question.id)}
-      {makeDiv("제목", question.title)}
-      {makeDiv("내용", question.content)}
-      {makeDiv("작성일자", question.createDate)}
-
+      {makeDiv("번호", board.id)}
+      {makeDiv("작성자", board.writer)}
+      {makeDiv("제목", board.title)}
+      {makeDiv("내용", board.content)}
+      {makeDiv("작성일자", dayjs(board.createDate).format('YYYY-MM-DD HH:mm'))}
 
       <div className="flex justify-center">
         <div className="relative mb-4 flex w-full flex-wrap items-stretch">
           <div className="w-1/5 p-6 text-right font-bold">이미지</div>
           <div className="w-4/5 flex flex-wrap gap-2 p-4">
-            {question.uploadFileNames?.length > 0 ? (
-              question.uploadFileNames.map((imgFile, i) => (
+            {board.uploadFileNames?.length > 0 ? (
+              board.uploadFileNames.map((imgFile, i) => (
                 <img
                   key={i}
-                  alt={`question-${i}`}
+                  alt={`board-${i}`}
                   className="p-2 w-1/3 cursor-pointer border rounded"
                   src={`${prefix}/q/view/${imgFile}`}
                 />
@@ -88,40 +147,69 @@ const ReadComponent = ({ id }) => {
       </div>
 
       <div className="flex justify-end p-4">
-        <button
-          type="button"
-          className="rounded p-4 m-2 text-xl w-32 text-white bg-red-500"
-          onClick={() => handleClickDelete(id)}>
+        <button type="button" className="rounded p-4 m-2 text-xl w-32 text-white bg-blue-500"
+          onClick={handleClickDelete}>
           삭제
         </button>
-        <button
-          type="button"
-          className="rounded p-4 m-2 text-xl w-32 text-white bg-blue-500"
+        <button type="button" className="rounded p-4 m-2 text-xl w-32 text-white bg-red-500"
           onClick={() => moveToModify(id)}>
           수정
         </button>
       </div>
-      <div>
-        <hr />
-
+      <>
+        {/*댓글 입력 테스트*/}
         <div className="space-y-2">
-          <label htmlFor="content" className="text-sm font-medium text-gray-700">내용</label>
-          <textarea id="comment" name="comment" placeholder="내용" rows={8} value={question.content} onChange={handleChangeQuest}
+          <label htmlFor="content" className="text-sm font-medium text-gray-700">댓글 입력</label>
+          <textarea id="content" name="content" placeholder="소중한 한마디 적어주세요" rows={8} value={addComment.content} onChange={handleChangeComment}
             className="w-full resize-y rounded-xl border border-gray-200 bg-gray-50 px-4 py-2 outline-none transition
                        focus:border-indigo-400 focus:bg-white focus:ring-2 focus:ring-indigo-200"/>
+          <div className="flex justify-end">
+            <button type="button" onClick={handleClickAdd}
+              className="inline-flex items-center rounded-xl bg-indigo-600 px-5 py-2.5 text-sm font-medium text-white shadow
+                       hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-400 active:translate-y-px">
+              글 등록
+            </button>
+          </div>
         </div>
 
-        <div className="flex justify-end p-4">
-          <button
-            type="button"
-            className="rounded p-4 m-2 text-xl w-32 text-white bg-blue-500"
-            onClick={() => (id)}>
-            등록
-          </button>
-        </div>
-      </div>
+
+
+        {/*댓글 수정 */}
+
+
+        {/*댓글 출력 테스트*/}
+        {comment?.length > 0 ?
+          comment.map((comment, index) => {
+            return (
+              <div key={index}>{makeDiv(comment.writer, comment.content)}
+                {/* 댓글 삭제 */}
+                <button
+                  className="px-2 py-1 text-sm bg-red-500 text-white rounded"
+                  onClick={async () => {
+                    await commentRemove(comment.id);
+                    const list = await commentGetList(id);
+                    setComment(list);
+                  }}>
+                  삭제
+                </button>
+                {/* 댓글 수정 */}
+                <button
+                  className="px-2 py-1 text-sm bg-red-500 text-white rounded"
+                  onClick={async () => {
+                    await commentRemove(comment.id);
+                    const list = await commentGetList(id);
+                    setComment(list);
+                  }}>
+                  수정(현삭제)
+                </button>
+
+              </div>
+            )
+          })
+          :
+          <></>}
+      </>
     </div>
-
   );
 };
 

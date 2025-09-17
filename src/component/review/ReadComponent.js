@@ -74,7 +74,7 @@ const ReadComponent = ({ id }) => {
       setAddComment(addCommentState)
       window.location.reload()
     }catch (err) {
-      console.error("댓글 오류 : " + err)
+      console.error("댓글 오류 : ", err)
       alert("등록 중 오류가 발생하였습니다")
     }
   }
@@ -93,13 +93,13 @@ const handleClickDelete = async () => {
 }
 
 useEffect(() => {
-  setFetching(true);
+  setFetching(true)
   getOne(id).then((data) => {
     setReview(data)
     setFetching(false)
   })
 
-  commentGetList(id).then((data) => {
+  commentGetList(id).then( (data) => {
     setComment(data)
     setFetching(false)
   })

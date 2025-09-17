@@ -32,6 +32,7 @@ const commentState = {
   delflag: false,
   writer: "",
   canEdit: false,
+  useEdit: false,
 }
 
 
@@ -77,7 +78,8 @@ const ReadComponent = ({ id }) => {
       const res = await commentRegister(commentData, id)
       alert("등록되었습니다.", res)
       setAddComment(addCommentState)
-      window.location.reload()
+      const list = await commentGetList(id)
+      setComment(list)
     } catch (err) {
       console.error("댓글 오류 : ", err)
       alert("등록 중 오류가 발생하였습니다.")
@@ -97,6 +99,14 @@ const ReadComponent = ({ id }) => {
     })
   }, [id])
 
+
+  const refreshComments = async (id) => {
+
+    //const list = await commentGetList(id)
+    //setComment(list)
+
+  }
+
   return (
     <div className="border-2 border-sky-200 mt-10 m-2 p-4">
       {fetching ? <FetchingModal /> : <></>}
@@ -104,7 +114,7 @@ const ReadComponent = ({ id }) => {
       {makeDiv("번호", board.id)}
       {makeDiv("작성자", board.writer)}
       {makeDiv("제목", board.title)}
-      {makeDiv("내용", board.content)}
+      {makeDiv("내용", <div className="content" dangerouslySetInnerHTML={{ __html: board.content }} />)}
       {makeDiv("작성일자", dayjs(board.createDate).format('YYYY-MM-DD HH:mm'))}
 
       <div className="flex justify-center">
@@ -153,16 +163,12 @@ const ReadComponent = ({ id }) => {
           </div>
         </div>
 
-
-
-        {/*댓글 수정 */}
-
-
         {/*댓글 출력 테스트*/}
         {comment?.length > 0 ?
           comment.map((comment, index) => {
             return (
-              <div key={index}>{makeDiv(comment.writer, comment.content)}
+              <div key={index}>
+                {comment.useEdit ? <></> : makeDiv(comment.writer, comment.content)}
                 {/* 댓글 삭제 */}
                 <button
                   className="px-2 py-1 text-sm bg-red-500 text-white rounded"
@@ -173,7 +179,14 @@ const ReadComponent = ({ id }) => {
                   }}>
                   삭제
                 </button>
+                {/*댓글 수정 */}
+                <button type="button" onClick={() => { comment.useEdit = true }}
+                  className="inline-flex items-center rounded-xl bg-indigo-600 px-5 py-2.5 text-sm font-medium text-white shadow
+                       hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-400 active:translate-y-px">
+                  수정
+                </button>
               </div>
+
             )
           })
           :

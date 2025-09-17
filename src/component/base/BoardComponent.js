@@ -1,4 +1,6 @@
 import dayjs from "dayjs";
+import { CKEditor } from '@ckeditor/ckeditor5-react'
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic'
 
 export function OutputList({ serverData, onClickTitle }) {
   const hasData = serverData?.totalCount > 0 && serverData?.dtoList?.length > 0;
@@ -64,7 +66,20 @@ export function InputDetail({ board, handleChangeBoard, uploadRef, handleClickAd
   return (
     <div className="mx-auto max-w-2xl px-4 py-8">
       <h1 className="mb-6 text-2xl font-semibold">글 등록</h1>
-
+      <div>
+      <h2>게시판 글쓰기</h2>
+      <CKEditor
+        editor={ClassicEditor}
+        data="여기에 글 작성..."
+        onReady={editor => {
+          console.log('Editor is ready!', editor)
+        }}
+        onChange={(event, editor) => {
+          const data = editor.getData()
+          console.log({ data })
+        }}
+      />
+    </div>
       <div className="space-y-5 rounded-2xl bg-white p-6 shadow">
         <div className="space-y-2">
           <label htmlFor="title" className="text-sm font-medium text-gray-700">
@@ -77,9 +92,8 @@ export function InputDetail({ board, handleChangeBoard, uploadRef, handleClickAd
 
         <div className="space-y-2">
           <label htmlFor="content" className="text-sm font-medium text-gray-700">내용</label>
-          <textarea id="content" name="content" placeholder="내용" rows={8} value={board.content} onChange={handleChangeBoard}
-            className="w-full resize-y rounded-xl border border-gray-200 bg-gray-50 px-4 py-2 outline-none transition
-                       focus:border-indigo-400 focus:bg-white focus:ring-2 focus:ring-indigo-200"/>
+          <CKEditor editor={ClassicEditor} style={{ minHeight: "200px" }} placeholder="내용" rows={8} data={board.content} onChange={(_, editor) => {handleChangeBoard({ target: { name: "content", value: editor.getData() } })}}
+            />
         </div>
 
         <div className="space-y-2">
@@ -117,9 +131,8 @@ export function OutputModify({ board, handleChangeBoard, uploadRef, handleClickM
 
         <div className="space-y-2">
           <label htmlFor="content" className="text-sm font-medium text-gray-700">내용</label>
-          <textarea id="content" name="content" placeholder="내용" rows={8} value={board.content} onChange={handleChangeBoard}
-            className="w-full resize-y rounded-xl border border-gray-200 bg-gray-50 px-4 py-2 outline-none transition
-                       focus:border-indigo-400 focus:bg-white focus:ring-2 focus:ring-indigo-200"/>
+          <CKEditor editor={ClassicEditor} style={{ minHeight: "200px" }} placeholder="내용" rows={8} data={board.content} onChange={(_, editor) => {handleChangeBoard({ target: { name: "content", value: editor.getData() } })}}
+            />
         </div>
 
         <div className="space-y-2">

@@ -1,17 +1,16 @@
-import { publicAxios } from "../util/http"
 import jwtAxios from "../util/JWTUtil"
-import { API_SERVER_HOST } from "./config"
+import { API_SERVER_HOST, moveAxios } from "./config"
 
 const prefix = `${API_SERVER_HOST}/n`
 
 export const getList = async (pageParam) => {
     const { page, size } = pageParam
-    const res = await publicAxios.get(`${prefix}/l`, { params: { page: page, size: size } })
+    const res = await moveAxios.get(`${prefix}/l`, { params: { page: page, size: size } })
     return res.data;
 }
 
 export const getOne = async (id) => {
-    const res = await publicAxios.get(`${prefix}/${id}`);
+    const res = await moveAxios.get(`${prefix}/${id}`);
     return res.data;
 }
 

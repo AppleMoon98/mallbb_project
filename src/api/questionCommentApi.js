@@ -3,32 +3,34 @@ import { API_SERVER_HOST } from "./config"
 
 const prefix = `${API_SERVER_HOST}/qc`
 
-export const commentGetList = async (pageParam, id) => {
-    const { page, size } = pageParam
-    const res = await jwtAxios.get(`${prefix}/${id}`, { params: { page: page, size: size } })
-    return res.data;
-}
-export const commentGetOne = async (id) => {
-    const res = await jwtAxios.get(`${prefix}/${id}`);
+export const commentGetList = async (boardId) => {
+    const res = await jwtAxios.get(`${prefix}/${boardId}`)
     return res.data;
 }
 
-
-export const commentRegister = async (formdata) => {
-    const res = await jwtAxios.post(`${prefix}/`, formdata, {
-        headers: { "Content-Type": "multipart/form-data" }
+export const commentRegister = async (comment,boardId) => {
+    const res = await jwtAxios.post(`${prefix}/${boardId}`, comment, {
+        headers: { "Content-Type": "application/json" }
     });
 
     return res.data;
 }
 
-export const commentModify = async (id, formdata) => {
-    const res = await jwtAxios.put(`${prefix}/${id}`, formdata, {
-        headers: { "Content-Type": "multipart/form-data" }
+export const commentModify = async (id, comment) => {
+    const res = await jwtAxios.put(`${prefix}/${id}`, comment, {
+        headers: { "Content-Type": "application/json" }
     });
 
     return res.data;
 }
+
+export const commentGetOne = async (boardId) => {
+    const res = await jwtAxios.get(`${prefix}/${boardId}`);
+    return res.data;
+}
+
+
+
 
 export const commentRemove = async (id) => {
     const res = await jwtAxios.delete(`${prefix}/${id}`);

@@ -2,7 +2,7 @@ import Addcomponent from "../../component/notice/AddComponent"
 
 const Addpage = () =>{
     return(
-        <div>
+        <div className="bg-[#F4C455]">
             <Addcomponent/>
         </div>
     )

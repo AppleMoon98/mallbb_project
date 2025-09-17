@@ -3,15 +3,17 @@ import { register } from "../../api/questionApi";
 import useCustomMove from "../hooks/useCustomMove"
 import { InputDetail } from "../base/BoardComponent";
 
+
 const initState = {
   title: "",
   content: "",
 }
 
 export default function AddComponent() {
-  const [questionBoard, setQuestionBoard] = useState({ initState })
+  const [questionBoard, setQuestionBoard] = useState(initState)
   const uploadRef = useRef(null)
   const { moveToPath } = useCustomMove()
+
 
   const handleChangeQuestionBoard = (e) => {
     const { name, value } = e.target;
@@ -33,8 +35,6 @@ export default function AddComponent() {
       for (let i = 0; i < files.length; i++) 
         formdata.append("files", files[i])
       
-    
-
     try {
       const res = await register(formdata);
       console.log("등록 성공:", res);

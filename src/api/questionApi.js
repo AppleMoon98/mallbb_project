@@ -23,7 +23,7 @@ export const register = async (formdata) => {
     return res.data;
 }
 
-export const modify = async (id, formdata) => {
+export const modify = async (formdata,id) => {
     const res = await jwtAxios.put(`${prefix}/${id}`, formdata, {
         headers: { "Content-Type": "multipart/form-data" }
     });
