@@ -16,6 +16,9 @@ export const loginPost = async(loginParam) => {
 }
 
 export const kakaoLoginPost = async(data) => {
-    const result = await axios.post(`${host}/auth/kakao`, data)
+    const result = await axios.post(`${host}/auth/kakao`, data, {
+        withCredentials: true,
+        headers: {"Content-Type":"application/json"}
+    })
     return result.data
 }
