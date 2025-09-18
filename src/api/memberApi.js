@@ -14,3 +14,7 @@ export const loginPost = async(loginParam) => {
 
     return result.data
 }
+
+export const kakaoLoginPost = async(data) => {
+    
+}

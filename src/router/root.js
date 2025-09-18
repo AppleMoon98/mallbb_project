@@ -20,6 +20,8 @@ const Reservation = lazy(()=>import("../pages/reservation"))
 const Map = lazy(()=>import("../pages/map"))
 const WebInfo = lazy(()=>import("../pages/webinfo"))
 
+const KakaoLoginComponent = lazy(()=>import("../component/auth/KakaoLoginComponent"))
+
 const root = createBrowserRouter([
   {
     path: "/",
@@ -72,6 +74,11 @@ const root = createBrowserRouter([
   {
     path: "webinfo",
     element:<Suspense fallback={Loading}><WebInfo/></Suspense>
+  },
+  {
+    // 카카오 테스트 용도로 사용할 주소
+    path: "kakao",
+    element:<Suspense fallback={Loading}><KakaoLoginComponent/></Suspense>
   }
 ])
 
