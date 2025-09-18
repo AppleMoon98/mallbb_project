@@ -19,7 +19,6 @@ const QuestionIndex = lazy( () => import("../pages/question/IndexPage"))
 const Reservation = lazy(()=>import("../pages/reservation"))
 const Map = lazy(()=>import("../pages/map"))
 const WebInfo = lazy(()=>import("../pages/webinfo"))
-
 const KakaoLoginComponent = lazy(()=>import("../component/auth/KakaoLoginComponent"))
 
 const root = createBrowserRouter([

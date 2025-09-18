@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { useState } from "react";
 import useCustomLogin from "../hooks/useCustomLogin";
 import GoogleLoginApi from "../../api/googleLoginAPI"
-import KakaoLoginAPI from "../../api/kakaoLoginAPI";
+import KakaoLoginAPI from "../../component/auth/KakaoLoginComponent";
 
 const initState = {
   email: "",
