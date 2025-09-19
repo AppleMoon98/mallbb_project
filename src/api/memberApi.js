@@ -3,6 +3,7 @@ import { API_SERVER_HOST } from "./config";
 
 const host = `${API_SERVER_HOST}/member`
 
+// 일반 로그인
 export const loginPost = async(loginParam) => {
     const header = {headers: {"Content-Type":"x-www-form-urlencoded"}}
 
@@ -15,10 +16,15 @@ export const loginPost = async(loginParam) => {
     return result.data
 }
 
+// 카카오 로그인
 export const kakaoLoginPost = async(data) => {
     const result = await axios.post(`${host}/auth/kakao`, data, {
         withCredentials: true,
         headers: {"Content-Type":"application/json"}
     })
     return result.data
+}
+
+export const naverLogin = async(data) => {
+    
 }

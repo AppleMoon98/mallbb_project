@@ -3,6 +3,7 @@ import { useState } from "react";
 import useCustomLogin from "../hooks/useCustomLogin";
 import GoogleLoginApi from "../../api/googleLoginAPI"
 import KakaoLoginAPI from "../../component/auth/KakaoLoginComponent";
+import NaverLoginAPI from "../../component/auth/NaverLoginComponent"
 
 const initState = {
   email: "",
@@ -85,11 +86,9 @@ const LoginComponent = () => {
         </button>
       </div>
 
-      <div className="mt-5 flex h-36 w-72 flex-col gap-2">
+      <div className="mt-5 flex h-36 w-72 flex-col gap-2 text-center">
         <GoogleLoginApi/>
-        <button className="rounded-lg bg-[#2db400] p-2 text-center text-white">
-          네이버로 로그인 하기
-        </button>
+        <NaverLoginAPI/>
         <KakaoLoginAPI/>
       </div>
 
