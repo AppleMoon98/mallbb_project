@@ -1,10 +1,5 @@
 import MainNav from "../common/MainNav";
 
-
-
-
-
-
 const WebInfoPage=()=>{
     
     return(

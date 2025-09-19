@@ -60,7 +60,7 @@ const ListComponent = () => {
                       key={item.id}
                       src={`${prefix}/r/view/${item.uploadFileNames}`}
                       text={item.title}
-                      label={''}
+                      label={item.writer}
                       path={`/review/read/${item.id}`}
                     />
                   ))}
@@ -71,7 +71,7 @@ const ListComponent = () => {
                       key={item.id}
                       src={`${prefix}/r/view/${item.uploadFileNames}`}
                       text={item.title}
-                      label={''}
+                      label={item.writer}
                       path={`/review/read/${item.id}`}
                     />
                   ))}

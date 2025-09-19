@@ -1,6 +1,3 @@
-
-
-
 .cards {
     padding: 4rem;
     background: #fff;
@@ -107,6 +104,10 @@
     color: #252e48;
     font-size: 18px;
     line-height: 24px;
+
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
   }
   
   @media only screen and (min-width: 1200px) {
@@ -126,3 +127,15 @@
       margin-bottom: 2rem;
     }
   }
+
+  @media (max-width: 1024px) {
+  .cards__item {
+    flex: 1 1 calc(50% - 20px); /* 2개 카드로 변경 */
+  }
+}
+
+@media (max-width: 600px) {
+  .cards__item {
+    flex: 1 1 100%; /* 모바일에서는 한 줄 1개 */
+  }
+}

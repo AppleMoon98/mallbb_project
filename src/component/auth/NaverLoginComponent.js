@@ -15,10 +15,9 @@ const NaverLoginComponent = () => {
                 "http://localhost/member/auth/naver" // 리다이렉트 URI
             );
             const state = naver_id_login.getUniqState();
-            naver_id_login.setButton("white", 2, 40);
+            naver_id_login.setButton("white", 50, 40);
             naver_id_login.setDomain("http://localhost");
             naver_id_login.setState(state);
-            naver_id_login.setPopup();
             naver_id_login.init_naver_id_login();
         };
     }, []);

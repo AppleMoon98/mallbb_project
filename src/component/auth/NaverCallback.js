@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { API_SERVER_HOST, moveAxios } from "../../api/config"
 
 const NaverCallback = () => {
     useEffect(() => {
@@ -10,30 +11,27 @@ const NaverCallback = () => {
         script.charset = "utf-8";
         document.body.appendChild(script);
 
-        script.onload = () => {
+        script.onload = async () => {
             const naver_id_login = new window.naver_id_login(
                 "qf5lQwzfLlN5Ok34GpdI", // Client ID
-                "http://localhost/member/auth/naver" // Redirect URI
+                `${API_SERVER_HOST}/member/auth/naver` // Redirect URI
             );
 
             // 토큰 확인
             console.log("access_token:", naver_id_login.oauthParams.access_token);
-
-            // 전역에 callback 등록 (네이버 SDK에서 실행)
-            window.naverSignInCallback = function () {
-                const email = naver_id_login.getProfileData("email");
-                const nickname = naver_id_login.getProfileData("nickname");
-
-                console.log("네이버 로그인 성공!");
-                console.log("email:", email);
-                console.log("nickname:", nickname);
-
-                // 여기서 서버에 로그인 요청 보내면 됨
-            };
-
-            // 프로필 요청
-            naver_id_login.get_naver_userprofile("window.naverSignInCallback()");
-        };
+            const token = naver_id_login?.oauthParams?.access_token;
+            console.log(token)
+            const result = await moveAxios.post(
+                `${API_SERVER_HOST}/member/auth/naver`,
+                {},
+                {
+                    headers: { Authorization: `Bearer ${token}` },
+                    withCredentials: true,
+                }
+            );
+            window.location.replace('/')
+            
+        };  
     }, []);
 
     return (

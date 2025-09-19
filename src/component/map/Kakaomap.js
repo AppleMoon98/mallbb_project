@@ -14,10 +14,20 @@ const KakaoMap = () => {
         if (!mapRef.current) return;
 
         const map = new window.kakao.maps.Map(mapRef.current, {
+          keyboardShortcuts: true,
           center: new window.kakao.maps.LatLng(37.5665, 126.9780),
           level: 3,
         });
         console.log("기본 지도 생성됨");
+        
+        const mapTypeControl = new window.kakao.maps.MapTypeControl();
+
+        map.addControl(mapTypeControl, window.kakao.maps.ControlPosition.TOPRIGHT);
+
+        const zoomControl = new window.kakao.maps.ZoomControl();
+        
+        map.addControl(zoomControl, window.kakao.maps.ControlPosition.RIGHT);
+
 
         if (navigator.geolocation) {
           navigator.geolocation.getCurrentPosition(
