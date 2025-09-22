@@ -9,6 +9,7 @@ import { lazy, Suspense } from "react"
 import reviewRouter from "./reviewRouter"
 import questionRouter from "./questionRouter"
 import freeRouter from "./freeRouter"
+import ChatPage from "../pages/ChatPage"
 
 const Loading = <div>Loading......</div>
 const Main = lazy(() => import("../pages/main"))
@@ -20,6 +21,8 @@ const Reservation = lazy(()=>import("../pages/reservation"))
 const Map = lazy(()=>import("../pages/map"))
 const WebInfo = lazy(()=>import("../pages/webinfo"))
 const KakaoLoginComponent = lazy(()=>import("../component/auth/KakaoLoginComponent"))
+
+
 
 const root = createBrowserRouter([
   {
@@ -78,7 +81,12 @@ const root = createBrowserRouter([
     // 카카오 테스트 용도로 사용할 주소
     path: "kakao",
     element:<Suspense fallback={Loading}><KakaoLoginComponent/></Suspense>
+  },
+  {
+    path:"chat",
+    element:<ChatPage/>
   }
 ])
+
 
 export default root;

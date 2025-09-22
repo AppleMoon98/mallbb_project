@@ -6,7 +6,7 @@ return (
       <ul style={{listStyle:"none",margin:0,padding:0}}>
         <li style={{padding:"12px 18px",borderBottom:"1px solid #c9b3b3",background:"#eef0f2",color:"#111",cursor:"pointer"}}>공지</li>
         <li style={{padding:"12px 18px",borderBottom:"1px solid #c9b3b3",background:"#ffffff",color:"#333",cursor:"pointer"}}>자유게시판</li>
-        <li style={{padding:"12px 18px",borderBottom:"1px solid #c9b3b3",background:"#ffffff",color:"#333",cursor:"pointer"}}>Q&A</li>
+        <li style={{padding:"12px 18px",borderBottom:"1px solid #c9b3b3",background:"#ffffff",color:"#333",cursor:"pointer"}}>질문게시판</li>
         <li style={{padding:"12px 18px",borderBottom:"1px solid #c9b3b3",background:"#ffffff",color:"#333",cursor:"pointer"}}>리뷰게시판</li>
       </ul>
     </aside>

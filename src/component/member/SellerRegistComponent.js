@@ -1,18 +1,22 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
-import useCustomMove from "../hooks/useCustomMove";
-import { register } from "../../api/memberApi";
+import { useState } from "react"
+import useCustomMove from "../hooks/useCustomMove"
+import { Link } from "react-router-dom"
+import { sellerRegister } from "../../api/memberApi"
 
 const initState = {
     email: "",
     nickname: "",
     password: "",
+    // 전화번호
     telNum: "",
-    // api 끌고오기 전까지 쓰이지 않음
     certification: false,
+    // 사업자 등록 번호 (Business Registration Number)
+    // BRN은 우리가 따로 보관하지 않음
+    brn: "",
+    brnCertification: false,
 }
 
-const RegistComponent = () => {
+const SellerRegistComponent = () => {
     const [userData, setUserData] = useState(initState)
     const { moveToPath } = useCustomMove()
 
@@ -22,10 +26,11 @@ const RegistComponent = () => {
     }
 
     const handleClickAdd = async () => {
-        if (!userData.email.trim() 
-            || !userData.nickname.trim() 
-            || !userData.password.trim() 
-            || !userData.telNum.trim()) {
+        if (!userData.email.trim()
+            || !userData.nickname.trim()
+            || !userData.password.trim()
+            || !userData.telNum.trim()
+            || !userData.brn.trim()) {
             alert("빈 칸을 모두 채워주세요.")
             return
         }
@@ -39,7 +44,7 @@ const RegistComponent = () => {
         console.log(payload)
 
         try {
-            const res = await register(payload)
+            const res = await sellerRegister(payload)
             console.log("등록 성공 : " + res)
             alert("회원가입이 완료되었습니다.")
             setUserData(initState)
@@ -52,21 +57,23 @@ const RegistComponent = () => {
 
     return (
         <div className="flex flex-col items-center justify-center h-[90vh]">
-            <h1 className="mb-5 text-2xl font-bold">회원가입</h1>
+            <h1 className="mb-5 text-2xl font-bold">사업자 회원가입</h1>
 
             {/* 탭 */}
             <div className="flex gap-10 mb-5">
-                <div className="cursor-pointer rounded-2xl border-2 border-neutral-800 bg-neutral-800 px-6 py-3 font-semibold text-white transition-all">
+                <Link to="/register"
+                    className="px-6 py-3 border-2 border-gray-800 rounded-2xl font-semibold text-gray-800 bg-white hover:bg-gray-100 transition">
                     개인
-                </div>
-                <Link to="/register/seller" className="cursor-pointer rounded-2xl border-2 border-neutral-800 bg-white px-6 py-3 font-semibold text-neutral-800 transition-all hover:bg-neutral-100">
-                    사업자
                 </Link>
+                <div className="px-6 py-3 border-2 border-gray-800 rounded-2xl font-semibold text-white bg-gray-800">
+                    사업자
+                </div>
             </div>
 
             {/* 폼 */}
             <form>
                 <div className="flex flex-col gap-3 border-[3px] border-black p-5 rounded-2xl">
+                    {makeDiv("사업자번호","text","brn",userData.brn, handleChangeData)}
                     {makeDiv("E-mail","email","email",userData.email, handleChangeData)}
                     {makeDiv("닉네임","text","nickname",userData.nickname, handleChangeData)}
                     {makeDiv("PASSWORD","password","password",userData.password, handleChangeData)}
@@ -89,14 +96,15 @@ const RegistComponent = () => {
                 </div>
             </form>
 
+            {/* 돌아가기 */}
             <div className="mt-3">
                 <Link to="/" className="text-gray-600 hover:underline">
                     돌아가기
                 </Link>
             </div>
         </div>
-    );
-};
+    )
+}
 
 const makeDiv = (text, type, idname, value, handleChangeData) => (
     <div>
@@ -106,4 +114,4 @@ const makeDiv = (text, type, idname, value, handleChangeData) => (
     </div>
 );
 
-export default RegistComponent;
+export default SellerRegistComponent

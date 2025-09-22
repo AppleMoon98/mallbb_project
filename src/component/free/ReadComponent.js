@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import useCustomMove from "../hooks/useCustomMove";
-import { API_SERVER_HOST } from "../../api/config"
+import { API_SERVER_HOST } from "../../api/config";
 import { getOne } from "../../api/freeApi";
 import FetchingModal from "../../common/FetchingModal";
 import dayjs from "dayjs";
-import { commentGetList, commentRegister, commentRemove } from "../../api/freeCommentApi";
+import { commentGetList, commentRegister, commentRemove, commentModify } from "../../api/freeCommentApi";
 import { useLocation, useNavigate } from "react-router-dom";
 import { getCookie } from "../../util/CookieUtil";
 
@@ -19,191 +19,207 @@ const boardState = {
   uploadFileNames: [],
   writer: "",
   canEdit: false,
-}
+};
 
-const addCommentState = {
-  content: ""
-}
-
-const commentState = {
-  id: 0,
-  content: "",
-  createDate: "",
-  delflag: false,
-  writer: "",
-  canEdit: false,
-  useEdit: false,
-}
-
+const addCommentState = { content: "" };
 
 const ReadComponent = ({ id }) => {
-  const [board, setBoard] = useState(boardState)
-  const [comment, setComment] = useState(commentState)
-
-  //useState([]) length가 터지기 때문에 빈 배열로 담아야 하나?
-  const [addComment, setAddComment] = useState(addCommentState)
-  const { moveToPath, moveToModify } = useCustomMove()
-  const [fetching, setFetching] = useState(false)
+  const [board, setBoard] = useState(boardState);
+  const [addComment, setAddComment] = useState(addCommentState);
+  const [comment, setComment] = useState([]);
+  const { moveToPath, moveToModify } = useCustomMove();
+  const [fetching, setFetching] = useState(false);
 
   const navigate = useNavigate();
   const location = useLocation();
-
   const isLogin = !!getCookie("member");
 
-  //!!는 이중 부정 연산자 =>자바스크립트의 이중 부정 연산자로, 어떤 값이든 명시적인 불리언(Boolean) 타입으로 변환하는 데 사용
-
-  // 댓글 등록시 내용이 바뀔때 초기화 용도지만,
-  // 사실 다른곳에 달아도 적용됨 ㅎㅎ;
+  const memberCookie = getCookie("member");
+  let memberId = null;
+  try {
+    memberId = memberCookie ? JSON.parse(memberCookie).id : null;
+  } catch (e) {
+    console.error("쿠키 굽기 실패", e);
+  }
 
   const handleChangeComment = (e) => {
-    const { name, value } = e.target
-    setAddComment((prev) => ({ ...prev, [name]: value }))
-  }
+    const { name, value } = e.target;
+    setAddComment((prev) => ({ ...prev, [name]: value }));
+  };
 
-  // 댓글 등록관련 시스템 전부
   const handleClickAdd = async () => {
     if (!isLogin) {
-      navigate(`/login?redirect=${encodeURIComponent(location.pathname + location.search)}`)
-      return
+      navigate(`/login?redirect=${encodeURIComponent(location.pathname + location.search)}`);
+      return;
     }
-
     if (!addComment.content.trim()) {
-      alert("댓글 내용을 입력해주세요.")
-      return
+      alert("댓글 내용을 입력해주세요.");
+      return;
     }
-
-    const commentData = { content: addComment.content }
 
     try {
-      const res = await commentRegister(commentData, id)
-      alert("등록되었습니다.", res)
-      setAddComment(addCommentState)
-      const list = await commentGetList(id)
-      setComment(list)
+      await commentRegister({ content: addComment.content }, id);
+      setAddComment(addCommentState);
+      refreshComments();
     } catch (err) {
-      console.error("댓글 오류 : ", err)
-      alert("등록 중 오류가 발생하였습니다.")
+      console.error(err);
+      alert("댓글 등록 중 오류가 발생했습니다.");
     }
-  }
+  };
+
+  const handleModify = async (commentId, newContent) => {
+    if (!newContent.trim()) {
+      alert("댓글 내용을 입력해주세요.");
+      return;
+    }
+    try {
+      await commentModify(commentId, { content: newContent });
+      refreshComments();
+    } catch (err) {
+      alert("댓글 수정 중 오류가 발생했습니다.");
+    }
+  };
+
+  const handleRemove = async (commentId) => {
+    try {
+      await commentRemove(commentId);
+      refreshComments();
+    } catch (err) {
+      alert("댓글 삭제 중 오류가 발생했습니다.");
+    }
+  };
+
+  const refreshComments = async () => {
+    try {
+      const list = await commentGetList(id);
+      setComment(
+        list.map((c) => ({
+          ...c,
+          editing: false,
+          newContent: c.content,
+          canEdit: memberId && memberId === c.writerId
+        }))
+      );
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   useEffect(() => {
-    setFetching(true)
-    getOne(id).then((data) => {
-      setBoard(data)
-      setFetching(false)
-    })
-
-    commentGetList(id).then((data) => {
-      setComment(data)
-      setFetching(false)
-    })
-  }, [id])
-
-
-  const refreshComments = (targetId) => {
-    setComment(prev =>
-      prev.map(c => c.id === targetId ? { ...c, useEdit: !c.useEdit } : c)
-    )
-  }
+    setFetching(true);
+    getOne(id)
+      .then((data) => setBoard(data))
+      .finally(() => setFetching(false));
+    refreshComments();
+  }, [id]);
 
   return (
-    <div className="border-2 border-sky-200 mt-10 m-2 p-4">
-      {fetching ? <FetchingModal /> : <></>}
+    <div className="mt-10 m-2 p-4 bg-[#F4C455] rounded-lg shadow-md">
+      {fetching && <FetchingModal />}
 
-      {makeDiv("번호", board.id)}
-      {makeDiv("작성자", board.writer)}
-      {makeDiv("제목", board.title)}
-      {makeDiv("내용", <div className="content" dangerouslySetInnerHTML={{ __html: board.content }} />)}
-      {makeDiv("작성일자", dayjs(board.createDate).format('YYYY-MM-DD HH:mm'))}
+      {/* 게시글 테이블 */}
+      <table className="w-full border-collapse bg-white rounded-lg overflow-hidden shadow-md">
+        <tbody>
+          <tr>
+            <td className="border p-4 font-bold w-1/5">번호</td>
+            <td className="border p-4">{board.id}</td>
+            <td className="border p-4 font-bold w-1/5">작성일자</td>
+            <td className="border p-4">{dayjs(board.createDate).format("YYYY-MM-DD HH:mm")}</td>
+          </tr>
+          <tr>
+            <td className="border p-4 font-bold">제목</td>
+            <td className="border p-4">{board.title}</td>
+            <td className="border p-4 font-bold">작성자</td>
+            <td className="border p-4">{board.writer}</td>
+          </tr>
+          <tr>
+            <td className="border p-4 font-bold">내용</td>
+            <td className="border p-4" colSpan={3}>
+              {board.content}
+            </td>
+          </tr>
+        </tbody>
+      </table>
 
-      <div className="flex justify-center">
-        <div className="relative mb-4 flex w-full flex-wrap items-stretch">
-          <div className="w-1/5 p-6 text-right font-bold">이미지</div>
-          <div className="w-4/5 flex flex-wrap gap-2 p-4">
-            {board.uploadFileNames?.length > 0 ? (
-              board.uploadFileNames.map((imgFile, i) => (
-                <img
-                  key={i}
-                  alt={`board-${i}`}
-                  className="p-2 w-1/3 cursor-pointer border rounded"
-                  src={`${prefix}/f/view/${imgFile}`}
-                />
-              ))
-            ) : (
-              <span className="text-gray-500">등록된 이미지가 없습니다</span>
-            )}
-          </div>
-        </div>
+      {/* 이미지 */}
+      <div className="flex flex-wrap gap-2 mt-4">
+        {board.uploadFileNames?.length > 0 ? (
+          board.uploadFileNames.map((imgFile, i) => (
+            <img
+              key={i}
+              src={`${prefix}/f/view/${imgFile}`}
+              alt={`board-${i}`}
+              className="w-1/3 border rounded p-2"
+            />
+          ))
+        ) : (
+          <span className="text-gray-500">등록된 이미지가 없습니다</span>
+        )}
       </div>
 
-      <div className="flex justify-end p-4">
-        <button type="button" className="rounded p-4 m-2 text-xl w-32 text-white bg-blue-500"
-          onClick={() => moveToPath('../')}>
-          List(임시)
+      {/* 버튼 */}
+      <div className="flex justify-end mt-4 space-x-2">
+        <button className="bg-blue-500 text-white px-4 py-2 rounded" onClick={() => moveToPath("../")}>
+          리스트
         </button>
-        <button type="button" className="rounded p-4 m-2 text-xl w-32 text-white bg-red-500"
-          onClick={() => moveToModify(id)}>
+        <button className="bg-red-500 text-white px-4 py-2 rounded" onClick={() => moveToModify(id)}>
           수정
         </button>
       </div>
-      <>
-        {/*댓글 입력 테스트*/}
-        <div className="space-y-2">
-          <label htmlFor="content" className="text-sm font-medium text-gray-700">댓글 입력</label>
-          <textarea id="content" name="content" placeholder="소중한 한마디 적어주세요" rows={8} value={addComment.content} onChange={handleChangeComment}
-            className="w-full resize-y rounded-xl border border-gray-200 bg-gray-50 px-4 py-2 outline-none transition
-                       focus:border-indigo-400 focus:bg-white focus:ring-2 focus:ring-indigo-200"/>
-          <div className="flex justify-end">
-            <button type="button" onClick={handleClickAdd}
-              className="inline-flex items-center rounded-xl bg-indigo-600 px-5 py-2.5 text-sm font-medium text-white shadow
-                       hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-400 active:translate-y-px">
-              글 등록
-            </button>
-          </div>
+
+      {/* 댓글 입력 */}
+      <div className="mt-6 space-y-2">
+        <textarea
+          name="content"
+          rows={4}
+          placeholder="댓글을 입력해주세요"
+          value={addComment.content}
+          onChange={handleChangeComment}
+          className="w-full p-2 border rounded-lg"
+        />
+        <div className="flex justify-end">
+          <button
+            onClick={handleClickAdd}
+            className="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700"
+          >
+            댓글 등록
+          </button>
         </div>
 
-        {/*댓글 출력 테스트*/}
-        {comment?.length > 0 ?
-          comment.map((c, index) => {
-            return (
-              <div key={index}>
-                {c.useEdit ? <></> : makeDiv(c.writer, c.content)}
-                {/* 댓글 삭제 */}
-                <button
-                  className="px-2 py-1 text-sm bg-red-500 text-white rounded"
-                  onClick={async () => {
-                    await commentRemove(c.id);
-                    const list = await commentGetList(id);
-                    setComment(list);
-                  }}>
-                  삭제
-                </button>
-                {/*댓글 수정 */}
-                <button type="button" onClick={() => refreshComments(c.id)}
-                  className="inline-flex items-center rounded-xl bg-indigo-600 px-5 py-2.5 text-sm font-medium text-white shadow
-                       hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-400 active:translate-y-px">
-                  수정
-                </button>
-              </div>
+        {/* 댓글 리스트 */}
+        {comment.length > 0 &&
+          comment.map((c) => (
+            <div key={c.id} className="flex justify-between p-2 border rounded-lg mt-2 bg-white items-center">
+              <span>
+                <strong>{c.writer}: </strong>
+                {c.content}
+              </span>
 
-            )
-          })
-          :
-          <></>}
-      </>
+              {/* 통합 버튼 + 호버 메뉴 */}
+              {c.canEdit && (
+                <div className="relative group">
+                  <button className="bg-gray-500 text-white px-3 py-1 rounded">•••</button>
+                  <div className="absolute right-0 top-full mt-1 hidden flex-col space-y-1 group-hover:flex bg-white border rounded shadow-md z-10">
+                    <button
+                      className="px-3 py-1 bg-yellow-500 text-white rounded hover:bg-yellow-600"
+                      onClick={() => handleModify(c.id, c.newContent)}
+                    >
+                      수정
+                    </button>
+                    <button
+                      className="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600"
+                      onClick={() => handleRemove(c.id)}
+                    >
+                      삭제
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+          ))}
+      </div>
     </div>
   );
 };
-
-const makeDiv = (title, value) => (
-  <div className="flex justify-center">
-    <div className="relative mb-4 flex w-full flex-wrap items-stretch">
-      <div className="w-1/5 p-6 text-right font-bold">{title}</div>
-      <div className="w-4/5 p-6 rounded-r border border-solid shadow-md">
-        {value}
-      </div>
-    </div>
-  </div>
-);
 
 export default ReadComponent;

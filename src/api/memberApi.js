@@ -25,6 +25,20 @@ export const kakaoLoginPost = async(data) => {
     return result.data
 }
 
-export const naverLogin = async(data) => {
-    
+// 회원 등록
+export const register = async (formdata) => {
+    const res = await axios.post(`${host}/register`, formdata, {
+        headers: {"Content-Type":"application/json"}
+    })
+    console.log(res)
+    return res.data
+}
+
+// 판매자 등록
+export const sellerRegister = async (formdata) => {
+    const res = await axios.post(`${host}/sellerregister`, formdata, {
+        headers: {"Content-Type":"application/json"}
+    })
+    console.log(res)
+    return res.data
 }

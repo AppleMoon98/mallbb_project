@@ -32,8 +32,9 @@ const ModifyComponent = ({ id }) => {
         for (let i = 0; i < files.length; i++)
             formData.append("files", files[i])
 
+        const plainText = board.content.replace(/<\/?[^>]+>/g, '').trim() 
         formData.append("title", board.title)
-        formData.append("content", board.content)
+        formData.append("content", plainText)
 
         for (let i = 0; i < board.uploadFileNames.length; i++)
             formData.append("uploadFileNames", board.uploadFileNames[i])
