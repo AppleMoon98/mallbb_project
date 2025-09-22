@@ -3,6 +3,7 @@ import useCustomMove from "../hooks/useCustomMove";
 import { API_SERVER_HOST } from "../../api/config";
 import { getOne } from "../../api/freeApi";
 import FetchingModal from "../../common/FetchingModal";
+import ConfirmModal from "../../common/ConfirmModal";
 import dayjs from "dayjs";
 import { commentGetList, commentRegister, commentRemove, commentModify } from "../../api/freeCommentApi";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -30,16 +31,22 @@ const ReadComponent = ({ id }) => {
   const { moveToPath, moveToModify } = useCustomMove();
   const [fetching, setFetching] = useState(false);
 
+  const [confirmModal, setConfirmModal] = useState({
+    visible: false,
+    commentId: null,
+    message: "",
+  });
+
   const navigate = useNavigate();
   const location = useLocation();
   const isLogin = !!getCookie("member");
 
   const memberCookie = getCookie("member");
-  let memberId = null;
+  let memberEmail = null;
   try {
-    memberId = memberCookie ? JSON.parse(memberCookie).id : null;
+    memberEmail = memberCookie ? memberCookie.email : null;
   } catch (e) {
-    console.error("쿠키 굽기 실패", e);
+    console.error(e);
   }
 
   const handleChangeComment = (e) => {
@@ -52,7 +59,7 @@ const ReadComponent = ({ id }) => {
       navigate(`/login?redirect=${encodeURIComponent(location.pathname + location.search)}`);
       return;
     }
-    if (!addComment.content.trim()) {
+    if (!addComment.content || !addComment.content.trim()) {
       alert("댓글 내용을 입력해주세요.");
       return;
     }
@@ -68,7 +75,7 @@ const ReadComponent = ({ id }) => {
   };
 
   const handleModify = async (commentId, newContent) => {
-    if (!newContent.trim()) {
+    if (!newContent || !newContent.trim()) {
       alert("댓글 내용을 입력해주세요.");
       return;
     }
@@ -76,6 +83,7 @@ const ReadComponent = ({ id }) => {
       await commentModify(commentId, { content: newContent });
       refreshComments();
     } catch (err) {
+      console.error(err);
       alert("댓글 수정 중 오류가 발생했습니다.");
     }
   };
@@ -85,6 +93,7 @@ const ReadComponent = ({ id }) => {
       await commentRemove(commentId);
       refreshComments();
     } catch (err) {
+      console.error(err);
       alert("댓글 삭제 중 오류가 발생했습니다.");
     }
   };
@@ -92,12 +101,13 @@ const ReadComponent = ({ id }) => {
   const refreshComments = async () => {
     try {
       const list = await commentGetList(id);
+      console.log(list);
       setComment(
         list.map((c) => ({
           ...c,
           editing: false,
-          newContent: c.content,
-          canEdit: memberId && memberId === c.writerId
+          newContent: c.content || "",
+          canEdit: memberEmail && memberEmail === c.email,
         }))
       );
     } catch (err) {
@@ -111,20 +121,23 @@ const ReadComponent = ({ id }) => {
       .then((data) => setBoard(data))
       .finally(() => setFetching(false));
     refreshComments();
+    
   }, [id]);
 
   return (
     <div className="mt-10 m-2 p-4 bg-[#F4C455] rounded-lg shadow-md">
       {fetching && <FetchingModal />}
 
-      {/* 게시글 테이블 */}
+      {/* 게시글 */}
       <table className="w-full border-collapse bg-white rounded-lg overflow-hidden shadow-md">
         <tbody>
           <tr>
             <td className="border p-4 font-bold w-1/5">번호</td>
             <td className="border p-4">{board.id}</td>
             <td className="border p-4 font-bold w-1/5">작성일자</td>
-            <td className="border p-4">{dayjs(board.createDate).format("YYYY-MM-DD HH:mm")}</td>
+            <td className="border p-4">
+              {board.createDate ? dayjs(board.createDate).format("YYYY-MM-DD HH:mm") : ""}
+            </td>
           </tr>
           <tr>
             <td className="border p-4 font-bold">제목</td>
@@ -191,15 +204,18 @@ const ReadComponent = ({ id }) => {
           comment.map((c) => (
             <div key={c.id} className="flex justify-between p-2 border rounded-lg mt-2 bg-white items-center">
               <span>
-                <strong>{c.writer}: </strong>
+                <strong>{c.writer} : </strong>
                 {c.content}
               </span>
 
-              {/* 통합 버튼 + 호버 메뉴 */}
+              
               {c.canEdit && (
-                <div className="relative group">
-                  <button className="bg-gray-500 text-white px-3 py-1 rounded">•••</button>
-                  <div className="absolute right-0 top-full mt-1 hidden flex-col space-y-1 group-hover:flex bg-white border rounded shadow-md z-10">
+                <div className="relative">
+                  <button className="peer bg-gray-500 text-white px-3 py-1 rounded">•••</button>
+                  <div
+                    className="absolute right-0 top-full hidden flex-col space-y-1 
+                          peer-hover:flex hover:flex bg-white border rounded shadow-md z-10 min-w-[80px]"
+                  >
                     <button
                       className="px-3 py-1 bg-yellow-500 text-white rounded hover:bg-yellow-600"
                       onClick={() => handleModify(c.id, c.newContent)}
@@ -208,7 +224,13 @@ const ReadComponent = ({ id }) => {
                     </button>
                     <button
                       className="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600"
-                      onClick={() => handleRemove(c.id)}
+                      onClick={() =>
+                        setConfirmModal({
+                          visible: true,
+                          commentId: c.id,
+                          message: "댓글을 삭제하시겠습니까?",
+                        })
+                      }
                     >
                       삭제
                     </button>
@@ -218,6 +240,21 @@ const ReadComponent = ({ id }) => {
             </div>
           ))}
       </div>
+
+      {confirmModal.visible && (
+        <ConfirmModal
+          visible={confirmModal.visible}
+          message={confirmModal.message}
+          onConfirm={async () => {
+            try {
+              await handleRemove(confirmModal.commentId);
+            } finally {
+              setConfirmModal({ visible: false, commentId: null, message: "" });
+            }
+          }}
+          onCancel={() => setConfirmModal({ visible: false, commentId: null, message: "" })}
+        />
+      )}
     </div>
   );
 };
