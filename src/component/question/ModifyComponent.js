@@ -1,5 +1,5 @@
 import { useEffect,useState, useRef} from "react";
-import { getOne, getFileUrl, modify } from "../../api/questionApi";
+import { getOne, getFileUrl, putOne } from "../../api/questionApi";
 import { OutputModify } from "../base/BoardComponent";
 import useCustomMove from "../hooks/useCustomMove";
 import { useLocation } from "react-router-dom";
@@ -20,10 +20,12 @@ const ModifyComponent = ({ id }) => {
     const [fetching, setFetching] = useState(false)
     const uploadRef = useRef()
 
-    const handleChangeBoard = (e) => {
-        board[e.target.name] = e.target.value
-        setBoard({ ...board })
+    //
+    const handleChangeBoard = (eOrObj) => {
+        const { name, value } = `target` in eOrObj ? eOrObj.target : eOrObj
+        setBoard(prev => ({ ...prev, [name]: value }))
     }
+    //
 
     const handleClickModify = async () => {
         const files = uploadRef.current.files
@@ -31,14 +33,15 @@ const ModifyComponent = ({ id }) => {
         for (let i = 0; i < files.length; i++)
             formData.append("files", files[i])
 
+        const plainText = board.content.replace(/<\/?[^>]+>/g, '').trim()
         formData.append("title", board.title)
-        formData.append("content", board.content)
+        formData.append("content", plainText)
 
         for (let i = 0; i < board.uploadFileNames.length; i++)
             formData.append("uploadFileNames", board.uploadFileNames[i])
 
         setFetching(true) 
-        await modify(formData, board.id).then(data => setResult("수정성공"))
+        await putOne(formData, board.id).then(data => setResult("수정성공"))
         alert("수정이 완료되었습니다.")
         moveToPath(`../read/${id}`)
     }
@@ -52,7 +55,6 @@ const ModifyComponent = ({ id }) => {
     useEffect(() => {
         setFetching(true)
         getOne(id).then(data => {
-        
             setBoard(data)
             setFetching(false)
         })

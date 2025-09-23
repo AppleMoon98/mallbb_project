@@ -1,17 +1,13 @@
-import { jwtDecode } from "jwt-decode"
+import useCustomLogin from "../component/hooks/useCustomLogin"
 import { API_SERVER_HOST } from "./config"
 import { GoogleLogin } from '@react-oauth/google'
 
 const prefix = API_SERVER_HOST
 
 const GoogleLoginAPI = () => {
+    const { loginToPath } = useCustomLogin()
     const handleSuccess = (credentialResponse) => {
         const idToken = credentialResponse.credential
-        console.log("구글 ID 토큰 : ", idToken)
-
-        // 디코딩된 사용자 정보 띄우기
-        const decodedUserInfo = jwtDecode(idToken)
-        console.log("디코딩된 유저 정보 : ", decodedUserInfo)
 
         // ID 토큰 백엔드로 전송
         sendTokenToServer(idToken)
@@ -31,7 +27,8 @@ const GoogleLoginAPI = () => {
             .then(response => response.json())
             .then(data => {
                 console.log('Server response:', data)
-                window.location.replace('/')
+                loginToPath("/", true, true)
+                window.location.reload()
             })
             .catch((err) => {
                 console.error('error:', err)

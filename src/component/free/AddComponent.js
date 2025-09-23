@@ -27,10 +27,10 @@ export default function AddComponent() {
       alert("제목과 내용을 입력해 주세요.")
       return
     }
-    //일단 보류
+    
     const html = board.content
     const plainText = html.replace(/<\/?[^>]+>/g, '').trim()
-    //
+    
     const formdata = new FormData()
     formdata.append("title", board.title)
     formdata.append("content", plainText)

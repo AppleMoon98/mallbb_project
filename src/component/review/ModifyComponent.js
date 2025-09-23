@@ -14,15 +14,15 @@ const initState = {
 }
 
 const ModifyComponent = ({ id }) => {
-    const [board, setBoard] = useState({ ...initState })
+    const [review, setReview] = useState({ ...initState })
     const [result, setResult] = useState(null)
     const { moveToPath } = useCustomMove()
     const [fetching, setFetching] = useState(false)
     const uploadRef = useRef()
 
-    const handleChangeBoard = (e) => {
-        board[e.target.name] = e.target.value
-        setBoard({ ...board })
+    const handleChangeReview = (eOrObj) => {
+        const { name, value } = 'target' in eOrObj ? eOrObj.target : eOrObj
+        setReview(prev => ({ ...prev, [name]: value })) 
     }
 
     const handleClickModify = async () => {
@@ -31,34 +31,35 @@ const ModifyComponent = ({ id }) => {
         for (let i = 0; i < files.length; i++)
             formData.append("files", files[i])
 
-        formData.append("title", board.title)
-        formData.append("content", board.content)
+        const plainText = review.content.replace(/<\/?[^>]+>/g, '').trim()
+        formData.append("title", review.title)
+        formData.append("content", plainText)
 
-        for (let i = 0; i < board.uploadFileNames.length; i++)
-            formData.append("uploadFileNames", board.uploadFileNames[i])
+        for (let i = 0; i < review.uploadFileNames.length; i++)
+            formData.append("uploadFileNames", review.uploadFileNames[i])
 
         setFetching(true) 
-        await putOne(formData, board.id).then(data => setResult("수정성공"))
+        await putOne(formData, review.id).then(data => setResult("수정성공"))
         alert("수정이 완료되었습니다.")
         moveToPath(`../read/${id}`)
     }
 
     const deleteOldImages = (imageName) => {
-        const resultFileNames = board.uploadFileNames.filter(fileName => fileName !== imageName)
-        board.uploadFileNames = resultFileNames
-        setBoard({ ...board })
+        const resultFileNames = review.uploadFileNames.filter(fileName => fileName !== imageName)
+        review.uploadFileNames = resultFileNames
+        setReview({ ...review })
     }
 
     useEffect(() => {
         setFetching(true)
         getOne(id).then(data => {
-            setBoard(data)
+            setReview(data)
             setFetching(false)
         })
     }, [id])
 
     return (
-        <OutputModify board={board} handleChangeBoard={handleChangeBoard} uploadRef={uploadRef}
+        <OutputModify board={review} handleChangeBoard={handleChangeReview} uploadRef={uploadRef}
             handleClickModify={handleClickModify} deleteOldImages={deleteOldImages} getFileUrl={getFileUrl} />
     )
 }

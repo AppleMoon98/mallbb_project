@@ -13,6 +13,7 @@
         padding-bottom: 56.25%; /* 16:9 비율의 세로값 계산 (9 / 16 * 100) */
         height: 0;
         overflow: hidden;
+        max-width: 500px;
     }
     .card-content {
         position: absolute;

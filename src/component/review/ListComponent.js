@@ -19,7 +19,8 @@ const initState = {
   prevPage: 0,
   nextPage: 0,
   totalPage: 0,
-  current: 0
+  current: 0,
+  writer: null
 }
 
 const prefix = API_SERVER_HOST;
@@ -58,8 +59,8 @@ const ListComponent = () => {
                   {serverData.dtoList.slice(0, 3).map(item => (
                     <CardItem
                       key={item.id}
-                      src={`${prefix}/r/view/${item.uploadFileNames}`}
-                      text={item.title}
+                      src={`${prefix}/r/view/s_${item.uploadFileNames}`}
+                      text={item.title.length > 10 ? `${item.title.slice(0,10)}...` : item.title}
                       label={item.writer}
                       path={`/review/read/${item.id}`}
                     />
@@ -69,8 +70,8 @@ const ListComponent = () => {
                   {serverData.dtoList.slice(3, 6).map(item => (
                     <CardItem
                       key={item.id}
-                      src={`${prefix}/r/view/${item.uploadFileNames}`}
-                      text={item.title}
+                      src={`${prefix}/r/view/s_${item.uploadFileNames}`}
+                      text={item.title.length > 10 ? `${item.title.slice(0,10)}...` : item.title}
                       label={item.writer}
                       path={`/review/read/${item.id}`}
                     />

@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation, useParams } from "react-router-dom";
 import { useState } from "react";
 import useCustomLogin from "../hooks/useCustomLogin";
 import GoogleLoginApi from "../../api/googleLoginAPI"
@@ -13,7 +13,8 @@ const initState = {
 const LoginComponent = () => {
   const [loginParam, setLoginParam] = useState({ ...initState });
   const [loading, setLoading] = useState(false);
-  const { doLogin, moveToPath } = useCustomLogin();
+  const { doLogin, loginToPath } = useCustomLogin();
+
 
   const handleChage = (e) => {
     const { name, value } = e.target;
@@ -31,7 +32,7 @@ const LoginComponent = () => {
         alert("이메일 혹은 패스워드가 일치하지 않습니다.");
       } else {
         alert("Login");
-        moveToPath("/");
+        loginToPath("/", true, true);
       }
     } finally {
       setLoading(false);
@@ -57,31 +58,18 @@ const LoginComponent = () => {
       <div className="flex w-72 flex-col gap-3 rounded-xl border-2 border-black p-5">
         <div>
           <label className="text-sm font-semibold">ID</label>
-          <input
-            type="text"
-            name="email"
-            value={loginParam.email}
-            onChange={handleChage}
-            className="mt-1 w-[95%] rounded-lg border border-gray-300 p-2"
-          />
+          <input type="text" name="email" value={loginParam.email} onChange={handleChage}
+            className="mt-1 w-[95%] rounded-lg border border-gray-300 p-2" />
         </div>
 
         <div>
           <label className="text-sm font-semibold">PASSWORD</label>
-          <input
-            type="password"
-            name="password"
-            value={loginParam.password}
-            onChange={handleChage}
-            className="mt-1 w-[95%] rounded-lg border border-gray-300 p-2"
-          />
+          <input type="password" name="password" value={loginParam.password} onChange={handleChage}
+            className="mt-1 w-[95%] rounded-lg border border-gray-300 p-2" />
         </div>
 
-        <button
-          onClick={handleClickLogin}
-          disabled={loading}
-          className="mt-2 rounded-lg bg-[#4a90e2] px-4 py-2 font-bold text-white hover:opacity-90 disabled:opacity-60"
-        >
+        <button onClick={handleClickLogin} disabled={loading}
+          className="mt-2 rounded-lg bg-[#4a90e2] px-4 py-2 font-bold text-white hover:opacity-90 disabled:opacity-60">
           {loading ? "로그인 중..." : "로그인"}
         </button>
       </div>

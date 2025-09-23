@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { createSearchParams, useNavigate, useSearchParams, useLocation } from "react-router-dom";
+import { createSearchParams, useNavigate, useSearchParams, useLocation, replace } from "react-router-dom";
 
 const getNum = (param, defaultValue) => {
     if (!param) {
@@ -17,6 +17,7 @@ const useCustomMove = () => {
     const page = getNum(queryParams.get(`page`), 1)
     const size = getNum(queryParams.get(`size`), 10)
     const queryDefault = createSearchParams({ page, size }).toString()
+    const location = useLocation();
 
     const moveToList = (pageParam) => {
         let queryStr = ""
@@ -29,7 +30,7 @@ const useCustomMove = () => {
             queryStr = queryDefault
 
         setRefresh(!refresh)
-        navigate({ pathname:'./', search: queryStr })
+        navigate({ pathname: './', search: queryStr })
     }
 
     const moveToModify = (id) => {
@@ -50,9 +51,9 @@ const useCustomMove = () => {
     }
 
     const moveToPath = (path, replace) => {
-        navigate({pathname:path}, {replace:replace})
+        navigate({ pathname: path }, { replace: replace })
     }
-    
+
     return { moveToList, page, size, moveToModify, moveToRead, moveToPath, refresh }
 }
 

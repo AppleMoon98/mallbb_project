@@ -24,9 +24,12 @@ export default function AddComponent() {
             return;
         }
 
+        const html = review.content
+        const plainText = html.replace(/<\/?[^>]+>/g, '').trim()
+
         const formdata = new FormData();
         formdata.append("title", review.title);
-        formdata.append("content", review.content);
+        formdata.append("content", plainText);
 
         const files = uploadRef.current?.files
         if (files && files.length > 0) {

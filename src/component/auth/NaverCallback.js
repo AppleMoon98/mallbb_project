@@ -1,7 +1,10 @@
 import { useEffect } from "react";
 import { API_SERVER_HOST, moveAxios } from "../../api/config"
+import useCustomLogin from "../hooks/useCustomLogin";
 
 const NaverCallback = () => {
+    const {loginToPath} = useCustomLogin()
+
     useEffect(() => {
         // 네이버 SDK 동적 로드
         const script = document.createElement("script");
@@ -29,8 +32,8 @@ const NaverCallback = () => {
                     withCredentials: true,
                 }
             );
-            window.location.replace('/')
-            
+            loginToPath("/", true, true)
+            window.location.reload()
         };  
     }, []);
 
