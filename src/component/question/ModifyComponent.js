@@ -1,9 +1,9 @@
-import { useEffect,useState, useRef} from "react";
+import { useEffect, useState, useRef } from "react";
 import { getOne, getFileUrl, putOne } from "../../api/questionApi";
 import { OutputModify } from "../base/BoardComponent";
 import useCustomMove from "../hooks/useCustomMove";
 import { useLocation } from "react-router-dom";
-//api putone 추가
+
 const initState = {
     id: 0,
     title: '',
@@ -22,7 +22,7 @@ const ModifyComponent = ({ id }) => {
 
     //
     const handleChangeBoard = (eOrObj) => {
-        const { name, value } = `target` in eOrObj ? eOrObj.target : eOrObj
+        const { name, value } = 'target' in eOrObj ? eOrObj.target : eOrObj
         setBoard(prev => ({ ...prev, [name]: value }))
     }
     //

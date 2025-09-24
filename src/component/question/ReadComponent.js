@@ -51,7 +51,6 @@ const ReadComponent = ({ id }) => {
           canEdit: (memberEmail && memberEmail === c.email) || isAdmin,
         }))
       );
-
     } catch (err) {
       console.error(err);
     }
@@ -64,8 +63,7 @@ const ReadComponent = ({ id }) => {
       return;
     }
     try {
-      await commentRegister(commentId, { content: newContent });
-      console.log(newContent)
+      await commentModify(commentId, { content: newContent });
       refreshComments();
     } catch (err) {
       console.error(err);
@@ -90,7 +88,7 @@ const ReadComponent = ({ id }) => {
     }
   };
 
-const handleClickCommentRemove = async (commentId) => {
+  const handleClickCommentRemove = async (commentId) => {
     if (!ensureLogin()) return;
     try {
       await commentRemove(commentId);
@@ -111,17 +109,6 @@ const handleClickCommentRemove = async (commentId) => {
       alert("게시글 삭제 중 오류가 발생했습니다.");
     }
   };
-
-  useEffect(() => {
-    setFetching(true);
-    getOne(id)
-      .then((data) => {
-        const canEdit = (memberEmail && memberEmail === data.email) || isAdmin;
-        setBoard({ ...data, canEdit });
-      })
-      .finally(() => setFetching(false));
-    refreshComments();
-  }, [id, memberEmail, isAdmin, refreshComments]);
 
   useEffect(() => {
     setFetching(true);
@@ -165,7 +152,6 @@ const handleClickCommentRemove = async (commentId) => {
         </tbody>
       </table>
 
-
       {board.canEdit && (
         <div className="relative flex justify-end pt-3">
           <button className="peer bg-gray-500 text-white px-3 py-1 rounded">•••</button>
@@ -191,7 +177,6 @@ const handleClickCommentRemove = async (commentId) => {
           ))) : (<span className="text-gray-500">등록된 이미지가 없습니다</span>)}
       </div>
 
-      
       {/* 댓글 입력 */}
       <div className="mt-6 space-y-2">
         <textarea
@@ -211,7 +196,7 @@ const handleClickCommentRemove = async (commentId) => {
 
         {/*댓글 리스트*/}
         {comment.map((c) => (
-          <div key={c.id} className="flex justify-between p-2 border rounded-lg mt-2 bg-white items-center">
+          <div key={c.id} className="flex justify-between p-2 border rounded-lg mt-2 bg-white items-start">
             <span className="flex-1">
               {c.editing ? (
                 <input
@@ -220,7 +205,7 @@ const handleClickCommentRemove = async (commentId) => {
                   onChange={(e) =>
                     setComment((prev) =>
                       prev.map((item) =>
-                        item.id === c.id ? { ...item, newContent: e.target.value } : item
+                        item.id === c.id ? { ...item, newContent: e.target.value } : { ...item, editing: false }
                       )
                     )
                   }
@@ -275,24 +260,22 @@ const handleClickCommentRemove = async (commentId) => {
         ))}
       </div>
 
-      {confirmModal.visible && (
-        <confirmModal
+      <ConfirmModal
         visible={confirmModal.visible}
         message={confirmModal.message}
-        onconfirm={async () => {
+        onConfirm={async () => {
           try {
             if (confirmModal.type === "comment")
-            await handleClickBoardRemove(confirmModal.commentId);
+              await handleClickCommentRemove(confirmModal.commentId);
             else if (confirmModal.type === "board")
-            await handleClickBoardRemove(confirmModal.commentId);
+              await handleClickBoardRemove(confirmModal.commentId);
           } finally {
             setConfirmModal({ visible: false, commentId: null, message: "", type: ""});
           }
         }}
         onCancel={() => setConfirmModal({ visible: false, commentId: null, message: "", type: ""})}
-        ></confirmModal>
-      )}
-      </div>
+      />
+    </div>
   );
 };
 

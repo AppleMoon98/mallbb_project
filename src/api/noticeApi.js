@@ -39,3 +39,9 @@ export const remove = async (id) => {
 export const getFileUrl = (filename) => {
     return `${prefix}/view/${encodeURIComponent(filename)}`;
 }
+
+export const putOne = async (formData, id) => {
+    const header = { headers: { "Content-Type": "multipart/form-data" } }
+    const res = await jwtAxios.put(`${prefix}/${id}`, formData, header)
+    return res.data
+}

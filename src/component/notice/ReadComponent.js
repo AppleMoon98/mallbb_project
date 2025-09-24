@@ -3,113 +3,133 @@ import { getOne ,remove} from "../../api/noticeApi";
 import useCustomMove from "../hooks/useCustomMove";
 import { API_SERVER_HOST } from "../../api/config";
 import FetchingModal from "../../common/FetchingModal";
-import { data } from "react-router-dom";
+import ConfirmModal from "../../common/ConfirmModal";
+import dayjs from "dayjs";
+import useAuthGuard from "../hooks/useAuthGuard";
+
+const prefix = API_SERVER_HOST;
+
 
 const initState = {
   id: 0,
   title: "",
   content: "",
   createDate: "",
-  desc: "",
   delflag: false,
+  writer: "운영자",
   uploadFilenames: [],
 }
 
-const prefix = API_SERVER_HOST;
 
 const ReadComponent = ({ id }) => {
   const [notice, setNotice] = useState(initState);
   const [fetching, setFetching] = useState(false);
   const { moveToList, moveToModify , moveToPath } = useCustomMove();
+  const { ensureLogin, member, isAdmin } = useAuthGuard();
 
-  const handleClickDelete = async() => {
-        if(!window.confirm("정말 삭제하시겠습니까?")) return;
-        try{
-          setFetching(true);
-          await remove(id);
-          moveToPath('../', true);
-        } catch (e) {
-          alert("삭제 중 오류가 발생했습니다.");
-        } finally {
-          setFetching(false);
-        }
+  const [confirmModal, setConfirmModal] = useState({
+    visible: false,
+    commentId: null,
+    message: "",
+    type: "",
+  });
+
+  const memberEmail = member?.email || null;
+
+  const handleClickBoardRemove = async (boardId) => {
+    if (!ensureLogin()) return;
+    try {
+      await remove(boardId);
+      moveToPath('../', true);
+    } catch (err) {
+      console.error(err);
+      alert("게시글 삭제 중 오류가 발생했습니다.");
     }
+  };
   
   useEffect(() => {
     setFetching(true);
-    getOne(id).then(data => {
-      console.log(data)
-      setNotice(data);
-      setFetching(false);
-    });
-  }, [id]);
+    getOne(id)
+      .then((data) => {
+        const canEdit = (memberEmail && memberEmail === data.email) || isAdmin;
+        setNotice({ ...data, canEdit });
+      })
+      .finally(() => setFetching(false));
+  }, [id, memberEmail, isAdmin]);
   
   return (
-    <div className="border-2 border-sky-200 mt-10 m-2 p-4">
-      {fetching ? <FetchingModal /> : null}
-
-      {makeDiv("번호", notice.id)}
-      {makeDiv("제목", notice.title)}
-      {makeDiv("내용", notice.content)}
-      {makeDiv("작성일자", notice.createDate)}
+    <div className="mt-10 m-2 p-4 bg-[#F4C455] rounded-lg shadow-md">
+    {fetching && <FetchingModal />}
 
 
-      <div className="flex justify-center">
-        <div className="relative mb-4 flex w-full flex-wrap items-stretch">
-          <div className="w-1/5 p-6 text-right font-bold">이미지</div>
-          <div className="w-4/5 flex flex-wrap gap-2 p-4">
-            {notice.uploadFileNames?.length > 0 ? (
-              notice.uploadFileNames.map((imgFile, i) => (
-                <img
-                  key={i}
-                  alt={`notice${i}`}
-                  className="p-2 w-1/3 cursor-pointer border rounded"
-                  src={`${prefix}/n/view/${imgFile}`}
-                />
-              ))
-            ) : (
-              <span className="text-gray-500">등록된 이미지가 없습니다</span>
-            )}
+    <table className="w-full border-collapse bg-white rounded-lg overflow-hidden shadow-md">
+        <tbody>
+          <tr>
+            <td className="border p-4 font-bold w-1/5">번호</td>
+            <td className="border p-4">{notice.id}</td>
+            <td className="border p-4 font-bold w-1/5">작성일자</td>
+            <td className="border p-4">
+              {notice.createDate ? dayjs(notice.createDate).format("YYYY-MM-DD HH:mm") : "-"}
+            </td>
+          </tr>
+          <tr>
+            <td className="border p-4 font-bold">제목</td>
+            <td className="border p-4">{notice.title}</td>
+            <td className="border p-4 font-bold">작성자</td>
+            <td className="border p-4">운영자</td>
+          </tr>
+          <tr>
+            <td className="border p-4 font-bold">내용</td>
+            <td className="border p-4" colSpan={3}>
+              <br />{notice.content}
+              <br /><br /><br /><br />
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      {notice.canEdit && (
+        <div className="relative flex justify-end pt-3">
+          <button className="peer bg-gray-500 text-white px-3 py-1 rounded">•••</button>
+          <div className="absolute right-0 top-full hidden flex-col space-y-1 
+                          peer-hover:flex hover:flex bg-white border rounded shadow-md z-10 min-w-[80px]">
+            <button className="px-3 py-1 bg-yellow-500 text-white rounded hover:bg-yellow-600"
+              onClick={() => moveToModify(id)} >
+              수정
+            </button>
+            <button className="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600"
+              onClick={() => setConfirmModal({ visible: true, commentId: notice.id, message: "글을 삭제하시겠습니까?", type: "board" })}>
+              삭제
+            </button>
           </div>
         </div>
+      )}
+
+      {/* 이미지 */}
+      <div className="flex flex-wrap gap-2 mt-4">
+        {notice.uploadFileNames?.length > 0 ? (
+          notice.uploadFileNames.map((imgFile, i) => (
+            <img key={i} src={`${prefix}/n/view/${imgFile}`} alt={`notice-${i}`} className="w-1/3 border rounded p-2" />
+          ))) : (<span className="text-gray-500">등록된 이미지가 없습니다</span>)}
       </div>
 
-      <div className="flex justify-end p-4">
-      <button
-        type="button"
-        className="rounded p-4 m-2 text-xl w-32 text-white bg-red-500"
-        onClick={handleClickDelete}
-      >
-        삭제
-      </button>
-        <button
-          type="button"
-          className="rounded p-4 m-2 text-xl w-32 text-white bg-yellow-500"
-          onClick={() => moveToList()}
-        >
-          리스트
-        </button>
-        <button
-        type="button"
-        className="rounded p-4 m-2 text-xl w-32 text-white bg-green-500"
-        onClick={() => moveToModify(id)}
-        >
-        수정
-        </button>
+      {confirmModal.visible && (
+        <ConfirmModal
+          visible={confirmModal.visible}
+          message={confirmModal.message}
+          onConfirm={async () => {
+            try {
+              if (confirmModal.type === "board")
+                await handleClickBoardRemove(confirmModal.commentId);
+            } finally {
+              setConfirmModal({ visible: false, commentId: null, message: "", type: "" });
+            }
+          }}
+          onCancel={() => setConfirmModal({ visible: false, commentId: null, message: "", type: "" })}
+        />
+      )}
       </div>
-    </div>
-  );
-};
-
-const makeDiv = (title, value) => (
-  <div className="flex justify-center">
-    <div className="relative mb-4 flex w-full flex-wrap items-stretch">
-      <div className="w-1/5 p-6 text-right font-bold">{title}</div>
-      <div className="w-4/5 p-6 rounded-r border border-solid shadow-md">
-        {value}
-      </div>
-    </div>
-  </div>
-);
+  )
+  }
 
 export default ReadComponent;
