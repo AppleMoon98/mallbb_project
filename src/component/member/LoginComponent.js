@@ -74,9 +74,13 @@ const LoginComponent = () => {
         </button>
       </div>
 
-      <div className="mt-5 flex h-36 w-72 flex-col gap-2 items-center">
+      <div className="mt-2 flex w-72 flex-col gap-2 items-center">
         <GoogleLoginApi/>
+      </div>
+      <div className="mt-2 flex w-72 flex-col gap-2 items-center">
         <KakaoLoginAPI/>
+      </div>
+      <div className="mt-2 flex w-72 flex-col gap-2 items-center">
         <NaverLoginAPI/>
       </div>
 

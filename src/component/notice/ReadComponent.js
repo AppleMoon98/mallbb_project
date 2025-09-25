@@ -17,14 +17,14 @@ const initState = {
   createDate: "",
   delflag: false,
   writer: "운영자",
-  uploadFilenames: [],
+  uploadFileNames: [],
 }
 
 
 const ReadComponent = ({ id }) => {
   const [notice, setNotice] = useState(initState);
   const [fetching, setFetching] = useState(false);
-  const { moveToList, moveToModify , moveToPath } = useCustomMove();
+  const { moveToModify , moveToPath } = useCustomMove();
   const { ensureLogin, member, isAdmin } = useAuthGuard();
 
   const [confirmModal, setConfirmModal] = useState({
@@ -119,8 +119,7 @@ const ReadComponent = ({ id }) => {
           message={confirmModal.message}
           onConfirm={async () => {
             try {
-              if (confirmModal.type === "board")
-                await handleClickBoardRemove(confirmModal.commentId);
+              await handleClickBoardRemove(confirmModal.commentId);
             } finally {
               setConfirmModal({ visible: false, commentId: null, message: "", type: "" });
             }

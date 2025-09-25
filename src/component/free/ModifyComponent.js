@@ -19,15 +19,20 @@ const ModifyComponent = ({ id }) => {
     const { moveToPath } = useCustomMove()
     const [fetching, setFetching] = useState(false)
     const uploadRef = useRef()
-    
+
     //
     const handleChangeBoard = (eOrObj) => {
         const { name, value } = 'target' in eOrObj ? eOrObj.target : eOrObj
-        setBoard(prev => ({ ...prev, [name]: value })) 
+        setBoard(prev => ({ ...prev, [name]: value }))
     }
     //
 
     const handleClickModify = async () => {
+        if (!board.title.trim() || !board.content.trim()) {
+            alert("제목과 내용을 입력해 주세요.")
+            return
+        }
+
         const files = uploadRef.current.files
         const formData = new FormData()
         for (let i = 0; i < files.length; i++)

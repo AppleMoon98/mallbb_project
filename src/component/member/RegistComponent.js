@@ -1,19 +1,29 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import useCustomMove from "../hooks/useCustomMove";
-import { register } from "../../api/memberApi";
+import { Certification, register } from "../../api/memberApi";
 
 const initState = {
   email: "",
   nickname: "",
   password: "",
   telNum: "",
+  number: "",
 };
 
 const RegistComponent = () => {
   const [userData, setUserData] = useState(initState);
+  const rangeRandom = (min, max) => Math.floor(Math.random() * (max - min) + min)
+
+  // 
   const [isVerifying, setIsVerifying] = useState(false);
   const [isVerified, setIsVerified] = useState(false);
+
+  // 조건문 정규식
+  const notNumber = /[^0-9]/g
+  const telNumPattern = /^0\d{8,10}$/
+  //
+
   const [authCodeInput, setAuthCodeInput] = useState("");
   const { moveToPath } = useCustomMove();
 
@@ -27,7 +37,27 @@ const RegistComponent = () => {
       alert("전화번호를 입력해주세요.");
       return;
     }
+
+    const telNum = userData.telNum.replace(notNumber, "")
+    if(!telNumPattern.test(telNum)){
+      alert("전화번호의 길이가 맞지 않습니다.")
+      return;
+    }
+    
+    const number = rangeRandom(100000, 999999)
+
     setIsVerifying(true);
+    setUserData(prev => ({ ...prev, number }))
+
+    const formdata = new FormData()
+    formdata.append("telNum", telNum)
+    formdata.append("number", number)
+  
+    // 여기서 인증번호를 백으로 전송하고 전화번호를 받아둠.
+    Certification(formdata)
+
+    // 마무리는 무조건 인증번호가 발송되었다는 알림으로 마무리됨
+    alert("인증번호가 전송되었습니다.")
   };
 
   const handleClickVerify = () => {
@@ -35,16 +65,21 @@ const RegistComponent = () => {
       alert("인증번호를 입력해주세요.");
       return;
     }
-    setIsVerified(true);
-    setIsVerifying(false);
+
+    if (authCodeInput != userData.number){
+      alert("인증번호가 다릅니다.")
+      return;
+    }
+    // 여기서 인증번호가 같은지 확인 후 백으로 전화번호 전송
+    setIsVerified(true);  // 해당 값이 true가 되면 버튼이 잠기게 설정해두었음
     alert("회원가입 인증이 완료되었습니다.");
   };
 
   const handleClickAdd = async () => {
-    if (!userData.email.trim() 
-        || !userData.nickname.trim() 
-        || !userData.password.trim() 
-        || !userData.telNum.trim()) {
+    if (!userData.email.trim()
+      || !userData.nickname.trim()
+      || !userData.password.trim()
+      || !userData.telNum.trim()) {
       alert("빈 칸을 모두 채워주세요.");
       return;
     }
@@ -89,33 +124,36 @@ const RegistComponent = () => {
 
       <form>
         <div className="flex flex-col gap-3 border-[3px] border-black p-5 rounded-2xl">
-          {makeDiv("E-mail","email","email",userData.email, handleChangeData)}
-          {makeDiv("닉네임","text","nickname",userData.nickname, handleChangeData)}
-          {makeDiv("PASSWORD","password","password",userData.password, handleChangeData)}
+          {makeDiv("E-mail", "email", "email", userData.email, handleChangeData)}
+          {makeDiv("닉네임", "text", "nickname", userData.nickname, handleChangeData)}
+          {makeDiv("PASSWORD", "password", "password", userData.password, handleChangeData)}
 
           <div>
-            <label className="flex text-sm font-semibold">전화번호</label>
-            <div className="flex items-center gap-6">
-              {!isVerifying ? (
-                <>
-                  <input type="text" id="telNum" name="telNum" onChange={handleChangeData}
+            {!isVerifying ? (
+              <>
+                <label className="flex text-sm font-semibold">전화번호</label>
+                <div className="flex items-center gap-6">
+                  <input type="text" id="telNum" name="telNum" value={userData.telNum} onChange={handleChangeData}
                     className="w-[70%] rounded-lg border border-gray-300 p-2 outline-none focus:border-blue-500" />
                   <button type="button" onClick={handleClickAuth}
                     className="w-[20%] rounded-lg bg-blue-500 px-2.5 py-2 text-white transition-colors hover:bg-blue-600">
                     인증
                   </button>
-                </>
-              ) : (
-                <>
-                  <input type="text" id="authCode" name="authCode" value={authCodeInput} onChange={(e)=>setAuthCodeInput(e.target.value)}
+                </div>
+              </>
+            ) : (
+              <>
+                <label className="flex text-sm font-semibold">인증번호</label>
+                <div className="flex items-center gap-6">
+                  <input type="number" id="authCode" name="authCode" value={authCodeInput} onChange={(e) => setAuthCodeInput(e.target.value)} disabled={isVerified}
                     className="w-[70%] rounded-lg border border-gray-300 p-2 outline-none focus:border-blue-500" />
-                  <button type="button" onClick={handleClickVerify}
+                  <button type="button" onClick={handleClickVerify} disabled={isVerified}
                     className="w-[20%] rounded-lg bg-green-500 px-2.5 py-2 text-white transition-colors hover:bg-green-600">
                     확인
                   </button>
-                </>
-              )}
-            </div>
+                </div>
+              </>
+            )}
           </div>
 
           <button type="button" onClick={handleClickAdd}

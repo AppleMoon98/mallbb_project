@@ -34,6 +34,11 @@ const ModifyComponent = ({ id }) => {
     //
 
     const handleClickModify = async () => {
+
+         if (!notice.title.trim() || !notice.content.trim()) {
+            alert("제목과 내용을 입력해 주세요.")
+            return
+        }
         const files = uploadRef.current.files
         const formData = new FormData()
         for (let i = 0; i < files.length; i++)

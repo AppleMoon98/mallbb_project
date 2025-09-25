@@ -27,7 +27,7 @@ const loginSeller = () => {
       <h1 style={{ marginBottom: "20px" }}>사업자 로그인</h1>
 
       <div style={{ display: "flex", gap: "40px", marginBottom: "20px" }}>
-        <Link to={"/login"} style={tabInactive}>개인</Link>
+        <Link to={"/member/login"} style={tabInactive}>개인</Link>
         <div style={tabActive}>사업자</div>
       </div>
 

@@ -1,7 +1,21 @@
+import { useEffect, useState } from "react";
 import MainNav from "../common/MainNav";
 import KakaoMap from "../component/map/Kakaomap";
+import {getBakeries} from "../api/bakeryApi"
 
 export default function MapPage() {
+  
+  const [bakeries, setBakeries] = useState([]);
+  c
+  useEffect(()=>{
+    const fetchData = async () =>{
+      const data = await getBakeries();
+      setBakeries(data);
+    };
+    fetchData();
+  },[]);
+  
+  
   return (
     <div className="min-h-screen">
       <MainNav />
@@ -24,23 +38,22 @@ export default function MapPage() {
 
             
             <div className="flex items-center justify-between mb-2 text-sm text-gray-500">
-              <div>검색 결과 <span className="font-semibold">0</span>개</div>
+              <div>검색 결과 <span className="font-semibold">{bakeries.length}</span>개</div>
               <div className="flex items-center gap-2">
                 <button className="px-2 py-1 rounded border">거리순</button>
-                <button className="px-2 py-1 rounded border">이름순</button>
               </div>
             </div>
 
             
             <div className="space-y-2">
-              {Array.from({ length: 8 }).map((_, i) => (
+              {bakeries.map ((b) => (
                 <div
-                  key={i}
+                  key={b.id}
                   className="rounded-xl border border-gray-200 bg-white p-3 shadow-sm"
                 >
-                  <div className="h-4 w-2/3 bg-gray-100 rounded mb-2" />
-                  <div className="h-3 w-11/12 bg-gray-100 rounded mb-1" />
-                  <div className="h-3 w-2/3 bg-gray-100 rounded" />
+                  <div className="font-semibold">{b.name}</div>
+                  <div className="text-sm text-gray-500">{b.loadAddress}</div>
+                  
                 </div>
               ))}
             </div>

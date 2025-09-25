@@ -176,20 +176,14 @@ const ReadComponent = ({ id }) => {
       <div className="flex flex-wrap gap-2 mt-4">
         {board.uploadFileNames?.length > 0 ? (
           board.uploadFileNames.map((imgFile, i) => (
-            <img key={i} src={`${prefix}/f/view/${imgFile}`} alt={`board-${i}`} className="w-1/3 border rounded p-2" />
+            <img key={i} src={`${prefix}/f/view/${imgFile}`} alt={`board-${i}`} className="w-full border rounded p-2" />
           ))) : (<span className="text-gray-500">등록된 이미지가 없습니다</span>)}
       </div>
 
       {/* 댓글 입력 */}
       <div className="mt-6 space-y-2">
-        <textarea
-          name="content"
-          rows={4}
-          placeholder="댓글을 입력해주세요"
-          value={addComment.content}
-          onChange={(e) => setAddComment({ content: e.target.value })}
-          className="w-full p-2 border rounded-lg"
-        />
+        <textarea name="content" rows={4} placeholder="댓글을 입력해주세요" value={addComment.content}
+          onChange={(e) => setAddComment({ content: e.target.value })} className="w-full p-2 border rounded-lg" />
         <div className="flex justify-end">
           <button onClick={handleClickAdd}
             className="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700">
