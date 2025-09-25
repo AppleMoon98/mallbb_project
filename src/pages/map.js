@@ -1,12 +1,14 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import MainNav from "../common/MainNav";
 import KakaoMap from "../component/map/Kakaomap";
 import {getBakeries} from "../api/bakeryApi"
 
+
+
 export default function MapPage() {
   
   const [bakeries, setBakeries] = useState([]);
-  c
+  const kakaoMapRef = useRef(null);
   useEffect(()=>{
     const fetchData = async () =>{
       const data = await getBakeries();
@@ -15,6 +17,11 @@ export default function MapPage() {
     fetchData();
   },[]);
   
+  const handleClickBakery = (b) =>{
+    if(kakaoMapRef.current){
+      kakaoMapRef.current.moveTo(b.lat, b.lng);
+    }
+  };
   
   return (
     <div className="min-h-screen">
@@ -50,6 +57,7 @@ export default function MapPage() {
                 <div
                   key={b.id}
                   className="rounded-xl border border-gray-200 bg-white p-3 shadow-sm"
+                  onClick={() => handleClickBakery(b)}
                 >
                   <div className="font-semibold">{b.name}</div>
                   <div className="text-sm text-gray-500">{b.loadAddress}</div>
@@ -62,7 +70,7 @@ export default function MapPage() {
           
           <section className="rounded-xl border border-gray-200 overflow-hidden">
             
-            <KakaoMap />
+            <KakaoMap ref={kakaoMapRef} bakeries={bakeries} />
           </section>
         </div>
       </div>
