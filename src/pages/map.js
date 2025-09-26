@@ -4,6 +4,7 @@ import { getBakeries, getBakeryProducts } from "../api/bakeryApi";
 import KakaoMap, { positions } from "../component/map/Kakaomap";
 import dayjs from "dayjs";
 import { moveAxios } from "../api/config";
+import { useNavigate } from "react-router-dom";
 
 export default function MapPage() {
   const [bakeries, setBakeries] = useState([]);
@@ -11,7 +12,7 @@ export default function MapPage() {
   const [menuList, setMenuList] = useState([]);
   const kakaoMapRef = useRef(null);
   const [searchKeyword, setSearchKeyword] = useState("");
-
+  const navigate = useNavigate();
   const bakeriesWithPositions = bakeries.map(b => {
     const pos = positions.find(p => p.content === b.name);
     return { ...b, lat: pos?.lat, lng: pos?.lng };
@@ -123,12 +124,9 @@ export default function MapPage() {
 
                     {/* (옵션) 예약 버튼 / 달력으로 바로 이동 등 추가 가능 */}
                     <div className="mt-4">
-                      <button className="w-full bg-indigo-600 text-white py-2 rounded" onClick={() => {
-                        
-                        // navigate(`/reservation?bakeryId=${selectedBakery.id}`)
-                        alert("예약 흐름 연결하세요 (예: 예약 페이지로 이동)");
-                      }}>
-                        예약하기
+                      <button className="mt-2 px-4 py-2 bg-blue-500 text-white rounded w-full"
+                        onClick={() => navigate("/reservation", { state: { bakery: selectedBakery } })}>
+                      예약하기
                       </button>
                     </div>
 
