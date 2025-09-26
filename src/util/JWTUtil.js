@@ -1,12 +1,12 @@
 import axios from "axios";
 import { getCookie, setCookie } from "./CookieUtil";
 import { API_SERVER_HOST } from "../api/config";
+import { createSearchParams, Navigate, useNavigate } from "react-router-dom";
 
 const LOGIN_URL = "/member/login";      // 로그인
 const REFRESH_URL = "/member/refresh";  // 리프레시
 
 export const jwtAxios = axios.create();
-
 const refreshJWT = async (accessToken, refreshToken) => {
     const host = API_SERVER_HOST
     const header = { headers: { "Authorization": `Bearer ${accessToken}` } }
@@ -64,7 +64,15 @@ const beforeRes = async (res) => {
 }
 
 const responseFail = (err) => {
-    console.log("response fail error..........")
+    console.log("response fail error.......... / JWTUtil.js")
+    // const errorMsg = err.response.data.error
+    //     const errorStr = createSearchParams({ error: errorMsg }).toString()
+    //     console.log(err.response.data.error)
+
+    //     if (errorMsg === 'REQUIRE_LOGIN') {
+    //         alert("로그인이 필요합니다.")
+    //         Navigate({ pathname: '/member/login', search: errorStr })
+    //     }
     return Promise.reject(err)
 }
 

@@ -113,7 +113,7 @@ const ReadComponent = ({ id }) => {
   useEffect(() => {
     setFetching(true);
     getOne(id)
-      .then((data) => {
+.then((data) => {
         const canEdit = (memberEmail && memberEmail === data.email) || isAdmin;
         setBoard({ ...data, canEdit });
       })
@@ -173,7 +173,7 @@ const ReadComponent = ({ id }) => {
       <div className="flex flex-wrap gap-2 mt-4">
         {board.uploadFileNames?.length > 0 ? (
           board.uploadFileNames.map((imgFile, i) => (
-            <img key={i} src={`${prefix}/f/view/${imgFile}`} alt={`board-${i}`} className="w-1/3 border rounded p-2" />
+            <img key={i} src={`${prefix}/f/view/${imgFile}`} alt={`board-${i}`} className="w-full border rounded p-2" />
           ))) : (<span className="text-gray-500">등록된 이미지가 없습니다</span>)}
       </div>
 
@@ -196,7 +196,7 @@ const ReadComponent = ({ id }) => {
 
         {/*댓글 리스트*/}
         {comment.map((c) => (
-          <div key={c.id} className="flex justify-between p-2 border rounded-lg mt-2 bg-white items-start">
+          <div key={c.id} className="flex justify-between p-2 border rounded-lg mt-2 bg-white items-center">
             <span className="flex-1">
               {c.editing ? (
                 <input
