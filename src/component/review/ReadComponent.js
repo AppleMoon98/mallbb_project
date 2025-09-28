@@ -19,6 +19,7 @@ const boardState = {
   uploadFileNames: [],
   writer: "",
   canEdit: false,
+  bakeryId: "",
 }
 
 const addCommentState = {

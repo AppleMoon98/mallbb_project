@@ -11,6 +11,7 @@ export default function useAuthGuard() {
     const ensureLogin = () => {
         if(!isLogin){
             const redirect = encodeURIComponent(location.pathname + location.search)
+            alert("로그인이 필요합니다.")
             navigate(`/member/login?redirect=${redirect}`)
             return false;
         }

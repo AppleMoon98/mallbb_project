@@ -18,6 +18,8 @@ const useCustomLogin = () => {
     const doLogout = () => {
         dispatch(logout())
         removeCookie('member', { path: "/" })
+        alert("로그아웃 되었습니다.")
+        moveToPath('/')
     }
 
     const moveToPath = (path) => {
@@ -32,7 +34,7 @@ const useCustomLogin = () => {
         const params = new URLSearchParams(location.search);
         const haveReplace = decodeURIComponent(params.get("redirect"));
         const imReplace = haveReplace.split("?")[0]
-        if (redirect && imReplace != "null")
+        if (redirect && imReplace !== "null")
             navigate({ pathname: imReplace }, { replace: replace })
         else
             navigate({ pathname: path }, { replace: replace })

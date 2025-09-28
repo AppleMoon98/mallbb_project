@@ -2,9 +2,11 @@ import { Link } from "react-router-dom";
 import "../css/main.css";
 import "../css/mainnav.css";
 import { useSelector } from "react-redux";
+import useCustomLogin from "../component/hooks/useCustomLogin";
 
 const MainNav = () => {
   const loginState = useSelector(state => state.loginSlice)
+  const { doLogout, isLogin } = useCustomLogin()
   return (
     <nav>
       <div id="nav_bar">
@@ -39,15 +41,15 @@ const MainNav = () => {
         </div>
         <div className="user">
           <ul className="submenu">
-            {!loginState.email ?
+            {!isLogin ?
               <div className="flex text-white">
                 <Link to="/register" className="px-4">회원가입</Link>
                 <Link to="/member/login">로그인</Link>
               </div>
               :
-               <div className="flex text-white">
-                <Link to="#" className="px-4">마이페이지</Link>
-                <Link to="/member/logout">로그아웃</Link>
+              <div className="flex text-white">
+                <Link to="/member/mypage" className="px-4">마이페이지</Link>
+                <button onClick={doLogout}>로그아웃</button>
               </div>
             }
           </ul>

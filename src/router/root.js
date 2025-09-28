@@ -10,6 +10,8 @@ import reviewRouter from "./reviewRouter"
 import questionRouter from "./questionRouter"
 import freeRouter from "./freeRouter"
 import ChatPage from "../pages/ChatPage"
+import MainNav from "../common/MainNav"
+
 
 const Loading = <div>Loading......</div>
 const Main = lazy(() => import("../pages/main"))
@@ -20,9 +22,7 @@ const QuestionIndex = lazy( () => import("../pages/question/IndexPage"))
 const Reservation = lazy(()=>import("../pages/reservation"))
 const Map = lazy(()=>import("../pages/map"))
 const WebInfo = lazy(()=>import("../pages/webinfo"))
-const KakaoLoginComponent = lazy(()=>import("../component/auth/KakaoLoginComponent"))
-
-
+const ReservationConfirm = lazy(()=> import("../pages/reservationConfirm"))
 
 const root = createBrowserRouter([
   {
@@ -78,13 +78,12 @@ const root = createBrowserRouter([
     element:<Suspense fallback={Loading}><WebInfo/></Suspense>
   },
   {
-    // 카카오 테스트 용도로 사용할 주소
-    path: "kakao",
-    element:<Suspense fallback={Loading}><KakaoLoginComponent/></Suspense>
-  },
-  {
     path:"chat",
     element:<ChatPage/>
+  },
+  {
+    path: "reservationConfirm",
+    element:<Suspense fallback={Loading}>{/**여기 임시 네비바 지워야함 */}<MainNav/><ReservationConfirm/></Suspense>    
   }
 ])
 

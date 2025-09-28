@@ -54,8 +54,8 @@ export default function AddComponent() {
     };
 
     return (
-        <InputDetail board={review} handleChangeBoard={handleChangeReview}
-            uploadRef={uploadRef} handleClickAdd={handleClickAdd} />
+            <InputDetail board={review} handleChangeBoard={handleChangeReview}
+             uploadRef={uploadRef} handleClickAdd={handleClickAdd} />
     );
 }
 
