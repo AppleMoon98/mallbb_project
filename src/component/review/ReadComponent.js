@@ -7,6 +7,7 @@ import ConfirmModal from "../../common/ConfirmModal";
 import dayjs from "dayjs";
 import { commentGetList, commentRegister, commentRemove, commentModify } from "../../api/reviewCommentApi";
 import useAuthGuard from "../hooks/useAuthGuard";
+import { getBakeries } from "../../api/bakeryApi"
 
 const prefix = API_SERVER_HOST
 
@@ -30,6 +31,7 @@ const ReadComponent = ({ id }) => {
 
   const [review, setReview] = useState(boardState);
   const [comment, setComment] = useState([])
+  const [bakeries, setBakeries] = useState([]);
   const [fetching, setFetching] = useState(false);
   const [addComment, setAddComment] = useState(addCommentState)
   const { moveToModify, moveToPath } = useCustomMove();
@@ -131,6 +133,8 @@ const handleClickAdd = async () => {
       setReview({ ...data, canEdit })
     })
       .finally(() => setFetching(false));
+
+      getBakeries().then( (list) => setBakeries(list));
     refreshComments();
   }, [id, memberEmail, isAdmin, refreshComments])
 
@@ -151,7 +155,7 @@ const handleClickAdd = async () => {
           </tr>
           <tr>
             <td className="border p-4 font-bold">제목</td>
-            <td className="border p-4">{review.title}</td>
+            <td className="border p-4">{review.title}</td>  
             <td className="border p-4 font-bold">작성자</td>
             <td className="border p-4">{review.writer}</td>
           </tr>

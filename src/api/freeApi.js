@@ -19,7 +19,6 @@ export const register = async (formdata) => {
     const res = await jwtAxios.post(`${prefix}/`, formdata, {
         headers: { "Content-Type": "multipart/form-data" }
     });
-
     return res.data;
 }
 

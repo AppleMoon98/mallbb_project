@@ -8,6 +8,8 @@ import "dayjs/locale/ko";
 import { ko as kor } from "date-fns/locale";
 import { getBakeryProducts } from "../api/bakeryApi";
 import useAuthGuard from "../component/hooks/useAuthGuard";
+import jwtAxios from "../util/JWTUtil";
+import { getCookie } from "../util/CookieUtil";
 
 dayjs.locale("ko");
 
@@ -21,6 +23,7 @@ export default function Reservation() {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [selectedTime, setSelectedTime] = useState(null);
   const [menuList, setMenuList] = useState([]);
+  const [sending, setSending] = useState(false);
 
   // 로그인 체크 및 bakery 정보 확인
   useEffect(() => {
@@ -31,7 +34,6 @@ export default function Reservation() {
       return;
     }
 
-    // 선택한 bakery 메뉴 가져오기 — 기존 quantity 보존
     const fetchMenu = async () => {
       try {
         const res = await getBakeryProducts(bakery.id);
@@ -66,11 +68,19 @@ export default function Reservation() {
   };
 
   // 예약 완료 클릭
-  const handleReserveSubmit = () => {
+  const handleReserveSubmit = async () => {
+    const memberInfo = getCookie("member");
+    if (!memberInfo) {
+      alert("예약하려면 로그인 해야합니다.");
+      navigate(-1);
+      return;
+    }
+
     if (!selectedTime) {
       alert("시간을 선택해주세요.");
       return;
     }
+
     const selectedMenu = menuList.filter((item) => (item.quantity || 0) > 0);
     if (selectedMenu.length === 0) {
       alert("메뉴를 선택해주세요.");
@@ -82,6 +92,7 @@ export default function Reservation() {
     const reservationData = {
       bakeryId: bakery.id,
       bakeryName: bakery.name,
+      bakeryAddress: bakery.loadAddress || bakery.townAddress,
       date: dayjs(selectedDate).format("YYYY-MM-DD"),
       time: dayjs(selectedTime).format("HH:mm"),
       menu: selectedMenu.map((m) => ({
@@ -89,18 +100,20 @@ export default function Reservation() {
         name: m.name,
         quantity: m.quantity,
         price: m.price,
+        totalPrice: (m.price || 0) * (m.quantity || 0),
       })),
       totalPrice,
     };
 
-    console.log("예약 데이터:", reservationData);
-    alert("예약 완료! 콘솔을 확인하세요.");
-
-    // DB 전송은 여기서 fetch/axios로 POST 요청 가능
-    // 예: await axios.post("/api/reservations", reservationData);
+    try {
+      const res = await jwtAxios.post("/api/reservations", reservationData, { timeout: 15000 });
+      alert("정상적으로 예약 되었습니다.");
+      navigate("/reservationConfirm", { state: { reservation: reservationData, serverResponse: res.data } });
+    } catch (err) {
+      const serverMsg = err?.response?.data?.message || err?.message || "예약 전송 중 오류가 발생했습니다.";
+      alert(serverMsg);
+    }
   };
-
-  if (!bakery) return null;
 
   return (
     <div>
@@ -220,8 +233,13 @@ export default function Reservation() {
         </section>
 
         <button
-          className="w-full md:w-auto px-5 py-2.5 rounded-xl bg-indigo-600 text-white text-sm font-medium hover:bg-indigo-700 focus:outline-none focus:ring-4 focus:ring-indigo-200"
+          className={`w-full md:w-auto px-5 py-2.5 rounded-xl text-sm font-medium focus:outline-none focus:ring-4 ${
+            menuList.filter((m) => m.quantity > 0).length === 0
+              ? "bg-gray-400 text-gray-200 cursor-not-allowed focus:ring-gray-200"
+              : "bg-indigo-600 text-white hover:bg-indigo-700 focus:ring-indigo-200"
+          }`}
           onClick={handleReserveSubmit}
+          disabled={menuList.filter((m) => m.quantity > 0).length === 0}
         >
           예약 완료
         </button>

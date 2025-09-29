@@ -1,5 +1,6 @@
 import axios from "axios";
-import { API_SERVER_HOST } from "./config";
+import { API_SERVER_HOST, moveAxios } from "./config";
+import jwtAxios from "../util/JWTUtil";
 
 const host = `${API_SERVER_HOST}/member`
 
@@ -46,6 +47,15 @@ export const register = async (formdata) => {
 export const sellerRegister = async (formdata) => {
     const res = await axios.post(`${host}/sellerregister`, formdata, {
         headers: {"Content-Type":"application/json"}
+    })
+    console.log(res)
+    return res.data
+}
+
+// 닉네임 변경
+export const modifyNickname = async(nickname) => {
+    const res = await jwtAxios.put(`${host}/nickname`, nickname, {
+        headers: {"Content-Type":"text/plain"}
     })
     console.log(res)
     return res.data
