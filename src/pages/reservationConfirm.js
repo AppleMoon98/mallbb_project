@@ -10,7 +10,6 @@ export default function ReservationConfirm() {
 
   return (
     <div className="mx-14 mt-14 space-y-6">
-    <MainNav/>
       <h1 className="text-2xl font-bold">예약 확인</h1>
 
       <div className="bg-white rounded-2xl border shadow-sm p-6 space-y-2">

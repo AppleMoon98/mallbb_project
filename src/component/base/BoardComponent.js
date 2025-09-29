@@ -47,7 +47,7 @@ export function OutputList({ serverData, onClickTitle }) {
           </span>
 
           <span className="flex-1 text-black">
-            {board.title}
+            {board.title} 
           </span>
 
           <span className={`${wirterClassName} text-gray-600`}>

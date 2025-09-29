@@ -42,24 +42,6 @@ const MyPageComponent = () => {
         setMemberData((prev) => ({ ...prev, [name]: value }));
     };
 
-    // 닉네임
-    const handleNicknameSubmit = async (e) => {
-        e.preventDefault();
-        const newNickname = e.target.newNickname.value;
-        if (!newNickname.trim()) return;
-
-        await modifyNickname(newNickname)
-
-        const current = getCookie("member") ?? {};
-        const updated = { ...current, nickname: newNickname };
-        setCookie("member", JSON.stringify(updated), 1)
-        setMemberData(updated);
-        e.target.reset();
-
-        alert('닉네임이 변경되었습니다.')
-        console.log(newNickname)
-    };
-
     // 인증번호
     const handleClickAuth = () => {
         if (!memberData.telNum.trim()) {
@@ -84,7 +66,7 @@ const MyPageComponent = () => {
         formdata.append("number", number)
 
         // 여기서 인증번호를 백으로 전송하고 전화번호를 받아둠.
-        //Certification(formdata)
+        Certification(formdata)
 
         // 마무리는 무조건 인증번호가 발송되었다는 알림으로 마무리됨
         alert("인증번호가 전송되었습니다.")
@@ -92,17 +74,24 @@ const MyPageComponent = () => {
 
     // 인증번호 받은 후
     const handleClickVerify = () => {
-        console.log(memberData)
+        console.log(member.telNum)
+
+        // 값이 제대로 적힌 것이 맞는지 확인
         if (!authCodeInput.trim()) {
             alert("인증번호를 입력해주세요.");
             return;
         }
 
+        // 인증번호가 서로 같은지 확인
         if (authCodeInput != memberData.number) {
             alert("인증번호가 다릅니다.")
             return;
         }
-        // if(){
+
+        // 회원가입 때, 등록된 번호와 같은지 확인
+        // if(memberData.telNum !== member.telNum){
+        //     alert("등록된 전화번호가 아닙니다.")
+        //     setIsVerifying(false);
         //     return;
         // }
 
@@ -112,8 +101,39 @@ const MyPageComponent = () => {
     };
 
     // 패스워드
-    const handlePasswordSubmit = () => {
+    const handlePasswordSubmit = async(e) => {
+        e.preventDefault();
+        const target = e.target;
 
+        if(!isVerified)
+            return;
+
+        if(!target.currentPassword.value.trim()
+            ||!target.newPassword.value.trim()
+            ||!target.confirmPassword.value.trim()){
+                alert('빈칸을 다 채워주세요')
+                return;
+        }
+
+        // bool 값 가져와야함.
+    };
+
+    // 닉네임
+    const handleNicknameSubmit = async (e) => {
+        e.preventDefault();
+        const newNickname = e.target.newNickname.value;
+        if (!newNickname.trim()) return;
+
+        await modifyNickname(newNickname)
+
+        const current = getCookie("member") ?? {};
+        const updated = { ...current, nickname: newNickname };
+        setCookie("member", JSON.stringify(updated), 1)
+        setMemberData(updated);
+        e.target.reset();
+
+        alert('닉네임이 변경되었습니다.')
+        console.log(newNickname)
     };
 
     useEffect(() => {
@@ -231,13 +251,13 @@ const MyPageComponent = () => {
 
                             <div className="sm:col-span-2">
                                 <label htmlFor="currentPassword" className="block text-sm font-medium text-gray-700">현재 비밀번호</label>
-                                <input id="currentPassword" name="currentPassword" type="password" placeholder="현재 비밀번호" required disabled={!memberData.isCertify}
+                                <input id="currentPassword" name="currentPassword" type="password" placeholder="현재 비밀번호" required disabled={!isVerified}
                                     className="mt-1 w-full rounded-xl border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-4 focus:ring-indigo-200" />
                             </div>
 
                             <div>
                                 <label htmlFor="newPassword" className="block text-sm font-medium text-gray-700">새 비밀번호</label>
-                                <input id="newPassword" name="newPassword" type="password" placeholder="새 비밀번호" disabled={!memberData.isCertify}
+                                <input id="newPassword" name="newPassword" type="password" placeholder="새 비밀번호" disabled={!isVerified}
                                     className="mt-1 w-full rounded-xl border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-4 focus:ring-indigo-200"
                                     minLength={8} maxLength={32} required aria-describedby="newPwHelp" />
                                 <p id="newPwHelp" className="mt-1 text-xs text-gray-500">영문 대/소문자, 숫자, 특수문자 포함 권장</p>
@@ -245,7 +265,7 @@ const MyPageComponent = () => {
 
                             <div>
                                 <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700">새 비밀번호 확인</label>
-                                <input id="confirmPassword" name="confirmPassword" type="password" placeholder="새 비밀번호 확인" required disabled={!memberData.isCertify}
+                                <input id="confirmPassword" name="confirmPassword" type="password" placeholder="새 비밀번호 확인" required disabled={!isVerified}
                                     className="mt-1 w-full rounded-xl border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-4 focus:ring-indigo-200" />
                             </div>
                         </div>

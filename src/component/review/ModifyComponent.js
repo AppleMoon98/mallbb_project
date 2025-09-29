@@ -7,6 +7,7 @@ import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic"
 import { getBakeries } from "../../api/bakeryApi"
 
+
 const initState = {
     id: 0,
     title: '',
@@ -63,14 +64,20 @@ const ModifyComponent = ({ id }) => {
     }
 
     useEffect(() => {
-        setFetching(true);
-        getOne(id).then(data => {
-            setReview(data);
-            setFetching(false);
-        });
+    setFetching(true);
 
-        getBakeries().then(list => setBakeries(list));
-    }, [id]);
+    // 두 API 호출을 병렬 처리
+    Promise.all([getOne(id), getBakeries()])
+        .then(([reviewData, bakeriesData]) => {
+            setReview({
+                ...reviewData,
+                bakeryId: reviewData.bakeryId || "",
+                uploadFileNames: reviewData.uploadFileNames || []
+            });
+            setBakeries(bakeriesData);
+        })
+        .finally(() => setFetching(false));
+}, [id]);
 
     return (
         <div className="mx-auto max-w-2xl px-4 py-8">
@@ -103,20 +110,18 @@ const ModifyComponent = ({ id }) => {
                 </div>
 
                 {/* 가게 선택 */}
-                <div className="space-y-2">
+                 <div className="space-y-2">
                     <label className="text-sm font-medium text-gray-700">가게 선택</label>
                     <select
                         name="bakeryId"
-                        value={review.bakeryId || ""}
+                        value={review.bakeryId}
                         onChange={handleChangeReview}
-                        className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-2 outline-none transition
-                            ocus:border-indigo-400 focus:bg-white focus:ring-2 focus:ring-indigo-200"
-                        >
+                        className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-2 outline-none transition 
+                        focus:border-indigo-400 focus:bg-white focus:ring-2 focus:ring-indigo-200"
+                    >
                         <option value="">가게를 선택하세요</option>
-                        {bakeries.map(b => (
-                            <option key={b.id} value={b.id}>
-                                {b.name}
-                            </option>
+                        {bakeries.map((b) => (
+                            <option key={b.id} value={b.id}>{b.name}</option>
                         ))}
                     </select>
                 </div>
@@ -132,6 +137,20 @@ const ModifyComponent = ({ id }) => {
                         file:mr-4 file:rounded-xl file:border-0 file:bg-indigo-50 file:px-4 file:py-2 file:text-indigo-700
                         hover:file:bg-indigo-100"
                     />
+                </div>
+
+                <div className="flex justify-center">
+                    <div className="relative mb-4 flex w-full flex-wrap items-stretch">
+                        <div className="w-1/5 p-6 text-right font-bold">IMAGE</div>
+                        <div className="w-4/5 justify-center flex flex-wrap items-start">
+                            {review.uploadFileNames.map((imgFile, i) =>
+                                <div className="flex justify-center flex-col w-1/3" key={i}>
+                                    <button className="bg-red-500 text-3xl text-white" onClick={() => deleteOldImages(imgFile)}>DELETE</button>
+                                    <img alt="img" src={getFileUrl(imgFile)} />
+                                </div>
+                            )}
+                        </div>
+                    </div>
                 </div>
 
                 {/* 버튼 */}

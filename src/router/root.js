@@ -11,6 +11,7 @@ import questionRouter from "./questionRouter"
 import freeRouter from "./freeRouter"
 import ChatPage from "../pages/ChatPage"
 import MainNav from "../common/MainNav"
+import ReservationListPage from "../pages/reservationList"
 
 
 const Loading = <div>Loading......</div>
@@ -22,7 +23,7 @@ const QuestionIndex = lazy( () => import("../pages/question/IndexPage"))
 const Reservation = lazy(()=>import("../pages/reservation"))
 const Map = lazy(()=>import("../pages/map"))
 const WebInfo = lazy(()=>import("../pages/webinfo"))
-const ReservationConfirm = lazy(()=> import("../pages/reservationConfirm"))
+const ReservationConfirm = lazy(()=> import("../pages/reservationList"))
 
 const root = createBrowserRouter([
   {
@@ -82,8 +83,12 @@ const root = createBrowserRouter([
     element:<ChatPage/>
   },
   {
-    path: "reservationConfirm",
-    element:<Suspense fallback={Loading}>{/**여기 임시 네비바 지워야함 */}<MainNav/><ReservationConfirm/></Suspense>    
+    path: "reservationconfirm",
+    element:<Suspense fallback={Loading}><ReservationConfirm/></Suspense>    
+  },
+  {
+    path: "reservationlist",
+    element: <Suspense fallback={Loading}><ReservationListPage/></Suspense>
   }
 ])
 

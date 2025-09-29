@@ -134,9 +134,11 @@ const handleClickAdd = async () => {
     })
       .finally(() => setFetching(false));
 
-      getBakeries().then( (list) => setBakeries(list));
+     getBakeries().then((data) => setBakeries(data));
     refreshComments();
   }, [id, memberEmail, isAdmin, refreshComments])
+
+  const bakeryName = bakeries.find(b => b.id == review.bakeryId)?.name || "-";
 
   return (
     <div className="mt-10 m-2 p-4 bg-[#F4C455] rounded-lg shadow-md">
@@ -158,6 +160,10 @@ const handleClickAdd = async () => {
             <td className="border p-4">{review.title}</td>  
             <td className="border p-4 font-bold">작성자</td>
             <td className="border p-4">{review.writer}</td>
+          </tr>
+          <tr>
+            <td className="border p-4 font-bold">가게</td>
+            <td className="border p-4" colSpan={3}>{bakeryName}</td>
           </tr>
           <tr>
             <td className="border p-4 font-bold">내용</td>

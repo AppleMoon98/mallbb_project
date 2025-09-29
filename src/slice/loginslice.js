@@ -7,6 +7,7 @@ const initState = {
     nickname: null,
     accessToken: null,
     refreshToken: null,
+    telnum: '',
     roleNames: [],
 }
 

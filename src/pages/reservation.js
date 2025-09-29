@@ -10,6 +10,9 @@ import { getBakeryProducts } from "../api/bakeryApi";
 import useAuthGuard from "../component/hooks/useAuthGuard";
 import jwtAxios from "../util/JWTUtil";
 import { getCookie } from "../util/CookieUtil";
+import { API_SERVER_HOST } from "../api/config";
+
+
 
 dayjs.locale("ko");
 
@@ -106,14 +109,20 @@ export default function Reservation() {
     };
 
     try {
-      const res = await jwtAxios.post("/api/reservations", reservationData, { timeout: 15000 });
+      const res = await jwtAxios.post(`${API_SERVER_HOST}/api/reservations`, reservationData, {
+      timeout: 15000,});
       alert("정상적으로 예약 되었습니다.");
-      navigate("/reservationConfirm", { state: { reservation: reservationData, serverResponse: res.data } });
+      navigate("/reservationconfirm", { state: { reservation: reservationData, serverResponse: res.data } });
     } catch (err) {
       const serverMsg = err?.response?.data?.message || err?.message || "예약 전송 중 오류가 발생했습니다.";
       alert(serverMsg);
+    } finally {
+      setSending(false);
     }
   };
+
+  const totalSelected = menuList.reduce((sum, m) => sum + (m.quantity || 0), 0);
+
 
   return (
     <div>
@@ -140,14 +149,13 @@ export default function Reservation() {
 
         {/* 예약 날짜/시간 + 메뉴 선택 */}
         <section className="bg-white rounded-2xl border shadow-sm p-6 grid md:grid-cols-2 gap-6">
-          {/* 왼쪽: 날짜/시간 */}
           <div className="space-y-4">
             <h2 className="text-lg font-semibold">예약 시간 선택</h2>
             <ReactDatePicker
               locale={kor}
               inline
               selected={selectedDate}
-              onChange={(date) => setSelectedDate(date)}
+              onChange={setSelectedDate}
               minDate={new Date()}
             />
             <div>
@@ -155,19 +163,17 @@ export default function Reservation() {
               <ReactDatePicker
                 locale={kor}
                 selected={selectedTime}
-                onChange={(time) => setSelectedTime(time)}
+                onChange={setSelectedTime}
                 showTimeSelect
                 showTimeSelectOnly
                 timeIntervals={30}
                 timeCaption="시간"
                 dateFormat="aa hh:mm"
-                timeFormat="aa hh:mm"
                 className="w-full rounded-xl border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-200"
               />
             </div>
           </div>
 
-          {/* 오른쪽: 메뉴 선택 */}
           <div>
             <h2 className="text-lg font-semibold mb-2">메뉴 선택</h2>
             <div className="space-y-2 max-h-[400px] overflow-y-auto">
@@ -182,17 +188,13 @@ export default function Reservation() {
                       type="button"
                       className="px-2 py-1 bg-gray-200 rounded"
                       onClick={() => handleQuantityChange(menu.id, -1)}
-                    >
-                      -
-                    </button>
+                    >-</button>
                     <span>{menu.quantity || 0}</span>
                     <button
                       type="button"
                       className="px-2 py-1 bg-gray-200 rounded"
                       onClick={() => handleQuantityChange(menu.id, 1)}
-                    >
-                      +
-                    </button>
+                    >+</button>
                   </div>
                 </div>
               ))}
@@ -200,11 +202,9 @@ export default function Reservation() {
           </div>
         </section>
 
-        {/* 예약 정보 표시 */}
+        {/* 예약 정보 */}
         <section className="bg-white rounded-2xl border shadow-sm p-6 mt-6">
           <h2 className="text-lg font-semibold mb-3">예약 정보</h2>
-
-          {/* 선택한 메뉴 */}
           <div className="space-y-2 mb-4 max-h-[200px] overflow-y-auto">
             {menuList.filter((m) => m.quantity > 0).map((m) => (
               <div key={m.id} className="flex justify-between items-center p-2 border rounded-xl bg-gray-50">
@@ -215,18 +215,12 @@ export default function Reservation() {
                 <div className="font-semibold">{((m.price || 0) * m.quantity).toLocaleString()}원</div>
               </div>
             ))}
-            {menuList.filter((m) => m.quantity > 0).length === 0 && (
-              <div className="text-sm text-gray-500">선택한 메뉴가 없습니다.</div>
-            )}
+            {totalSelected === 0 && <div className="text-sm text-gray-500">선택한 메뉴가 없습니다.</div>}
           </div>
-
-          {/* 예약 날짜/시간 */}
           <div className="mb-4 text-sm text-gray-600">
             <div>예약 날짜: {dayjs(selectedDate).format("YYYY-MM-DD")}</div>
             <div>예약 시간: {selectedTime ? dayjs(selectedTime).format("HH:mm") : "-"}</div>
           </div>
-
-          {/* 총 합계 */}
           <div className="text-right font-bold text-lg">
             총 합계: {menuList.reduce((sum, m) => sum + (m.price || 0) * (m.quantity || 0), 0).toLocaleString()}원
           </div>
@@ -234,12 +228,10 @@ export default function Reservation() {
 
         <button
           className={`w-full md:w-auto px-5 py-2.5 rounded-xl text-sm font-medium focus:outline-none focus:ring-4 ${
-            menuList.filter((m) => m.quantity > 0).length === 0
-              ? "bg-gray-400 text-gray-200 cursor-not-allowed focus:ring-gray-200"
-              : "bg-indigo-600 text-white hover:bg-indigo-700 focus:ring-indigo-200"
+            totalSelected === 0 ? "bg-gray-400 text-gray-200 cursor-not-allowed focus:ring-gray-200" : "bg-indigo-600 text-white hover:bg-indigo-700 focus:ring-indigo-200"
           }`}
           onClick={handleReserveSubmit}
-          disabled={menuList.filter((m) => m.quantity > 0).length === 0}
+          disabled={totalSelected === 0 || sending}
         >
           예약 완료
         </button>
