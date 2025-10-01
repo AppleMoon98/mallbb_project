@@ -1,10 +1,11 @@
 import React from "react";
 import Slider from "react-slick";
-import Slide1 from "../img/project_Img/slide_Image/Silde.webp"
-import Slide2 from "../img/project_Img/slide_Image/Silde2.webp"
-import Slide3 from "../img/project_Img/slide_Image/Slide3.jpg"
-import Slide4 from "../img/project_Img/slide_Image/Silde4.jpeg"
-import Slide5 from "../img/project_Img/slide_Image/Silde6.png"
+import Slide1 from "../img/project_Img/slide_Image/KakaoTalk_20251001_174118820.jpg"
+import Slide2 from "../img/project_Img/slide_Image/Silde.webp"
+import Slide3 from "../img/project_Img/slide_Image/Silde2.webp"
+import Slide4 from "../img/project_Img/slide_Image/Slide3.jpg"
+import Slide5 from "../img/project_Img/slide_Image/Silde4.jpeg"
+import Slide6 from "../img/project_Img/slide_Image/Silde6.png"
 
 
 const MainSlider = () => {
@@ -30,6 +31,7 @@ const MainSlider = () => {
         <div className="slide-card"><img src={Slide3}></img></div>
         <div className="slide-card"><img src={Slide4}></img></div>
         <div className="slide-card"><img src={Slide5}></img></div>
+        <div className="slide-card"><img src={Slide6}></img></div>
       </Slider>
     </div>
   );

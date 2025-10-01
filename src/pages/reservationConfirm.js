@@ -18,13 +18,13 @@ export default function ReservationConfirm() {
 
         <div className="bg-white rounded-2xl border shadow-sm p-6 space-y-2">
           <div className="text-sm text-gray-600">
-            가게: {reservation.bakeryName}
+            가게 : {reservation.bakeryName}
           </div>
           <div className="text-sm text-gray-600">
-            예약 날짜: {reservation.date}
+            예약 날짜 : {reservation.date}
           </div>
           <div className="text-sm text-gray-600">
-            예약 시간: {reservation.time}
+            예약 시간 : {reservation.time}
           </div>
           <div className="space-y-1">
             {reservation.menu.map((m) => (

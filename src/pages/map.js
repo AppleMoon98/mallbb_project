@@ -14,6 +14,7 @@ export default function MapPage() {
   const [searchKeyword, setSearchKeyword] = useState("");
   const navigate = useNavigate();
   const { ensureLogin } = useAuthGuard();
+  const [activeTab, setActiveTab] = useState("menu");
 
   // 지도에 표시할 위치 포함
   const bakeriesWithPositions = bakeries.map((b) => {
@@ -102,9 +103,8 @@ export default function MapPage() {
                 <div
                   key={b.id}
                   onClick={() => handleClickBakery(b)}
-                  className={`rounded-xl border p-3 shadow-sm cursor-pointer ${
-                    selectedBakery?.id === b.id ? "ring-2 ring-indigo-300" : ""
-                  }`}
+                  className={`rounded-xl border p-3 shadow-sm cursor-pointer ${selectedBakery?.id === b.id ? "ring-2 ring-indigo-300" : ""
+                    }`}
                 >
                   <div className="font-semibold">{b.name}</div>
                   <div className="text-sm text-gray-500">
@@ -137,8 +137,8 @@ export default function MapPage() {
                       영업시간:{" "}
                       {selectedBakery.openDate
                         ? `${dayjs(selectedBakery.openDate).format("a hh:mm")} - ${dayjs(
-                            selectedBakery.closeDate
-                          ).format("a hh:mm")}`
+                          selectedBakery.closeDate
+                        ).format("a hh:mm")}`
                         : "정보 없음"}
                     </div>
                     <div className="text-sm text-gray-600">
@@ -151,7 +151,25 @@ export default function MapPage() {
                     >
                       예약하기
                     </button>
-                          
+
+                    {/* 탭 버튼 */}
+                    <div className="flex gap-2 mt-4">
+                      <button
+                        className={`px-3 py-1 rounded ${activeTab === "menu" ? "bg-blue-500 text-white" : "bg-gray-200"}`}
+                        onClick={() => setActiveTab("menu")}
+                      >
+                        메뉴
+                      </button>
+                      <button
+                        className={`px-3 py-1 rounded ${activeTab === "review" ? "bg-blue-500 text-white" : "bg-gray-200"}`}
+                        onClick={() => setActiveTab("review")}
+                      >
+                        리뷰
+                      </button>
+                    </div>
+
+                    {activeTab === "menu" && (
+                      <>
                     <h3 className="mt-5 font-semibold">메뉴</h3>
                     {menuList.length > 0 ? (
                       <ul className="space-y-2">
@@ -165,6 +183,11 @@ export default function MapPage() {
                       </ul>
                     ) : (
                       <p className="text-sm text-gray-500">메뉴 정보가 없습니다.</p>
+                    )}
+                    </>
+                    )}
+                    {activeTab === "review" && (
+                      <></>
                     )}
                   </>
                 ) : (
