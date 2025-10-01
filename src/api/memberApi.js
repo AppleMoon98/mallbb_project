@@ -60,3 +60,9 @@ export const modifyNickname = async(nickname) => {
     console.log(res)
     return res.data
 }
+
+// 패스워드 변경
+export const modifyPassword = async(payload) => {
+    const res = await jwtAxios.put(`${host}/password`, payload);
+    return res.data
+}

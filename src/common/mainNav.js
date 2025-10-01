@@ -31,7 +31,7 @@ const MainNav = () => {
               <Link to={"/map"}>지도</Link>
             </li>
             <li className="depth1">
-              <Link to={"/reservation"}>예약</Link>
+              <Link to={"/reservationlist"}>예약</Link>
               <ul className="submenu">
                 <li><a href="#">예약하기</a></li>
                 <li><a href="#">예약확인</a></li>

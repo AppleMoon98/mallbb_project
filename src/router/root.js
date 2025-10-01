@@ -10,7 +10,6 @@ import reviewRouter from "./reviewRouter"
 import questionRouter from "./questionRouter"
 import freeRouter from "./freeRouter"
 import ChatPage from "../pages/ChatPage"
-import MainNav from "../common/MainNav"
 import ReservationListPage from "../pages/reservationList"
 
 
@@ -23,7 +22,7 @@ const QuestionIndex = lazy( () => import("../pages/question/IndexPage"))
 const Reservation = lazy(()=>import("../pages/reservation"))
 const Map = lazy(()=>import("../pages/map"))
 const WebInfo = lazy(()=>import("../pages/webinfo"))
-const ReservationConfirm = lazy(()=> import("../pages/reservationList"))
+const ReservationConfirm = lazy(()=> import("../pages/reservationConfirm"))
 
 const root = createBrowserRouter([
   {

@@ -9,9 +9,12 @@
  */
 
 import { useEffect, useState } from "react";
-import { Certification, modifyNickname } from "../../api/memberApi";
+import { Certification, modifyNickname, modifyPassword } from "../../api/memberApi";
 import useAuthGuard from "../../component/hooks/useAuthGuard"
-import { getCookie, setCookie } from "../../util/CookieUtil";
+import { getCookie, removeCookie, setCookie } from "../../util/CookieUtil";
+import { logout } from "../../slice/LoginSlice";
+import useCustomMove from "../hooks/useCustomMove";
+import { useDispatch } from "react-redux";
 
 const memberState = {
     nickname: 'member',
@@ -27,6 +30,8 @@ const MyPageComponent = () => {
     const [memberData, setMemberData] = useState(memberState)
     const rangeRandom = (min, max) => Math.floor(Math.random() * (max - min) + min)
     const [authCodeInput, setAuthCodeInput] = useState("");
+    const { moveToPath } = useCustomMove()
+    const dispatch = useDispatch()
 
     // 정규식
     const notNumber = /[^0-9]/g
@@ -104,18 +109,41 @@ const MyPageComponent = () => {
     const handlePasswordSubmit = async(e) => {
         e.preventDefault();
         const target = e.target;
+        const currentPassword = target.currentPassword.value.trim();
+        const newPassword = target.newPassword.value.trim();
+        const confirmPassword = target.confirmPassword.value.trim();
 
         if(!isVerified)
             return;
 
-        if(!target.currentPassword.value.trim()
-            ||!target.newPassword.value.trim()
-            ||!target.confirmPassword.value.trim()){
+        if(!currentPassword
+            ||!newPassword
+            ||!confirmPassword){
                 alert('빈칸을 다 채워주세요')
                 return;
         }
 
-        // bool 값 가져와야함.
+        if(newPassword !== confirmPassword){
+            alert("새 비밀번호가 서로 일치하지 않습니다.")
+            return;
+        }
+
+        if(newPassword.length < 8){
+            alert("비밀번호는 8자 이상이어야 합니다.")
+            return
+        }
+
+        try{
+            await modifyPassword({currentPassword, newPassword});
+            alert("비밀번호가 변경되었습니다. 다시 로그인 해주세요.")
+
+            // 여기서 로그인 창으로 보내고 로그아웃 메서드 발동하고 쿠키 삭제
+            removeCookie("member", '/')
+            window.location.replace("/member/login");
+        }catch(err){
+            const msg = err?.response?.data?.message || "변경 실패. 현재 비밀번호를 확인해주세요."
+            alert(msg)
+        }
     };
 
     // 닉네임

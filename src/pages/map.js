@@ -151,7 +151,7 @@ export default function MapPage() {
                     >
                       예약하기
                     </button>
-
+                          
                     <h3 className="mt-5 font-semibold">메뉴</h3>
                     {menuList.length > 0 ? (
                       <ul className="space-y-2">

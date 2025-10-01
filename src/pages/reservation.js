@@ -8,11 +8,10 @@ import "dayjs/locale/ko";
 import { ko as kor } from "date-fns/locale";
 import { getBakeryProducts } from "../api/bakeryApi";
 import useAuthGuard from "../component/hooks/useAuthGuard";
-import jwtAxios from "../util/JWTUtil";
 import { getCookie } from "../util/CookieUtil";
 import { API_SERVER_HOST } from "../api/config";
-
-
+import axios from "axios";
+import jwtAxios from "../util/JWTUtil";
 
 dayjs.locale("ko");
 
@@ -41,7 +40,6 @@ export default function Reservation() {
       try {
         const res = await getBakeryProducts(bakery.id);
         const arr = Array.isArray(res) ? res : [];
-
         setMenuList((prev) => {
           const prevMap = new Map(prev.map((p) => [String(p.id), p]));
           return arr.map((item) => {
@@ -72,26 +70,31 @@ export default function Reservation() {
 
   // 예약 완료 클릭
   const handleReserveSubmit = async () => {
-    const memberInfo = getCookie("member");
-    if (!memberInfo) {
+    setSending(true);
+
+    // 로그인 검사 로직은 유지
+    const token = getCookie("member");
+    if (!token) {
       alert("예약하려면 로그인 해야합니다.");
       navigate(-1);
       return;
     }
-
+    
     if (!selectedTime) {
       alert("시간을 선택해주세요.");
+      setSending(false);
       return;
     }
-
+    
     const selectedMenu = menuList.filter((item) => (item.quantity || 0) > 0);
     if (selectedMenu.length === 0) {
       alert("메뉴를 선택해주세요.");
+      setSending(false);
       return;
     }
-
+    
     const totalPrice = selectedMenu.reduce((sum, m) => sum + (m.price || 0) * (m.quantity || 0), 0);
-
+    
     const reservationData = {
       bakeryId: bakery.id,
       bakeryName: bakery.name,
@@ -99,7 +102,7 @@ export default function Reservation() {
       date: dayjs(selectedDate).format("YYYY-MM-DD"),
       time: dayjs(selectedTime).format("HH:mm"),
       menu: selectedMenu.map((m) => ({
-        id: m.id,
+        menuId: m.id,
         name: m.name,
         quantity: m.quantity,
         price: m.price,
@@ -107,12 +110,17 @@ export default function Reservation() {
       })),
       totalPrice,
     };
-
+    
     try {
       const res = await jwtAxios.post(`${API_SERVER_HOST}/api/reservations`, reservationData, {
-      timeout: 15000,});
+        headers: { Authorization: `Bearer ${token}` },
+        withCredentials: true //
+      });
+      
       alert("정상적으로 예약 되었습니다.");
-      navigate("/reservationconfirm", { state: { reservation: reservationData, serverResponse: res.data } });
+      navigate("/reservationconfirm", {
+        state: { reservation: reservationData, serverResponse: res.data },
+      });
     } catch (err) {
       const serverMsg = err?.response?.data?.message || err?.message || "예약 전송 중 오류가 발생했습니다.";
       alert(serverMsg);
@@ -123,7 +131,6 @@ export default function Reservation() {
 
   const totalSelected = menuList.reduce((sum, m) => sum + (m.quantity || 0), 0);
 
-
   return (
     <div>
       <MainNav />
@@ -133,7 +140,8 @@ export default function Reservation() {
           <h2 className="text-lg font-semibold mb-2">가게 정보</h2>
           <div className="grid sm:grid-cols-3 gap-4">
             <div className="bg-gray-50 p-2 rounded-xl border">
-              <span className="font-medium">이름: </span>{bakery.name}
+              <span className="font-medium">이름: </span>
+              {bakery.name}
             </div>
             <div className="bg-gray-50 p-2 rounded-xl border">
               <span className="font-medium">영업시간: </span>
@@ -142,7 +150,8 @@ export default function Reservation() {
                 : "정보 없음"}
             </div>
             <div className="bg-gray-50 p-2 rounded-xl border">
-              <span className="font-medium">주차: </span>{bakery.parking ? "O" : "X"}
+              <span className="font-medium">주차: </span>
+              {bakery.parking ? "O" : "X"}
             </div>
           </div>
         </section>
@@ -184,17 +193,9 @@ export default function Reservation() {
                     <div className="text-sm text-gray-500">{(menu.price || 0).toLocaleString()}원</div>
                   </div>
                   <div className="flex items-center gap-2">
-                    <button
-                      type="button"
-                      className="px-2 py-1 bg-gray-200 rounded"
-                      onClick={() => handleQuantityChange(menu.id, -1)}
-                    >-</button>
+                    <button type="button" className="px-2 py-1 bg-gray-200 rounded" onClick={() => handleQuantityChange(menu.id, -1)}>-</button>
                     <span>{menu.quantity || 0}</span>
-                    <button
-                      type="button"
-                      className="px-2 py-1 bg-gray-200 rounded"
-                      onClick={() => handleQuantityChange(menu.id, 1)}
-                    >+</button>
+                    <button type="button" className="px-2 py-1 bg-gray-200 rounded" onClick={() => handleQuantityChange(menu.id, 1)}>+</button>
                   </div>
                 </div>
               ))}
