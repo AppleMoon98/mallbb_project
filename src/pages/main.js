@@ -9,8 +9,10 @@ export default function App() {
   return (
     <div className="page-wrap">
       <MainNav/>
-      <main className="main-container">
+      <div className="main-visual-area">
         <MainSlider/>
+      </div>
+      <main className="main-container">
         <div className="text-4xl font-extrabold">오늘의 추천메뉴</div>
         <CardSlider/>
       </main>

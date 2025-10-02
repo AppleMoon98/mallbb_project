@@ -6,7 +6,8 @@ import "../../css/review.css";
 import CardItem from "./CardItem";
 import { API_SERVER_HOST } from "../../api/config";
 import PageComponent from "../../common/PageComponent";
-
+import useAuthGuard from "../hooks/useAuthGuard";
+import { ListToRegister } from "../base/BoardComponent";
 
 
 const initState = {
@@ -28,6 +29,7 @@ const prefix = API_SERVER_HOST;
 const ListComponent = () => {
   const { page, moveToList, moveToRead } = useCustomMove()
   const [serverData, setServerData] = useState(initState);
+  const { ensureLogin } = useAuthGuard()
   const size = 6
 
   useEffect(() => {
@@ -45,11 +47,7 @@ const ListComponent = () => {
           <div className="flex justify-between">
             <h2 className="mb-4 text-2xl font-bold">리뷰게시판</h2>
             <div className="justify-end">
-              <Link to="/review/add"
-                className="inline-flex items-center rounded-xl bg-indigo-600 px-5 py-2.5 text-sm font-medium text-white shadow
-              hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-400 active:translate-y-px">
-                글 등록
-              </Link>
+              <ListToRegister type="review" />
             </div>
           </div>
           <div className='cards'>

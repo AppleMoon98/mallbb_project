@@ -5,6 +5,7 @@ import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic"
 import { getBakeries } from "../../api/bakeryApi"
 
+
 const initState = {
     title: "",
     content: "",
@@ -16,6 +17,7 @@ export default function AddComponent() {
     const [bakeries, setBakeries] = useState([]);
     const uploadRef = useRef(null);
     const { moveToPath } = useCustomMove()
+    
 
     useEffect(() => {
         const fetchBakeries = async () => {
@@ -33,7 +35,7 @@ export default function AddComponent() {
 
     const handleClickAdd = async () => {
         if (!review.title.trim() || !review.content.trim()) {
-            alert("제목과 내용, 가게를 입력해주세요");
+            alert("제목과 내용을 입력해주세요");
             return;
         }
 

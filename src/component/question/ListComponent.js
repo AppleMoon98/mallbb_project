@@ -3,7 +3,7 @@
   import PageComponent from "../../common/PageComponent";
   import useCustomMove from "../hooks/useCustomMove";
   import { Link } from "react-router-dom";
-  import { OutputList } from "../base/BoardComponent";
+  import { OutputList, ListToRegister } from "../base/BoardComponent";
 
   const initState = {
       dtoList:[],
@@ -39,13 +39,11 @@
         </ul>
 
         <div className="mt-5 text-left">
+
           <PageComponent serverData={serverData} movePage={moveToList} />
         </div>
         <div className="flex justify-end">
-          <Link to="/question/add" className="inline-flex items-left rounded-xl bg-indigo-600 px-5 py-2.5 text-sm font-medium text-white shadow
-                        hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-400 active:translate-y-px">
-            글 등록
-          </Link>
+          <ListToRegister type="question" />
         </div>
       </div>
     );

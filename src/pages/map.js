@@ -93,7 +93,7 @@ export default function MapPage() {
           {/* 왼쪽 가게 목록 */}
           <aside className="border-r md:pr-3 overflow-y-auto p-3">
             <input
-              className="flex-1 rounded-lg border border-gray-300 px-3 py-2 text-sm mb-3"
+              className="flex-1 rounded-lg border border-gray-300 px-10 py-2 text-sm mb-3"
               placeholder="검색"
               value={searchKeyword}
               onChange={(e) => setSearchKeyword(e.target.value)}
@@ -191,8 +191,9 @@ export default function MapPage() {
                     )}
                   </>
                 ) : (
-                  <p className="text-gray-400">
-                    왼쪽 목록에서 가게를 선택하면 상세정보와 메뉴가 표시됩니다.
+                  <p className="text-gray-400 text-lg text-center flex items-center">
+                    왼쪽 목록에서 가게를 선택하면<br/>
+                    상세정보와 메뉴가 표시됩니다.
                   </p>
                 )}
               </div>

@@ -45,6 +45,7 @@ const RegistComponent = () => {
     }
     
     const number = rangeRandom(100000, 999999)
+    console.log(number)
 
     setIsVerifying(true);
     setUserData(prev => ({ ...prev, number }))

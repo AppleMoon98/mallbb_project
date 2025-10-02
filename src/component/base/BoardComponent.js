@@ -3,7 +3,7 @@ import { CKEditor } from '@ckeditor/ckeditor5-react'
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic'
 import useAuthGuard from '../hooks/useAuthGuard'
 
-export function OutputList({ serverData, onClickTitle }) {
+export function OutputList({ serverData, onClickTitle, booltype }) {
   const hasData = serverData?.totalCount > 0 && serverData?.dtoList?.length > 0;
   
   // Board List Class Name
@@ -51,7 +51,7 @@ export function OutputList({ serverData, onClickTitle }) {
           </span>
 
           <span className={`${wirterClassName} text-gray-600`}>
-            {board.writer}
+            {!booltype ? board.writer : '운영자'}
           </span>
 
           <span className={`${dateClassName} text-gray-600`}>

@@ -38,34 +38,8 @@ const ListComponent = () => {
       <h2 className="mb-4 text-2xl font-bold">공지사항</h2>
       <ul className="m-0 list-none p-0">
 
-        <li className="flex border-b-2 border-gray-300 bg-gray-100 px-2 py-3 font-semibold">
-          <span className="m-2">번호</span>
-          <span className="m-2 flex-1">제목</span>
-          <span className="m-2 flex-1">작성자</span>
-          <span className="m-2 flex-1">날짜</span>
-        </li>
-
-        {serverData.dtoList.map((notice) => (
-        <li key={notice.id}
-        className="flex cursor-pointer border-b border-gray-200 px-2 py-2 hover:bg-gray-50"
-        onClick={() => moveToRead(notice.id)}>
-
-          <span className="m-2 text-gray-600">
-            {notice.id}
-          </span>
-
-          <span className="m-2 flex-1 text-black">
-            {notice.title}
-          </span>
-
-          <span className="m-2 flex-1 text-gray-600">운영자
-          </span>
-
-          <span className="m-2 flex-1 text-gray-600">
-            {dayjs(notice.createDate).format('YYYY-MM-DD')}
-          </span>
-        </li>
-      ))}
+        {/* 목록 /base/Listcomponent.js */}
+        <OutputList serverData={serverData} onClickTitle={moveToRead} booltype={true} />
       </ul>
 
       <div className="mt-5 text-center">

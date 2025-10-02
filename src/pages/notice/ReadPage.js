@@ -12,10 +12,11 @@ const ReadPage = () => {
 
     const page = queryParams.get("page") ? parseInt(queryParams.get("page")) : 1
     const size = queryParams.get("size") ? parseInt(queryParams.get("size")) : 10
-    toString()
+    
+    const queryStr = createSearchParams({page,size}).toString()
 
     return(
-        <div className="font-extrabold w-full bg-divide-yellow-600 mt-6">
+        <div className="font-extrabold w-full bg-white mt-6">
             <div className="text-4xl text-center">
             {/* 상세보기 {} <= 바로 제목으로 가져올것 */}
             </div>

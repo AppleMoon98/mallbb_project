@@ -21,7 +21,8 @@ const KakaoLoginComponent = () => {
     }
 
     return (
-        <KakaoLogin token={kakaoClientId} onSuccess={kakaoOnSuccess} onFail={kakaoOnFailure} />
+        <KakaoLogin style={{ width: '198px',height:'40px' , backgroundColor: '#FEE500', border: '1px solid #d9d9d9', 
+                borderRadius: '4px'}}  token={kakaoClientId} onSuccess={kakaoOnSuccess} onFail={kakaoOnFailure} />
     )
 }
 
