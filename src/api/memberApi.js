@@ -28,10 +28,10 @@ export const kakaoLoginPost = async(data) => {
 
 // 회원 인증번호
 export const Certification = async (formdata) => {
-    // const res = await axios.post(`${API_SERVER_HOST}/api/sms/send-one`, formdata, {
-    //     headers: {"Content-Type":"application/json"}
-    // })
-    // return res.data
+    const res = await axios.post(`${API_SERVER_HOST}/api/sms/send-one`, formdata, {
+        headers: {"Content-Type":"application/json"}
+    })
+    return res.data
 }
 
 // 회원 등록
